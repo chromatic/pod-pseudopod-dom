@@ -22,9 +22,10 @@ sub emit_kids { join '', map { $_->emit } @{ shift->children } }
 
 sub emit_header
 {
-    my $self = shift;
+    my $self  = shift;
+    my $level = 'h' . $self->level;
 
-    return '=head1 ' . $self->text->emit . "\n\n";
+    return "<$level>" . $self->text->emit . "</$level>\n\n";
 }
 
 sub emit_text
@@ -35,28 +36,29 @@ sub emit_text
 
 sub emit_literal
 {
-    my $self = shift;
-    return "=begin literal\n\n" . $self->emit_kids . "=end literal\n\n";
+    my $self      = shift;
+    my @grandkids = map { $_->emit_kids } @{ $self->children };
+    return "<pre>" . join( "\n", @grandkids ) . "</pre>\n\n";
 }
 
 sub emit_paragraph
 {
-    my $self     = shift;
-    my $content  = $self->emit_kids;
+    my $self    = shift;
+    my $content = $self->emit_kids;
     return '' unless defined $content;
-    return $content . "\n\n";
+    return "<p>" . $content . "</p>\n\n";
 }
 
 sub emit_anchor
 {
     my $self = shift;
-    return 'Z<' . $self->content->emit . '>';
+    return qq|<a name="| . $self->content->emit . qq|"></a>|;
 }
 
 sub emit_italics
 {
     my $self = shift;
-    return 'I<' . $self->content->emit . '>';
+    return '<em>' . $self->content->emit . '</em>';
 }
 
 1;
