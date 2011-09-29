@@ -1,4 +1,4 @@
-#!/home/chromatic/.perl5/perls/perl-5.14.0/bin/perl 
+#!/home/chromatic/.perl5/perls/perl-5.14.0/bin/perl
 
 eval 'exec /home/chromatic/.perl5/perls/perl-5.14.0/bin/perl  -S $0 ${1+"$@"}'
     if 0; # not running under some shell
@@ -28,15 +28,15 @@ foreach my $file (@ARGV) {
         formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML'
     );
 
-	# HTML output goes to the current working 
-	# directory not the source directory.
-	my $outfile = fileparse( $file, qr{\..*} ) . '.html';
-	
-	open my $HTMLOUT, '>', $outfile or die "Can't write to $outfile: $!";
-	$parser->output_fh($HTMLOUT);
+    # HTML output goes to the current working
+    # directory not the source directory.
+    my $outfile = fileparse( $file, qr{\..*} ) . '.html';
 
-	$parser->no_errata_section(1); # don't put errors in doc output
-	$parser->complain_stderr(1);   # output errors on STDERR instead
+    open my $HTMLOUT, '>', $outfile or die "Can't write to $outfile: $!";
+    $parser->output_fh($HTMLOUT);
+
+    $parser->no_errata_section(1); # don't put errors in doc output
+    $parser->complain_stderr(1);   # output errors on STDERR instead
 
     die "Unable to open file\n" unless -e $file;
     $parser->parse_file($file);
@@ -44,4 +44,4 @@ foreach my $file (@ARGV) {
     print {$HTMLOUT} $doc->emit;
 }
 
-exit
+exit;
