@@ -23,7 +23,7 @@ sub emit_kids { join '', map { $_->emit } @{ shift->children } }
 sub emit_header
 {
     my $self  = shift;
-    my $level = 'h' . $self->level;
+    my $level = 'h' . ($self->level + 1);
 
     return "<$level>" . $self->text->emit . "</$level>\n\n";
 }
@@ -59,6 +59,18 @@ sub emit_italics
 {
     my $self = shift;
     return '<em>' . $self->content->emit . '</em>';
+}
+
+sub emit_bullet_list
+{
+    my $self = shift;
+    return "<ul>\n\n" . $self->emit_kids . "</ul>\n\n";
+}
+
+sub emit_bullet_item
+{
+    my $self = shift;
+    return "<li>" . $self->emit_kids . "</li>\n\n";
 }
 
 1;

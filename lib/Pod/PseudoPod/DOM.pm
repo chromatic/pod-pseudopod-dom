@@ -114,7 +114,7 @@ sub reset_to_item
 
 BEGIN
 {
-    for my $heading ( 1 .. 4 )
+    for my $heading ( 0 .. 4 )
     {
         my $start_meth = sub
         {
@@ -166,6 +166,43 @@ BEGIN
             *{ 'end_'   . $tag } = $end_meth;
         };
     }
+
+    for my $list_type (qw( bullet text block number ))
+    {
+        my $start_list_meth = sub
+        {
+            my $self = shift;
+            $self->push_element( 'List', type => $list_type . '_list' );
+        };
+
+        my $end_list_meth = sub
+        {
+            my $self = shift;
+            $self->reset_to_item( 'List', type => $list_type );
+        };
+
+        my $start_item_meth = sub
+        {
+            my $self = shift;
+            $self->push_element( 'Paragraph', type => $list_type . '_item' );
+        };
+
+        my $end_item_meth = sub
+        {
+            my $self = shift;
+            $self->reset_to_item( 'Paragraph', type => $list_type . '_item' );
+        };
+
+        do
+        {
+            no strict 'refs';
+            *{ 'start_over_' . $list_type } = $start_list_meth;
+            *{ 'end_over_'   . $list_type } = $end_list_meth;
+            *{ 'start_item_' . $list_type } = $start_item_meth;
+            *{ 'end_item_'   . $list_type } = $end_item_meth;
+        };
+    }
+
 }
 
 sub handle_text
