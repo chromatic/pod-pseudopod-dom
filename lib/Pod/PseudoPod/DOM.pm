@@ -67,6 +67,18 @@ sub end_Document
     $self->{active_elements} = [];
 }
 
+sub start_Verbatim
+{
+    my $self = shift;
+    $self->push_element( 'Text', type => 'verbatim' );
+}
+
+sub end_Verbatim
+{
+    my $self = shift;
+    $self->reset_to_item( 'Text', type => 'verbatim' );
+}
+
 sub reset_to_document
 {
     my $self = shift;

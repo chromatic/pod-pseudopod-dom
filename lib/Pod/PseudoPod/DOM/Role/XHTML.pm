@@ -105,4 +105,10 @@ sub emit_text_item
          . join( '', map { $_->emit } @$kids ) . "</li>\n\n";
 }
 
+sub emit_verbatim
+{
+    my $self = shift;
+    return "<pre><code>" . $self->content->emit . "</code></pre>\n\n";
+}
+
 1;

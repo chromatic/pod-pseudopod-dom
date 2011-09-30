@@ -153,8 +153,6 @@ is($result, <<'EOHTML', "list with text headings");
 
 EOHTML
 
-done_testing;
-__END__
 
 $result = parse( <<'EOPOD' );
 =pod
@@ -164,12 +162,14 @@ $result = parse( <<'EOPOD' );
 
 EOPOD
 
-is($result, <<'EOHTML', "code block");
+is $result, <<'EOHTML', "code block";
 <pre><code>  1 + 1 = 2;
   2 + 2 = 4;</code></pre>
 
 EOHTML
 
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod
