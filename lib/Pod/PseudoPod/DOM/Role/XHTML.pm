@@ -117,4 +117,10 @@ sub emit_code
     return "<code>" . $self->content->emit . "</code>";
 }
 
+sub emit_footnote
+{
+    my $self = shift;
+    return ' <span class="footnote">' . $self->content->emit . '</span>';
+}
+
 1;

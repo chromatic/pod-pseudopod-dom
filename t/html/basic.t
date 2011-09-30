@@ -178,9 +178,6 @@ is($result, <<"EOHTML", "code entity in a paragraph");
 
 EOHTML
 
-done_testing;
-__END__
-
 
 $result = parse( <<'EOPOD' );
 =pod
@@ -188,9 +185,12 @@ $result = parse( <<'EOPOD' );
 A plain paragraph with aN<footnote entry>.
 EOPOD
 is($result, <<"EOHTML", "footnote entity in a paragraph");
-<p>A plain paragraph with a (footnote: footnote entry).</p>
+<p>A plain paragraph with a <span class="footnote">footnote entry</span>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 
 $parser->add_body_tags(1);

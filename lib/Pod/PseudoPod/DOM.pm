@@ -156,6 +156,7 @@ BEGIN
         Z => 'Anchor',
         I => 'Italics',
         C => 'Code',
+        N => 'Footnote',
     );
 
     while (my ($tag, $type) = each %text_types)
