@@ -111,4 +111,10 @@ sub emit_verbatim
     return "<pre><code>" . $self->content->emit . "</code></pre>\n\n";
 }
 
+sub emit_code
+{
+    my $self = shift;
+    return "<code>" . $self->content->emit . "</code>";
+}
+
 1;

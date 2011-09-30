@@ -168,9 +168,6 @@ is $result, <<'EOHTML', "code block";
 
 EOHTML
 
-done_testing;
-__END__
-
 $result = parse( <<'EOPOD' );
 =pod
 
@@ -180,6 +177,9 @@ is($result, <<"EOHTML", "code entity in a paragraph");
 <p>A plain paragraph with a <code>functionname</code>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 
 $result = parse( <<'EOPOD' );
