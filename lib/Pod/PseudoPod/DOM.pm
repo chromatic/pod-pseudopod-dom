@@ -183,14 +183,19 @@ BEGIN
 
         my $start_item_meth = sub
         {
-            my $self = shift;
-            $self->push_element( 'Paragraph', type => $list_type . '_item' );
+            my ($self, $args) = @_;
+            my @marker        = $args->{number}
+                              ? (marker => $args->{number})
+                              : ();
+            $self->push_element( 'ListItem',
+                type => $list_type . '_item', @marker
+            );
         };
 
         my $end_item_meth = sub
         {
             my $self = shift;
-            $self->reset_to_item( 'Paragraph', type => $list_type . '_item' );
+            $self->reset_to_item( 'ListItem', type => $list_type . '_item' );
         };
 
         do

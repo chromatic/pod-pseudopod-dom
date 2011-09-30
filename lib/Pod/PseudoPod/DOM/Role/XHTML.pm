@@ -73,4 +73,18 @@ sub emit_bullet_item
     return "<li>" . $self->emit_kids . "</li>\n\n";
 }
 
+sub emit_number_list
+{
+    my $self = shift;
+    return "<ol>\n\n" . $self->emit_kids . "</ol>\n\n";
+}
+
+sub emit_number_item
+{
+    my $self   = shift;
+    my $marker = $self->marker;
+    my $number = $marker ? qq| number="$marker"| : '';
+    return "<li$number>" . $self->emit_kids . "</li>\n\n";
+}
+
 1;

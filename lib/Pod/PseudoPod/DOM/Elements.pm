@@ -101,8 +101,9 @@ use Moose;
     package Pod::PseudoPod::DOM::Element::ListItem;
 
     use Moose;
+    has 'marker', is => 'ro';
 
-    extends 'Pod::PseudoPod::DOM::Element';
+    extends 'Pod::PseudoPod::DOM::ParentElement';
 }
 
 {

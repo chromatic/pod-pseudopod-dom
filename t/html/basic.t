@@ -90,8 +90,6 @@ is $result, <<'EOHTML', "simple bulleted list";
 </ul>
 
 EOHTML
-done_testing;
-__END__
 
 
 $result = parse( <<'EOPOD' );
@@ -109,16 +107,18 @@ B: The same thing we do every night, Pinky. Try to take over the world!
 
 EOPOD
 
-is($result, <<'EOHTML', "numbered list");
+is $result, <<'EOHTML', "numbered list";
 <ol>
 
-<li>1. P: Gee, Brain, what do you want to do tonight?</li>
+<li number="1">P: Gee, Brain, what do you want to do tonight?</li>
 
-<li>2. B: The same thing we do every night, Pinky. Try to take over the world!</li>
+<li number="2">B: The same thing we do every night, Pinky. Try to take over the world!</li>
 
 </ol>
 
 EOHTML
+done_testing;
+__END__
 
 
 $result = parse( <<'EOPOD' );
