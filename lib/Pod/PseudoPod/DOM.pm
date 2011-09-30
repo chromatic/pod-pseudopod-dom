@@ -108,7 +108,7 @@ sub reset_to_item
             $attrs-- if $element->$attribute() eq $value;
         }
 
-        return unless $attrs;
+        return $element unless $attrs;
     }
 }
 
@@ -178,7 +178,10 @@ BEGIN
         my $end_list_meth = sub
         {
             my $self = shift;
-            $self->reset_to_item( 'List', type => $list_type );
+            my $list = $self->reset_to_item( 'List',
+                type => $list_type . '_list'
+            );
+            $list->fixup_list if $list;
         };
 
         my $start_item_meth = sub
@@ -187,6 +190,7 @@ BEGIN
             my @marker        = $args->{number}
                               ? (marker => $args->{number})
                               : ();
+
             $self->push_element( 'ListItem',
                 type => $list_type . '_item', @marker
             );
@@ -213,7 +217,6 @@ BEGIN
 sub handle_text
 {
     my $self = shift;
-    $self->add_element( Text => type => 'text' );
     $self->add_element( 'Text::Plain' => type => 'text', content => shift );
 }
 

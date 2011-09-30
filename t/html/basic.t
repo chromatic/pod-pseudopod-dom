@@ -117,8 +117,6 @@ is $result, <<'EOHTML', "numbered list";
 </ol>
 
 EOHTML
-done_testing;
-__END__
 
 
 $result = parse( <<'EOPOD' );
@@ -139,18 +137,24 @@ EOPOD
 is($result, <<'EOHTML', "list with text headings");
 <ul>
 
-<li>Pinky
+<li><p>Pinky</p>
 
 <p>Gee, Brain, what do you want to do tonight?</p>
 
-<li>Brain
+</li>
+
+<li><p>Brain</p>
 
 <p>The same thing we do every night, Pinky. Try to take over the world!</p>
+
+</li>
 
 </ul>
 
 EOHTML
 
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod

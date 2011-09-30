@@ -13,6 +13,7 @@ use Moose;
     with 'MooseX::Traits';
 
     has 'type', is => 'ro', required => 1;
+    sub is_empty { 1 }
 }
 
 {
@@ -23,7 +24,7 @@ use Moose;
     extends 'Pod::PseudoPod::DOM::Element';
 
     has 'children',
-        is      => 'ro',
+        is      => 'rw',
         isa     => 'ArrayRef[Pod::PseudoPod::DOM::Element]',
         default => sub { [] };
 
@@ -34,6 +35,8 @@ use Moose;
     }
 
     sub add_children { push @{ shift->children }, @_ }
+
+    sub is_empty { return @{ shift->children } == 0 }
 }
 
 {
@@ -57,6 +60,8 @@ use Moose;
         my $self = shift;
         $self->content( shift );
     }
+
+    sub is_empty { length( shift->content ) == 0 }
 }
 
 {
@@ -95,6 +100,30 @@ use Moose;
     use Moose;
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
+    sub fixup_list
+    {
+        my $self = shift;
+        my $kids = $self->children;
+        my @newkids;
+        my $prev;
+
+        for my $i (0 .. $#$kids)
+        {
+            my $kid = $kids->[$i];
+            if ($kid->isa( 'Pod::PseudoPod::DOM::Element::ListItem' ))
+            {
+                push @newkids, $prev if $prev;
+                $prev = $kid;
+                next;
+            }
+            next if $kid->is_empty;
+
+            $prev->add( $kid );
+        }
+        push @newkids, $prev if $prev;
+
+        $self->children( \@newkids );
+    }
 }
 
 {

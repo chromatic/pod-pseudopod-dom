@@ -87,4 +87,22 @@ sub emit_number_item
     return "<li$number>" . $self->emit_kids . "</li>\n\n";
 }
 
+sub emit_text_list
+{
+    my $self = shift;
+    return "<ul>\n\n" . $self->emit_kids . "</ul>\n\n";
+}
+
+sub emit_text_item
+{
+    my $self  = shift;
+    my $kids  = $self->children;
+    return "<li></li>\n\n" unless @$kids;
+
+    my $first = shift @$kids;
+
+    return "<li><p>" . $first->emit . "</p>\n\n"
+         . join( '', map { $_->emit } @$kids ) . "</li>\n\n";
+}
+
 1;
