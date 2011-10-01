@@ -160,6 +160,7 @@ BEGIN
         N => 'Footnote',
         U => 'URL',
         A => 'Link',
+        G => 'Superscript',
     );
 
     while (my ($tag, $type) = each %text_types)

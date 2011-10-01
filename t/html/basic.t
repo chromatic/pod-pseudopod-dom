@@ -241,9 +241,6 @@ is($result, <<"EOHTML", "Link entity in a paragraph");
 
 EOHTML
 
-done_testing;
-__END__
-
 $result = parse( <<'EOPOD' );
 =pod
 
@@ -253,6 +250,9 @@ is($result, <<"EOHTML", "Superscript in a paragraph");
 <p>A plain paragraph with a <sup>superscript</sup>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod

@@ -158,4 +158,10 @@ sub emit_link
     return qq|<a href="#| . $self->content->emit . q|">link</a>|;
 }
 
+sub emit_superscript
+{
+    my $self = shift;
+    return "<sup>" . $self->content->emit . "</sup>";
+}
+
 1;
