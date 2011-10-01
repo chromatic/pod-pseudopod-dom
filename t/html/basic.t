@@ -270,10 +270,6 @@ is($result, <<"EOHTML", "Bold text in a paragraph");
 
 EOHTML
 
-done_testing;
-__END__
-
-
 $result = parse( <<'EOPOD' );
 =pod
 
@@ -283,6 +279,9 @@ is($result, <<"EOHTML", "Italic text in a paragraph");
 <p>A plain paragraph with <em>italic text</em>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod
