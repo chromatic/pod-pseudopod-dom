@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Moose::Role;
+use HTML::Entities;
 
 requires 'type';
 has 'add_body_tags', is => 'ro', default => 0;
@@ -12,8 +13,8 @@ sub emit
 {
     my $self = shift;
     my $type = $self->type;
-
     my $emit = 'emit_' . $type;
+
     $self->$emit();
 }
 
@@ -130,7 +131,8 @@ sub emit_text_item
 sub emit_verbatim
 {
     my $self = shift;
-    return "<pre><code>" . $self->content->emit . "</code></pre>\n\n";
+    my $kids = encode_entities($self->emit_kids);
+    return "<pre><code>" . $kids . "</code></pre>\n\n";
 }
 
 sub emit_code

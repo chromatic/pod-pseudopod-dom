@@ -299,16 +299,18 @@ is($result, <<"EOHTML", "File name in a paragraph");
 
 EOHTML
 
-done_testing;
-__END__
-
 $result = parse( <<'EOPOD' );
 =pod
 
   # this header is very important & don't you forget it
   my $text = "File is: " . <FILE>;
 EOPOD
-like($result, qr/&quot;/, "Verbatim text with encodable quotes");
-like($result, qr/&amp;/, "Verbatim text with encodable ampersands");
-like($result, qr/&lt;/, "Verbatim text with encodable less-than");
-like($result, qr/&gt;/, "Verbatim text with encodable greater-than");
+
+like $result, qr/&quot;/, "Verbatim text with encodable quotes";
+like $result, qr/&amp;/,  "Verbatim text with encodable ampersands";
+like $result, qr/&lt;/,   "Verbatim text with encodable less-than";
+like $result, qr/&gt;/,   "Verbatim text with encodable greater-than";
+like $result, qr/&quot;File is: &quot; . &lt;FILE&gt;/,
+    '... encoding everything correctly';
+
+done_testing;

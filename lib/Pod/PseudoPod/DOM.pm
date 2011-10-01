@@ -71,13 +71,13 @@ sub end_Document
 sub start_Verbatim
 {
     my $self = shift;
-    $self->push_element( 'Text', type => 'verbatim' );
+    $self->push_element( 'Paragraph', type => 'verbatim' );
 }
 
 sub end_Verbatim
 {
     my $self = shift;
-    $self->reset_to_item( 'Text', type => 'verbatim' );
+    $self->reset_to_item( 'Paragraph', type => 'verbatim' );
 }
 
 sub reset_to_document
