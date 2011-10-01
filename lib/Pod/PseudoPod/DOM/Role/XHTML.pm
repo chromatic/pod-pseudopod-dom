@@ -145,4 +145,11 @@ sub emit_footnote
     return ' <span class="footnote">' . $self->content->emit . '</span>';
 }
 
+sub emit_url
+{
+    my $self = shift;
+    my $url  = $self->content->emit;
+    return qq|<a class="url" href="$url">$url</a>|;
+}
+
 1;

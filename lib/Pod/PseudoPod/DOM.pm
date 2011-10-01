@@ -158,6 +158,7 @@ BEGIN
         I => 'Italics',
         C => 'Code',
         N => 'Footnote',
+        U => 'URL',
     );
 
     while (my ($tag, $type) = each %text_types)

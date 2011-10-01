@@ -209,34 +209,20 @@ is $result, <<"EOHTML", "adding html body tags";
 </html>
 EOHTML
 
-done_testing;
-__END__
-
-
-
-$parser->add_css_tags(1);
-$result = parse( <<'EOPOD' );
-=pod
-
-A plain paragraph with aN<footnote entry> and css tags.
-EOPOD
-
-$html = '<p>A plain paragraph with a<font class="footnote"> (footnote: '
-      . "footnote entry)</font> and css tags.</p>\n\n";
-
-is($result, $html, "css footnote entity in a paragraph");
-
-$parser->add_css_tags(1);
 $result = parse( <<'EOPOD' );
 =pod
 
 A plain paragraph with a U<http://test.url.com/stuff/and/junk.txt>.
 EOPOD
 
-$html = '<p>A plain paragraph with a <font class="url">'
-      . "http://test.url.com/stuff/and/junk.txt</font>.</p>\n\n";
+$html = '<p>A plain paragraph with a <a class="url" '
+      . 'href="http://test.url.com/stuff/and/junk.txt">'
+      . "http://test.url.com/stuff/and/junk.txt</a>.</p>\n\n";
 
-is($result, $html, "URL entity in a paragraph");
+is $result, $html, "URL entity in a paragraph";
+
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod
