@@ -1,4 +1,5 @@
 package Pod::PseudoPod::DOM::Role::XHTML;
+# ABSTRACT: an XHTML formatter role for PseudoPod DOM trees
 
 use strict;
 use warnings;
