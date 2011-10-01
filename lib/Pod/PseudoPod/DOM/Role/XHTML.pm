@@ -170,4 +170,10 @@ sub emit_subscript
     return "<sub>" . $self->content->emit . "</sub>";
 }
 
+sub emit_bold
+{
+    my $self = shift;
+    return "<strong>" . $self->content->emit . "</strong>";
+}
+
 1;

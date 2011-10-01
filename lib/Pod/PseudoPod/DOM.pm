@@ -162,6 +162,7 @@ BEGIN
         A => 'Link',
         G => 'Superscript',
         H => 'Subscript',
+        B => 'Bold',
     );
 
     while (my ($tag, $type) = each %text_types)

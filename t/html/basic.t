@@ -260,10 +260,6 @@ is($result, <<"EOHTML", "Subscript in a paragraph");
 <p>A plain paragraph with a <sub>subscript</sub>.</p>
 
 EOHTML
-
-done_testing;
-__END__
-
 $result = parse( <<'EOPOD' );
 =pod
 
@@ -273,6 +269,10 @@ is($result, <<"EOHTML", "Bold text in a paragraph");
 <p>A plain paragraph with <strong>bold text</strong>.</p>
 
 EOHTML
+
+done_testing;
+__END__
+
 
 $result = parse( <<'EOPOD' );
 =pod
