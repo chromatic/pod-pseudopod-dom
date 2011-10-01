@@ -152,4 +152,10 @@ sub emit_url
     return qq|<a class="url" href="$url">$url</a>|;
 }
 
+sub emit_link
+{
+    my $self = shift;
+    return qq|<a href="#| . $self->content->emit . q|">link</a>|;
+}
+
 1;

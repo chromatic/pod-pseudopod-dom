@@ -231,9 +231,6 @@ is($result, <<"EOHTML", "Link anchor entity in a paragraph");
 
 EOHTML
 
-done_testing;
-__END__
-
 $result = parse( <<'EOPOD' );
 =pod
 
@@ -243,6 +240,9 @@ is($result, <<"EOHTML", "Link entity in a paragraph");
 <p>A plain paragraph with a <a href="#crossreferencelink">link</a>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod
