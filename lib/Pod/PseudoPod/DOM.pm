@@ -14,6 +14,7 @@ sub new
     my $self                = $class->SUPER::new(@_);
     $self->{class_registry} = {};
     $self->{formatter_role} = $role;
+    $self->{formatter_args} = $args{formatter_args} || {};
 
     $self->accept_targets( 'html', 'HTML' );
     $self->accept_targets_as_text(
@@ -48,7 +49,7 @@ sub make
                  = $name->with_traits( $self->{formatter_role} );
     }
 
-    return $class->new( @args );
+    return $class->new( %{ $self->{formatter_args} }, @args );
 }
 
 sub start_Document

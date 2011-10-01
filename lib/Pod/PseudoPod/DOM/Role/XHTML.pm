@@ -6,6 +6,7 @@ use warnings;
 use Moose::Role;
 
 requires 'type';
+has 'add_body_tags', is => 'ro', default => 0;
 
 sub emit
 {
@@ -16,7 +17,18 @@ sub emit
     $self->$emit();
 }
 
-sub emit_document { return shift->emit_kids }
+sub emit_document
+{
+    my $self = shift;
+    return $self->emit_body if $self->add_body_tags;
+    return $self->emit_kids;
+}
+
+sub emit_body
+{
+    my $self = shift;
+    return "<html>\n<body>\n\n" . $self->emit_kids . "</body>\n</html>\n";
+}
 
 sub emit_kids { join '', map { $_->emit } @{ shift->children } }
 
