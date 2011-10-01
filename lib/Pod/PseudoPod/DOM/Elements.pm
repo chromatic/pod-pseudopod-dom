@@ -100,6 +100,7 @@ use Moose;
     use Moose;
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
+
     sub fixup_list
     {
         my $self = shift;

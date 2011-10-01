@@ -15,7 +15,7 @@ sub emit
     my $type = $self->type;
     my $emit = 'emit_' . $type;
 
-    $self->$emit();
+    $self->$emit( @_ );
 }
 
 sub emit_document
@@ -41,7 +41,11 @@ END_HTML_HEAD
 END_HTML
 }
 
-sub emit_kids { join '', map { $_->emit } @{ shift->children } }
+sub emit_kids
+{
+    my $self = shift;
+    join '', map { $_->emit( @_ ) } @{ $self->children }
+}
 
 sub emit_header
 {
@@ -53,8 +57,11 @@ sub emit_header
 
 sub emit_text
 {
-    my $self = shift;
-    return $self->content || '';
+    my ($self, %args) = @_;
+    my $content       = $self->content || '';
+
+    return encode_entities($content) if $args{encode_html};
+    return $content;
 }
 
 sub emit_literal
@@ -131,14 +138,14 @@ sub emit_text_item
 sub emit_verbatim
 {
     my $self = shift;
-    my $kids = encode_entities($self->emit_kids);
-    return "<pre><code>" . $kids . "</code></pre>\n\n";
+    return "<pre><code>" . $self->emit_kids( encode_html => 1 )
+         . "</code></pre>\n\n";
 }
 
 sub emit_code
 {
     my $self = shift;
-    return "<code>" . $self->content->emit . "</code>";
+    return "<code>" . $self->content->emit( encode_html => 1 ) . "</code>";
 }
 
 sub emit_footnote
@@ -182,6 +189,12 @@ sub emit_file
 {
     my $self = shift;
     return "<em>" . $self->content->emit . "</em>";
+}
+
+sub emit_programlisting
+{
+    my $self = shift;
+    return q|<div class="programlisting">| . $self->emit_kids . "</div>\n\n";
 }
 
 1;

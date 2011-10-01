@@ -313,4 +313,18 @@ like $result, qr/&gt;/,   "Verbatim text with encodable greater-than";
 like $result, qr/&quot;File is: &quot; . &lt;FILE&gt;/,
     '... encoding everything correctly';
 
+$result = parse( <<'EOPOD' );
+=begin programlisting
+
+    This verbatim text has B<bold> & I<emphasized> text.
+
+=end programlisting
+EOPOD
+
+like $result, qr!<code>\s*This verbatim text has <strong>bold</strong>!,
+    '... verbatim should not encode B<> tags';
+
+like $result, qr!&amp; <em>emphasized</em> text.!,
+    '... nor I<> tags';
+
 done_testing;
