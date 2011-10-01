@@ -289,10 +289,6 @@ is($result, <<"EOHTML", "Replaceable text in a paragraph");
 
 EOHTML
 
-done_testing;
-__END__
-
-
 $result = parse( <<'EOPOD' );
 =pod
 
@@ -302,6 +298,9 @@ is($result, <<"EOHTML", "File name in a paragraph");
 <p>A plain paragraph with a <em>filename</em>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod

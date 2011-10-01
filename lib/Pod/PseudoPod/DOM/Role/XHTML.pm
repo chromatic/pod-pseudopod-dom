@@ -176,4 +176,10 @@ sub emit_bold
     return "<strong>" . $self->content->emit . "</strong>";
 }
 
+sub emit_file
+{
+    my $self = shift;
+    return "<em>" . $self->content->emit . "</em>";
+}
+
 1;

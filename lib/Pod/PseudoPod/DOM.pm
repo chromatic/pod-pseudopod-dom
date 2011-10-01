@@ -164,6 +164,7 @@ BEGIN
         H => 'Subscript',
         B => 'Bold',
         R => 'Italics',
+        F => 'File',
     );
 
     while (my ($tag, $type) = each %text_types)
