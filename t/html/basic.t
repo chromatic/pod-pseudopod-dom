@@ -198,6 +198,9 @@ A plain paragraph with body tags turned on.
 EOPOD
 is $result, <<"EOHTML", "adding html body tags";
 <html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
 <body>
 
 <p>A plain paragraph with body tags turned on.</p>
@@ -206,28 +209,9 @@ is $result, <<"EOHTML", "adding html body tags";
 </html>
 EOHTML
 
-
 done_testing;
 __END__
 
-$parser->add_body_tags(1);
-$parser->add_css_tags(1);
-$result = parse( <<'EOPOD' );
-=pod
-
-A plain paragraph with body tags and css tags turned on.
-EOPOD
-is($result, <<"EOHTML", "adding html body tags and css tags");
-<html>
-<body>
-<link rel='stylesheet' href='style.css' type='text/css'>
-
-<p>A plain paragraph with body tags and css tags turned on.</p>
-
-</body>
-</html>
-
-EOHTML
 
 
 $parser->add_css_tags(1);

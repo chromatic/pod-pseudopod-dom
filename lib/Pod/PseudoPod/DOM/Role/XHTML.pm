@@ -27,7 +27,17 @@ sub emit_document
 sub emit_body
 {
     my $self = shift;
-    return "<html>\n<body>\n\n" . $self->emit_kids . "</body>\n</html>\n";
+    return <<END_HTML_HEAD . $self->emit_kids . <<END_HTML;
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+
+END_HTML_HEAD
+</body>
+</html>
+END_HTML
 }
 
 sub emit_kids { join '', map { $_->emit } @{ shift->children } }
