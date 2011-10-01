@@ -221,18 +221,18 @@ $html = '<p>A plain paragraph with a <a class="url" '
 
 is $result, $html, "URL entity in a paragraph";
 
-done_testing;
-__END__
-
 $result = parse( <<'EOPOD' );
 =pod
 
 A plain paragraph with a Z<crossreferenceendpoint>.
 EOPOD
 is($result, <<"EOHTML", "Link anchor entity in a paragraph");
-<p>A plain paragraph with a <a name="crossreferenceendpoint">.</p>
+<p>A plain paragraph with a <a name="crossreferenceendpoint"></a>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod
