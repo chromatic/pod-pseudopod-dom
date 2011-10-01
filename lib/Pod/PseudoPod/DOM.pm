@@ -161,6 +161,7 @@ BEGIN
         U => 'URL',
         A => 'Link',
         G => 'Superscript',
+        H => 'Subscript',
     );
 
     while (my ($tag, $type) = each %text_types)

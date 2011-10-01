@@ -251,9 +251,6 @@ is($result, <<"EOHTML", "Superscript in a paragraph");
 
 EOHTML
 
-done_testing;
-__END__
-
 $result = parse( <<'EOPOD' );
 =pod
 
@@ -263,6 +260,9 @@ is($result, <<"EOHTML", "Subscript in a paragraph");
 <p>A plain paragraph with a <sub>subscript</sub>.</p>
 
 EOHTML
+
+done_testing;
+__END__
 
 $result = parse( <<'EOPOD' );
 =pod

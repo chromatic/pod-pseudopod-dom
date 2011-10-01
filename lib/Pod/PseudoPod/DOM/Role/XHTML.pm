@@ -164,4 +164,10 @@ sub emit_superscript
     return "<sup>" . $self->content->emit . "</sup>";
 }
 
+sub emit_subscript
+{
+    my $self = shift;
+    return "<sub>" . $self->content->emit . "</sub>";
+}
+
 1;
