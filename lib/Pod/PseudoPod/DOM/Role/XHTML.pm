@@ -53,7 +53,7 @@ sub emit_header
     my $self  = shift;
     my $level = 'h' . ($self->level + 1);
 
-    return "<$level>" . $self->text->emit . "</$level>\n\n";
+    return "<$level>" . $self->emit_kids . "</$level>\n\n";
 }
 
 sub emit_text
@@ -196,6 +196,12 @@ sub emit_programlisting
 {
     my $self = shift;
     return q|<div class="programlisting">| . $self->emit_kids . "</div>\n\n";
+}
+
+sub emit_sidebar
+{
+    my $self = shift;
+    return q|<div class="sidebar">\n| . $self->emit_kids . "</div>\n\n";
 }
 
 1;

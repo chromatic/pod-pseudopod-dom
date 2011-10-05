@@ -132,7 +132,6 @@ BEGIN
         my $start_meth = sub
         {
             my $self = shift;
-            $self->reset_to_document;
             $self->push_element(
                 Heading => level => $heading, type => 'header'
             );
@@ -264,6 +263,18 @@ sub end_for
 {
     my $self = shift;
     $self->reset_to_item( 'Block' );
+}
+
+sub start_sidebar
+{
+    my ($self, $flags) = @_;
+    $self->push_element( Sidebar => type => 'sidebar', title => $flags->{title} );
+}
+
+sub end_sidebar
+{
+    my $self = shift;
+    $self->reset_to_item( 'Sidebar' );
 }
 
 1;

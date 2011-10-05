@@ -82,16 +82,9 @@ use Moose;
 
     use Moose;
 
-    extends 'Pod::PseudoPod::DOM::Element';
+    extends 'Pod::PseudoPod::DOM::ParentElement';
 
     has 'level', is => 'ro', required => 1;
-    has 'text',  is => 'rw';
-
-    sub add
-    {
-        my ($self, $item) = @_;
-        $self->text( $item );
-    }
 }
 
 {
