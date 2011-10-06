@@ -72,13 +72,6 @@ sub emit_literal
     return "<pre>" . join( "\n", @grandkids ) . "</pre>\n\n";
 }
 
-sub emit_paragraph
-{
-    my $self    = shift;
-    my $content = $self->emit_kids;
-    return '' unless defined $content;
-    return "<p>" . $content . "</p>\n\n";
-}
 
 sub emit_anchor
 {
@@ -92,36 +85,12 @@ sub emit_italics
     return '<em>' . $self->content->emit . '</em>';
 }
 
-sub emit_bullet_list
-{
-    my $self = shift;
-    return "<ul>\n\n" . $self->emit_kids . "</ul>\n\n";
-}
-
-sub emit_bullet_item
-{
-    my $self = shift;
-    return "<li>" . $self->emit_kids . "</li>\n\n";
-}
-
-sub emit_number_list
-{
-    my $self = shift;
-    return "<ol>\n\n" . $self->emit_kids . "</ol>\n\n";
-}
-
 sub emit_number_item
 {
     my $self   = shift;
     my $marker = $self->marker;
     my $number = $marker ? qq| number="$marker"| : '';
     return "<li$number>" . $self->emit_kids . "</li>\n\n";
-}
-
-sub emit_text_list
-{
-    my $self = shift;
-    return "<ul>\n\n" . $self->emit_kids . "</ul>\n\n";
 }
 
 sub emit_text_item
@@ -192,16 +161,28 @@ sub emit_file
     return "<em>" . $self->content->emit . "</em>";
 }
 
-sub emit_programlisting
-{
-    my $self = shift;
-    return q|<div class="programlisting">| . $self->emit_kids . "</div>\n\n";
-}
+use constant { BEFORE => 0, AFTER => 1 };
 
-sub emit_sidebar
+my %parent_items =
+(
+    programlisting => [ qq|<div class="programlisting">\n\n|, q|</div>| ],
+    sidebar        => [ qq|<div class="sidebar">\n\n|,        q|</div>| ],
+    paragraph      => [  q|<p>|,                              q|</p>|   ],
+    text_list      => [ qq|<ul>\n\n|,                         q|</ul>|  ],
+    bullet_list    => [ qq|<ul>\n\n|,                         q|</ul>|  ],
+    bullet_item    => [ qq|<li>|,                             q|</li>|  ],
+    number_list    => [ qq|<ol>\n\n|,                         q|</ol>|  ],
+);
+
+while (my ($tag, $values) = each %parent_items)
 {
-    my $self = shift;
-    return q|<div class="sidebar">\n| . $self->emit_kids . "</div>\n\n";
+    my $sub = sub
+    {
+        my $self = shift;
+        return $values->[BEFORE] . $self->emit_kids . $values->[AFTER] . "\n\n";
+    };
+
+    do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
 }
 
 1;
