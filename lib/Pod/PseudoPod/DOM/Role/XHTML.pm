@@ -67,7 +67,7 @@ sub emit_text
     }
     else
     {
-        $content =~ s/\s*---\s*/&emdash;/g;
+        $content =~ s/\s*---\s*/&#8213;/g;
         $content =~ s/\s*--\s*/&mdash;/g;
     }
 
