@@ -177,6 +177,7 @@ my %parent_items =
     programlisting => [ qq|<div class="programlisting">\n\n|, q|</div>| ],
     sidebar        => [ qq|<div class="sidebar">\n\n|,        q|</div>| ],
     epigraph       => [ qq|<div class="epigraph">\n\n|,       q|</div>| ],
+    blockquote     => [ qq|<div class="blockquote">\n\n|,     q|</div>| ],
     paragraph      => [  q|<p>|,                              q|</p>|   ],
     text_list      => [ qq|<ul>\n\n|,                         q|</ul>|  ],
     bullet_list    => [ qq|<ul>\n\n|,                         q|</ul>|  ],

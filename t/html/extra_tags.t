@@ -34,4 +34,16 @@ END_POD
 like $result, qr!<div class="epigraph">.*A witty.*&mdash;someone.*</div>!s,
     'epigraph handled correctly';
 
+$result = parse( <<END_POD );
+=begin blockquote
+
+Sure, why not indent this a little bit?
+
+=end blockquote
+END_POD
+
+like $result, qr!<div class="blockquote">\n\n<p>Sure, why not!,
+    'blockquote handled correctly';
+
+
 done_testing;
