@@ -25,7 +25,8 @@ use File::Basename;
 
 for my $file (@ARGV) {
     my $parser = Pod::PseudoPod::DOM->new(
-        formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML'
+        formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML',
+        formatter_args => { add_body_tags => 1 },
     );
 
     # HTML output goes to the current working
