@@ -1,4 +1,4 @@
-#!/home/chromatic/.perl5/perls/perl-5.14.0/bin/perl
+#!/usr/bin/env perl
 
 eval 'exec /home/chromatic/.perl5/perls/perl-5.14.0/bin/perl  -S $0 ${1+"$@"}'
     if 0; # not running under some shell
@@ -23,7 +23,7 @@ use strict;
 use Pod::PseudoPod::DOM;
 use File::Basename;
 
-foreach my $file (@ARGV) {
+for my $file (@ARGV) {
     my $parser = Pod::PseudoPod::DOM->new(
         formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML'
     );
