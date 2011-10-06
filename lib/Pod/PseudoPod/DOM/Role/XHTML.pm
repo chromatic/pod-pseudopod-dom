@@ -61,7 +61,16 @@ sub emit_text
     my ($self, %args) = @_;
     my $content       = $self->content || '';
 
-    return encode_entities($content) if $args{encode_html};
+    if ($args{encode_html})
+    {
+        $content = encode_entities($content);
+    }
+    else
+    {
+        $content =~ s/\s*---\s*/&emdash;/g;
+        $content =~ s/\s*--\s*/&mdash;/g;
+    }
+
     return $content;
 }
 
@@ -167,6 +176,7 @@ my %parent_items =
 (
     programlisting => [ qq|<div class="programlisting">\n\n|, q|</div>| ],
     sidebar        => [ qq|<div class="sidebar">\n\n|,        q|</div>| ],
+    epigraph       => [ qq|<div class="epigraph">\n\n|,       q|</div>| ],
     paragraph      => [  q|<p>|,                              q|</p>|   ],
     text_list      => [ qq|<ul>\n\n|,                         q|</ul>|  ],
     bullet_list    => [ qq|<ul>\n\n|,                         q|</ul>|  ],
