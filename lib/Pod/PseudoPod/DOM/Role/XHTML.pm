@@ -78,7 +78,7 @@ sub emit_literal
 {
     my $self      = shift;
     my @grandkids = map { $_->emit_kids } @{ $self->children };
-    return "<pre>" . join( "\n", @grandkids ) . "</pre>\n\n";
+    return qq|<div class="literal">| . join( "\n", @grandkids ) . "</div>\n\n";
 }
 
 
