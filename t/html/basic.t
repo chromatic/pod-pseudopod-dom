@@ -2,6 +2,8 @@ use strict;
 use warnings;
 
 use Test::More;
+use lib 't/lib';
+use TestDOM 'Pod::PseudoPod::DOM::Role::XHTML';
 
 use_ok('Pod::PseudoPod::DOM') or exit;
 
@@ -9,17 +11,6 @@ my $parser = Pod::PseudoPod::DOM->new(
     formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML'
 );
 isa_ok $parser, 'Pod::PseudoPod::DOM';
-
-sub parse
-{
-    my $document = shift;
-    my $parser = Pod::PseudoPod::DOM->new(
-        formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML',
-        @_
-    );
-    $parser->parse_string_document( $document );
-    $parser->get_document->emit;
-}
 
 my $result = parse( "=head0 Narf!" );
 is $result, "<h1>Narf!</h1>\n\n", "head0 level output";
