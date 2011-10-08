@@ -8,7 +8,7 @@ use Moose::Role;
 
 requires 'type';
 has 'add_body_tags',     is => 'ro', default => 0;
-has 'emit_environments', is => 'ro', default => sub { [] };
+has 'emit_environments', is => 'ro', default => sub { {} };
 
 sub accept_targets { 'latex' }
 
@@ -232,7 +232,6 @@ my %parent_items =
 (
 
     programlisting => [ qq|<div class="programlisting">\n\n|, q|</div>| ],
-    sidebar        => [ qq|<div class="sidebar">\n\n|,        q|</div>| ],
     epigraph       => [ qq|<div class="epigraph">\n\n|,       q|</div>| ],
     blockquote     => [ qq|<div class="blockquote">\n\n|,     q|</div>| ],
     paragraph      => [  q||,                                 q||       ],
@@ -315,18 +314,68 @@ sub emit_block
     my $title  = $self->title;
     my $target = $self->target;
 
-    if (my $meth = $self->can( 'emit_' . $target))
+    if (my $environment = $self->emit_environments->{$target})
+    {
+        $target = $environment;
+    }
+    elsif (my $meth = $self->can( 'emit_' . $target))
     {
         return $self->$meth( @_ );
     }
 
-    $title = qq|{$title}| if $title;
+    return $self->make_basic_block( $self->target, $self->title, @_ );
+}
+
+sub make_basic_block
+{
+    my ($self, $target, $title, @rest) = @_;
+
+    $title = defined $title ? qq|{$title}| : '';
 
     return qq|\\begin{$target}$title\n\n|
-         . $self->emit_kids
-         . qq|\n\n\\end{$title}\n|;
+         . $self->emit_kids( @rest )
+         . qq|\n\\end{$target}\n|;
 }
 
 sub encode_E_contents {}
+
+sub emit_sidebar
+{
+    my $self  = shift;
+    my $title = $self->title;
+    my $env   = $self->emit_environments;
+
+    return $self->make_basic_block( $env->{sidebar}, $title, @_ )
+        if exists $env->{sidebar};
+
+    if ($title)
+    {
+        $title = <<END_TITLE;
+\\begin{center}
+\\large{\\bfseries{$title}}
+\\end{center}
+END_TITLE
+    }
+    else
+    {
+        $title = '';
+    }
+
+    return <<END_HEADER . $self->emit_kids( @_ ) . <<END_FOOTER;
+\\begin{figure}[!h]
+\\begin{center}
+\\framebox{
+\\begin{minipage}{3.5in}
+\\vspace{3pt}
+$title
+END_HEADER
+\\vspace{3pt}
+\\end{minipage}
+}
+\\end{center}
+\\end{figure}
+END_FOOTER
+
+}
 
 1;

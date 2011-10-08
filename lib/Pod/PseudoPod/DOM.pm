@@ -38,7 +38,8 @@ sub parse_string_document
 
     if (my $environments = delete $args{emit_environments})
     {
-        $self->accept_targets( @{ $environments } );
+        $self->accept_targets( keys %{ $environments } );
+        $self->{formatter_args}{emit_environments} = $environments;
     }
 
     return $self->SUPER::parse_string_document( $document );
@@ -296,13 +297,13 @@ sub end_for
 sub start_sidebar
 {
     my ($self, $flags) = @_;
-    $self->push_element( Sidebar => type => 'sidebar', title => $flags->{title} );
+    $self->push_element( Block => type => 'sidebar', title => $flags->{title} );
 }
 
 sub end_sidebar
 {
     my $self = shift;
-    $self->reset_to_item( 'Sidebar' );
+    $self->reset_to_item( 'Block' );
 }
 
 1;
