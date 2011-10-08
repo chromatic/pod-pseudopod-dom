@@ -56,7 +56,7 @@ sub emit_header
     return "<$level>" . $self->emit_kids . "</$level>\n\n";
 }
 
-sub emit_text
+sub emit_plaintext
 {
     my ($self, %args) = @_;
     my $content       = $self->content || '';
@@ -85,13 +85,13 @@ sub emit_literal
 sub emit_anchor
 {
     my $self = shift;
-    return qq|<a name="| . $self->content->emit . qq|"></a>|;
+    return qq|<a name="| . $self->emit_kids . qq|"></a>|;
 }
 
 sub emit_italics
 {
     my $self = shift;
-    return '<em>' . $self->content->emit . '</em>';
+    return '<em>' . $self->emit_kids . '</em>';
 }
 
 sub emit_number_item
@@ -124,50 +124,50 @@ sub emit_verbatim
 sub emit_code
 {
     my $self = shift;
-    return "<code>" . $self->content->emit( encode_html => 1 ) . "</code>";
+    return "<code>" . $self->emit_kids( encode_html => 1 ) . "</code>";
 }
 
 sub emit_footnote
 {
     my $self = shift;
-    return ' <span class="footnote">' . $self->content->emit . '</span>';
+    return ' <span class="footnote">' . $self->emit_kids . '</span>';
 }
 
 sub emit_url
 {
     my $self = shift;
-    my $url  = $self->content->emit;
+    my $url  = $self->emit_kids;
     return qq|<a class="url" href="$url">$url</a>|;
 }
 
 sub emit_link
 {
     my $self = shift;
-    return qq|<a href="#| . $self->content->emit . q|">link</a>|;
+    return qq|<a href="#| . $self->emit_kids . q|">link</a>|;
 }
 
 sub emit_superscript
 {
     my $self = shift;
-    return "<sup>" . $self->content->emit . "</sup>";
+    return "<sup>" . $self->emit_kids . "</sup>";
 }
 
 sub emit_subscript
 {
     my $self = shift;
-    return "<sub>" . $self->content->emit . "</sub>";
+    return "<sub>" . $self->emit_kids . "</sub>";
 }
 
 sub emit_bold
 {
     my $self = shift;
-    return "<strong>" . $self->content->emit . "</strong>";
+    return "<strong>" . $self->emit_kids . "</strong>";
 }
 
 sub emit_file
 {
     my $self = shift;
-    return "<em>" . $self->content->emit . "</em>";
+    return "<em>" . $self->emit_kids . "</em>";
 }
 
 use constant { BEFORE => 0, AFTER => 1 };

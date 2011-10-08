@@ -58,7 +58,7 @@ sub emit_header
     return qq|\\${subs}section*{| . $self->emit_kids . qq|}\n\n|;
 }
 
-sub emit_text
+sub emit_plaintext
 {
     my ($self, %args) = @_;
     my $content       = $self->content || '';
@@ -86,11 +86,35 @@ sub encode_text
 {
     my ($self, $text) = @_;
 
+    # Escape LaTeX-specific characters
+    $text =~ s/\\/\\backslash/g;          # backslashes are special
+    $text =~ s/([#\$&%_{}])/\\$1/g;
+    $text =~ s/(\^)/\\char94{}/g;         # carets are special
+    $text =~ s/</\\textless{}/g;
+    $text =~ s/>/\\textgreater{}/g;
+
+    $text =~ s/(\\backslash)/\$$1\$/g;    # add unescaped dollars
+
     # use the right beginning quotes
     $text =~ s/(^|\s)"/$1``/g;
 
     # and the right ending quotes
     $text =~ s/"(\W|$)/''$1/g;
+
+    # fix the ellipses
+    $text =~ s/\.{3}\s*/\\ldots /g;
+
+    # fix the ligatures
+    $text =~ s/f([fil])/f\\mbox{}$1/g unless $self->{keep_ligatures};
+
+    # fix emdashes
+    $text =~ s/\s--\s/---/g;
+
+    # fix tildes
+    $text =~ s/~/\$\\sim\$/g;
+
+    # suggest hyphenation points for module names
+    $text =~ s/::/::\\-/g;
 
     return $text;
 }
@@ -102,7 +126,6 @@ sub emit_literal
     return qq|<div class="literal">| . join( "\n", @grandkids ) . "</div>\n\n";
 }
 
-
 sub emit_anchor
 {
     my $self = shift;
@@ -112,7 +135,7 @@ sub emit_anchor
 sub emit_italics
 {
     my $self = shift;
-    return '<em>' . $self->content->emit . '</em>';
+    return '\\emph{' . $self->emit_kids . '}';
 }
 
 sub emit_number_item
@@ -152,50 +175,49 @@ sub emit_bullet_item
 sub emit_code
 {
     my $self = shift;
-    return "<code>" . $self->content->emit . "</code>";
+    return '\\texttt{' . $self->emit_kids . '}';
 }
 
 sub emit_footnote
 {
     my $self = shift;
-    return ' <span class="footnote">' . $self->content->emit . '</span>';
+    return '\\footnote{' . $self->emit_kids . '}';
 }
 
 sub emit_url
 {
     my $self = shift;
-    my $url  = $self->content->emit;
-    return qq|<a class="url" href="$url">$url</a>|;
+    return q|\\url{| . $self->emit_kids . '}';
 }
 
 sub emit_link
 {
     my $self = shift;
-    return qq|<a href="#| . $self->content->emit . q|">link</a>|;
+    return qq|<a href="#| . $self->emit_kids . q|">link</a>|;
 }
 
 sub emit_superscript
 {
     my $self = shift;
-    return "<sup>" . $self->content->emit . "</sup>";
+    return '$^{' . $self->emit_kids . '}$';
 }
 
 sub emit_subscript
 {
     my $self = shift;
-    return "<sub>" . $self->content->emit . "</sub>";
+    return '$_{' . $self->emit_kids . '}$';
 }
 
 sub emit_bold
 {
     my $self = shift;
-    return "<strong>" . $self->content->emit . "</strong>";
+    return '\\textbf{' . $self->emit_kids . '}';
 }
 
 sub emit_file
 {
     my $self = shift;
-    return "<em>" . $self->content->emit . "</em>";
+    return '\\emph{' . $self->emit_kids . '}';
 }
 
 use constant { BEFORE => 0, AFTER => 1 };
@@ -243,5 +265,39 @@ sub emit_screen
          . $self->emit_kids( encode => 'verbatim_text' )
          . qq|\n\\end{Verbatim}|;
 }
+
+my %characters = (
+    acute   => sub { qq|\\'| . shift },
+    grave   => sub { qq|\\`| . shift },
+    uml     => sub { qq|\\"| . shift },
+    cedilla => sub { '\c' },              # ccedilla
+    opy     => sub { '\copyright' },      # copy
+    dash    => sub { '---' },             # mdash
+    lusmn   => sub { '\pm' },             # plusmn
+    mp      => sub { '\&' },              # amp
+);
+
+sub emit_character
+{
+    my $self    = shift;
+
+    my $content = eval { $self->emit_kids };
+    return unless defined $content;
+
+    if (my ($char, $class) = $content =~ /(\w)(\w+)/)
+    {
+        return $characters{$class}->($char) if exists $characters{$class};
+    }
+
+    return Pod::Escapes::e2char( $content );
+}
+
+sub emit_index
+{
+    my $self = shift;
+    return '\\index{' . $self->emit_kids . '|textit}>';
+}
+
+sub encode_E_contents {}
 
 1;

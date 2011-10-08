@@ -23,11 +23,18 @@ sub new
             production programlisting screen sidebar table tip warning )
     );
 
-    $self->nix_X_codes(1);
     $self->nbsp_for_S(1);
     $self->codes_in_verbatim(1);
 
     return $self;
+}
+
+sub _treat_Es
+{
+    my $self      = shift;
+    my $formatter = $self->{formatter_role};
+    return if $formatter->can( 'encode_E_contents' );
+    return $self->SUPER::_treat_Es( @_ );
 }
 
 sub get_document
@@ -164,6 +171,8 @@ BEGIN
         B => 'Bold',
         R => 'Italics',
         F => 'File',
+        E => 'Character',
+        X => 'Index',
     );
 
     while (my ($tag, $type) = each %text_types)
@@ -232,13 +241,12 @@ BEGIN
             *{ 'end_item_'   . $list_type } = $end_item_meth;
         };
     }
-
 }
 
 sub handle_text
 {
     my $self = shift;
-    $self->add_element( 'Text::Plain' => type => 'text', content => shift );
+    $self->add_element( 'Text::Plain' => type => 'plaintext', content => $_[0]);
 }
 
 sub start_Para

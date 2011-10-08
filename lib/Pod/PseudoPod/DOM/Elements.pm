@@ -48,11 +48,11 @@ use Moose;
 }
 
 {
-    package Pod::PseudoPod::DOM::Element::Text;
+    package Pod::PseudoPod::DOM::Element::Text::Plain;
 
     use Moose;
 
-    extends 'Pod::PseudoPod::DOM::Element';
+    extends 'Pod::PseudoPod::DOM::ParentElement';
     has 'content', is => 'rw';
 
     sub add
@@ -68,11 +68,12 @@ use Moose;
     my $parent = 'Pod::PseudoPod::DOM::Element::Text';
 
     for my $text_item (qw(
-        Anchor Bold Code Entity File Footnote Italics Index Link Plain
+        Anchor Bold Character Code Entity File Footnote Italics Index Link
         Subscript Superscript URL ))
     {
         Class::MOP::Class->create(
-            $parent . '::' . $text_item => superclasses => [ $parent ]
+            $parent . '::' . $text_item =>
+            superclasses                => [ 'Pod::PseudoPod::DOM::ParentElement' ]
         );
     }
 }
