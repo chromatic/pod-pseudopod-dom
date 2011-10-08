@@ -77,6 +77,23 @@ sub emit_plaintext
 
 sub encode_none { return $_[1] }
 
+sub encode_index_text
+{
+    my ($self, $text) = @_;
+
+    my @terms;
+
+    for my $term (split /,/, $text)
+    {
+        $term =~ s/^\s+|\s+$//g;
+        $term =~ s/"/""/g;
+        $term =~ s/([!|@])/"$1/g;
+        push @terms, $term;
+    }
+
+    return join '!', @terms;
+}
+
 sub encode_verbatim_text
 {
     my ($self, $text) = @_;
@@ -299,7 +316,9 @@ sub emit_character
 sub emit_index
 {
     my $self = shift;
-    return '\\index{' . $self->emit_kids . '|textit}>';
+    return '\\index{'
+         . $self->emit_kids( encode => 'index_text' )
+         . '}';
 }
 
 sub emit_latex

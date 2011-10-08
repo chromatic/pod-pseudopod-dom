@@ -52,7 +52,7 @@ like_string $result, qr/\\emph{semantic-only emphasis}/,
 like_string $result, qr/\\footnote{but beware of footnotes!}/,
     'footnotes need special escaping too';
 
-like_string $result, qr/\\index{Special formatting|textit}/,
+like_string $result, qr/\\index{Special formatting}/,
     'indexed items need even more special escaping';
 
 like_string $result, qr/mc\$\^\{2\}\$/, 'superscript works';

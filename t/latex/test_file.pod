@@ -73,7 +73,7 @@ subscripts, like I<HH<2>O>.
 =end
 
 Hierarchical terms are also possible, separating single terms with a comma.
-Spaces around comma (e.g. in X< hierarchical terms , omiting trailing spaces>)
+Spaces around comma (e.g. in X< hierarchical terms , omitting trailing spaces>)
 should be ignored, as they influence sorting order.
  
 
