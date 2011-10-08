@@ -10,11 +10,11 @@ sub import
     my $sub    = sub
     {
         my $document = shift;
-        my $parser = Pod::PseudoPod::DOM->new(
+        my $parser   = Pod::PseudoPod::DOM->new(
             formatter_role => $formatter,
             @_
         );
-        $parser->parse_string_document( $document );
+        $parser->parse_string_document( $document, @_ );
         $parser->get_document->emit;
     };
 

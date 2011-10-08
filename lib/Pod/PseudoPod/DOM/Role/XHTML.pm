@@ -10,6 +10,8 @@ use HTML::Entities;
 requires 'type';
 has 'add_body_tags', is => 'ro', default => 0;
 
+sub accept_targets { qw( html HTML xhtml XHTML ) }
+
 sub emit
 {
     my $self = shift;
@@ -194,6 +196,17 @@ while (my ($tag, $values) = each %parent_items)
     };
 
     do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
+}
+
+sub emit_block
+{
+    my $self   = shift;
+    my $target = $self->target;
+
+    if (my $meth = $self->can( 'emit_' . $target ))
+    {
+        return $self->$meth( @_ );
+    }
 }
 
 1;

@@ -7,7 +7,10 @@ use warnings;
 use Moose::Role;
 
 requires 'type';
-has 'add_body_tags', is => 'ro', default => 0;
+has 'add_body_tags',     is => 'ro', default => 0;
+has 'emit_environments', is => 'ro', default => sub { [] };
+
+sub accept_targets { 'latex' }
 
 sub emit
 {
@@ -71,6 +74,8 @@ sub emit_plaintext
 
     return $self->encode_text( $content );
 }
+
+sub encode_none { return $_[1] }
 
 sub encode_verbatim_text
 {
@@ -296,6 +301,30 @@ sub emit_index
 {
     my $self = shift;
     return '\\index{' . $self->emit_kids . '|textit}>';
+}
+
+sub emit_latex
+{
+    my $self = shift;
+    return $self->emit_kids( encode => 'none' ) . "\n";
+}
+
+sub emit_block
+{
+    my $self   = shift;
+    my $title  = $self->title;
+    my $target = $self->target;
+
+    if (my $meth = $self->can( 'emit_' . $target))
+    {
+        return $self->$meth( @_ );
+    }
+
+    $title = qq|{$title}| if $title;
+
+    return qq|\\begin{$target}$title\n\n|
+         . $self->emit_kids
+         . qq|\n\n\\end{$title}\n|;
 }
 
 sub encode_E_contents {}

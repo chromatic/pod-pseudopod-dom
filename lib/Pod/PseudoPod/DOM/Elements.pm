@@ -157,6 +157,9 @@ use Moose;
 
     use Moose;
 
+    has 'title',  is => 'ro', default => '';
+    has 'target', is => 'ro', default => '';
+
     extends 'Pod::PseudoPod::DOM::ParentElement';
 }
 

@@ -5,6 +5,8 @@ use strict;
 use warnings;
 
 use parent 'Pod::PseudoPod';
+
+use Class::Load;
 use Pod::PseudoPod::DOM::Elements;
 
 sub new
@@ -16,7 +18,8 @@ sub new
     $self->{formatter_role} = $role;
     $self->{formatter_args} = $args{formatter_args} || {};
 
-    $self->accept_targets( 'html', 'HTML' );
+    Class::Load::load_class( $role );
+    $self->accept_targets( $role->accept_targets );
     $self->accept_targets_as_text(
         qw( author blockquote comment caution
             editor epigraph example figure important listing literal note
@@ -27,6 +30,18 @@ sub new
     $self->codes_in_verbatim(1);
 
     return $self;
+}
+
+sub parse_string_document
+{
+    my ($self, $document, %args) = @_;
+
+    if (my $environments = delete $args{emit_environments})
+    {
+        $self->accept_targets( @{ $environments } );
+    }
+
+    return $self->SUPER::parse_string_document( $document );
 }
 
 sub _treat_Es
@@ -264,7 +279,12 @@ sub end_Para
 sub start_for
 {
     my ($self, $flags) = @_;
-    $self->push_element( Block => type => $flags->{target} || 'unknown_block' );
+    do { $flags->{$_} = '' unless defined $flags->{$_} } for qw( title target );
+
+    $self->push_element( Block  =>
+                         type   => 'block',
+                         title  => $flags->{title},
+                         target => $flags->{target} );
 }
 
 sub end_for
