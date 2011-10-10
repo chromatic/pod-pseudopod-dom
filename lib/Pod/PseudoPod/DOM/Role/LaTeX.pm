@@ -237,17 +237,16 @@ my $escapes = "commandchars=\\\\\\{\\}";
 
 my %parent_items =
 (
-
-    programlisting => [ qq|<div class="programlisting">\n\n|, q|</div>| ],
-    epigraph       => [ qq|<div class="epigraph">\n\n|,       q|</div>| ],
-    blockquote     => [ qq|<div class="blockquote">\n\n|,     q|</div>| ],
     paragraph      => [  q||,                                 q||       ],
+    blockquote     => [ qq|<div class="blockquote">\n\n|,     q|</div>| ],
     text_list      => [ qq|\\begin{description}\n\n|,
                         qq|\\end{description}|                          ],
     bullet_list    => [ qq|\\begin{itemize}\n\n|,
                         qq|\\end{itemize}|                              ],
     number_list    => [ qq|\\begin{enumerate}\n\n|,
                         qq|\\end{enumerate}|                            ],
+     map { $_ => [ qq|\\begin{$_}\n|, qq|\\end{$_}\n\n| ] }
+         qw( programlisting epigraph blockquote )
 );
 
 while (my ($tag, $values) = each %parent_items)

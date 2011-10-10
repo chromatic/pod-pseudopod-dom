@@ -19,4 +19,10 @@ like_string $result, qr/\\LaTeX/,
     '\LaTeX in a =for latex section remains intact';
 
 like_string $result, qr/\\begin{foo}{Title}/, 'title passed is available';
+
+like_string $result, qr/\\begin{programlisting}/,
+    '=begin programlisting should use programlisting environment';
+
+like_string $result, qr/\\end{programlisting}/, '... with end tag';
+
 done_testing;
