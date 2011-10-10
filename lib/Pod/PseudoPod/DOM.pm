@@ -189,6 +189,7 @@ BEGIN
         F => 'File',
         E => 'Character',
         X => 'Index',
+        L => 'Link',
     );
 
     while (my ($tag, $type) = each %text_types)
