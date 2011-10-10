@@ -155,7 +155,7 @@ sub emit_number_item
     my $self   = shift;
     my $marker = $self->marker;
     my $number = $marker ? qq| number="$marker"| : '';
-    return "<li$number>" . $self->emit_kids . "</li>\n\n";
+    return "\\item " . $self->emit_kids . "\n\n";
 }
 
 sub emit_text_item
@@ -246,8 +246,8 @@ my %parent_items =
                         qq|\\end{description}|                          ],
     bullet_list    => [ qq|\\begin{itemize}\n\n|,
                         qq|\\end{itemize}|                              ],
-    number_list    => [ qq|\\begin{itemize}\n\n|,
-                        qq|\\end{itemize}|                              ],
+    number_list    => [ qq|\\begin{enumerate}\n\n|,
+                        qq|\\end{enumerate}|                            ],
 );
 
 while (my ($tag, $values) = each %parent_items)

@@ -81,7 +81,7 @@ subscripts, like I<HH<2>O>.
 Hierarchical terms are also possible, separating single terms with a comma.
 Spaces around comma (e.g. in X< hierarchical terms , omitting trailing spaces>)
 should be ignored, as they influence sorting order.
- 
+
 
 Lists are fun:
 
@@ -145,10 +145,26 @@ Fooled you!
 
 =back
 
+And of course, normal numbered lists:
+
+=over 4
+
+=item 1
+
+Something.
+
+=item 2
+
+Or.
+
+=item 3
+
+Other.
+
+=back
+
 =begin foo Title
 
 Something
 
 =end foo
-
-
