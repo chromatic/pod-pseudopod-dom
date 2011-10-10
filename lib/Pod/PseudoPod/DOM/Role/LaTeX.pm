@@ -126,9 +126,8 @@ sub encode_text
 
 sub emit_literal
 {
-    my $self      = shift;
-    my @grandkids = map { $_->emit_kids } @{ $self->children };
-    return qq|<div class="literal">| . join( "\n", @grandkids ) . "</div>\n\n";
+    my $self = shift;
+    return join "\n", map { $_->emit_kids } @{ $self->children };
 }
 
 sub emit_anchor
