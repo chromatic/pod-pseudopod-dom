@@ -8,6 +8,8 @@ Here is some ignorable text.
 
 Z<next_heading>
 
+This is part of some document (L<startofdocument>; A<startofdocument>).
+
 =begin programlisting
 
   "This text should not be escaped -- it is normal $text."
@@ -41,6 +43,9 @@ lots of other escapable characters, including $ & % and _.  The curly braces,
 into double single quotes going in the correct direction."
 
 The caret ^ is interesting too.
+
+(A<slightly complex?heading> links to this section! L<next_heading> links to
+the previous.)
 
 =head3 c heading
 

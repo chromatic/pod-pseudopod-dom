@@ -22,4 +22,19 @@ like_string $result, qr!\\label{next_heading}!, '... without normal escaping';
 like_string $result, qr!\\label{slightly-complex-heading}!,
     '... and escaping non-alphanumerics';
 
+like_string $result, qr!\\url{http://www.google.com/}!,
+    'U<> tag should become urls';
+
+like_string $result, qr!\\ppodxref{startofdocument}!,
+    'L<> tag should become cross references';
+
+like_string $result, qr!; \\ppodxref{startofdocument}!,
+    'A<> tag should become cross references';
+
+like_string $result, qr!\\ppodxref{slightly-complex-heading}!,
+    '... with appropriate quoting';
+
+like_string $result, qr!\\ppodxref{next_heading}!,
+    '... and non-quoting when appropriate';
+
 done_testing;

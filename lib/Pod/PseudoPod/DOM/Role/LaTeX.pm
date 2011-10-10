@@ -205,7 +205,7 @@ sub emit_url
 sub emit_link
 {
     my $self = shift;
-    return qq|<a href="#| . $self->emit_kids . q|">link</a>|;
+    return qq|\\ppodxref{| . $self->emit_kids( encode => 'label_text' ). q|}|;
 }
 
 sub emit_superscript
