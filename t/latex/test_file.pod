@@ -1,8 +1,12 @@
 =head0 Some Document
 
+Z<startofdocument>
+
 Here is some ignorable text.
 
 =head1 A Heading
+
+Z<next_heading>
 
 =begin programlisting
 
@@ -26,6 +30,8 @@ Blockquoted text may or may not need "escaped".  I haven't decided.
 =end blockquote
 
 =head2 B heading
+
+Z<slightly complex?heading>
 
 Encode the noble octothorpe, #, and the slash used for escaping: \.  There are
 lots of other escapable characters, including $ & % and _.  The curly braces,

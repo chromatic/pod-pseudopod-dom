@@ -77,6 +77,14 @@ sub encode_index_text
     return join '!', @terms;
 }
 
+sub encode_label_text
+{
+    my ($self, $text) = @_;
+    $text =~ s/[^\w:]/-/g;
+
+    return $text;
+}
+
 sub encode_verbatim_text
 {
     my ($self, $text) = @_;
@@ -133,7 +141,7 @@ sub emit_literal
 sub emit_anchor
 {
     my $self = shift;
-    return qq|<a name="| . $self->content->emit . qq|"></a>|;
+    return '\\label{' . $self->emit_kids( encode => 'label_text' ) . qq|}\n\n|;
 }
 
 sub emit_italics
