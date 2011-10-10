@@ -24,24 +24,7 @@ sub emit
 sub emit_document
 {
     my $self = shift;
-    return $self->emit_body if $self->add_body_tags;
     return $self->emit_kids;
-}
-
-sub emit_body
-{
-    my $self = shift;
-    return <<END_HTML_HEAD . $self->emit_kids . <<END_HTML;
-<html>
-<head>
-<link rel="stylesheet" href="style.css" type="text/css" />
-</head>
-<body>
-
-END_HTML_HEAD
-</body>
-</html>
-END_HTML
 }
 
 sub emit_kids
