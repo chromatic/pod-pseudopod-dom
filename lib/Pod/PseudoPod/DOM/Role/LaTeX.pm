@@ -238,7 +238,6 @@ my $escapes = "commandchars=\\\\\\{\\}";
 my %parent_items =
 (
     paragraph      => [  q||,                                 q||       ],
-    blockquote     => [ qq|<div class="blockquote">\n\n|,     q|</div>| ],
     text_list      => [ qq|\\begin{description}\n\n|,
                         qq|\\end{description}|                          ],
     bullet_list    => [ qq|\\begin{itemize}\n\n|,
