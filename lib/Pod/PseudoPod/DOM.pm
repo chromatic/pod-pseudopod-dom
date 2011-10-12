@@ -17,6 +17,7 @@ sub new
     $self->{class_registry} = {};
     $self->{formatter_role} = $role;
     $self->{formatter_args} = $args{formatter_args} || {};
+    $self->{filename}       = $args{filename};
 
     Class::Load::load_class( $role );
     $self->accept_targets( $role->accept_targets );
@@ -81,7 +82,8 @@ sub start_Document
 
     $self->{active_elements} =
     [
-        $self->{Document} = $self->make( Document => type => 'document' )
+        $self->{Document} = $self->make( Document => type => 'document',
+                                         filename => $self->{filename} )
     ];
 }
 

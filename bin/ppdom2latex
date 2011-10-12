@@ -21,15 +21,16 @@ use File::Basename;
 
 for my $file (@ARGV)
 {
-    my $parser = Pod::PseudoPod::DOM->new(
-        formatter_role => 'Pod::PseudoPod::DOM::Role::LaTeX',
-    );
-
     # LaTeX output goes to the current working
     # directory not the source directory.
     my $outfile = fileparse( $file, qr{\..*} ) . '.tex';
 
-    open my $fh, '>', $outfile or die "Can't write to $outfile: $!";
+    my $parser  = Pod::PseudoPod::DOM->new(
+        formatter_role => 'Pod::PseudoPod::DOM::Role::LaTeX',
+        filename       => $outfile,
+    );
+
+    my $fh = open_fh( $outfile );
     $parser->output_fh($fh);
 
     $parser->no_errata_section(1); # don't put errors in doc output
@@ -39,6 +40,13 @@ for my $file (@ARGV)
     $parser->parse_file($file);
     my $doc = $parser->get_document;
     print {$fh} $doc->emit;
+}
+
+sub open_fh
+{
+    my $file = shift;
+    open my $fh, '>', $file;
+    return $fh;
 }
 
 exit;

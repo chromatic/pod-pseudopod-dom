@@ -6,19 +6,21 @@ sub import
 {
     my ($self, $formatter, @args) = @_;
 
-    my $caller = caller;
-    my $sub    = sub
+    my @caller   = caller;
+    my $filename = $caller[1] . '.tex';
+    my $sub      = sub
     {
         my $document = shift;
         my $parser   = Pod::PseudoPod::DOM->new(
             formatter_role => $formatter,
+            filename       => $filename,
             @_
         );
         $parser->parse_string_document( $document, @_ );
         $parser->get_document->emit;
     };
 
-    do { no strict 'refs'; *{ $caller . '::' . 'parse' } = $sub };
+    do { no strict 'refs'; *{ $caller[0] . '::' . 'parse' } = $sub };
 }
 
 1;

@@ -7,8 +7,8 @@ use warnings;
 use Moose::Role;
 
 requires 'type';
-has 'add_body_tags',     is => 'ro', default => 0;
 has 'emit_environments', is => 'ro', default => sub { {} };
+has 'filename',          is => 'ro', default => '';
 
 sub accept_targets { 'latex' }
 
