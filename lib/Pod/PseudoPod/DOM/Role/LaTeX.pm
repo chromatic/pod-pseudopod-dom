@@ -71,6 +71,7 @@ sub encode_index_text
         $term =~ s/^\s+|\s+$//g;
         $term =~ s/"/""/g;
         $term =~ s/([!|@])/"$1/g;
+        $term =~ s/([#\$&%_{}])/\\$1/g;
         push @terms, $term;
     }
 
