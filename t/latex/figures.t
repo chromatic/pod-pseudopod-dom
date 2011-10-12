@@ -16,7 +16,7 @@ my ( $doc, $result) = parse( $file );
 
 like_string $result, qr/\\begin{figure}\[!h\]\n\\centering/,
     'figure should start a figure environment';
-like_string $result, qr!\\includegraphics\[\\textwidth\]{some/path!,
+like_string $result, qr!\\includegraphics\[width=\\linewidth\]{some/path!,
     '... with path to graphics file';
 like_string $result, qr!{some/path/to/image_file.png}!,
     '... without quoting image file paths';

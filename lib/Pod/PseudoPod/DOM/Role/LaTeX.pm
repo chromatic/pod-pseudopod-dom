@@ -459,7 +459,7 @@ sub emit_figure
     return <<END_FIGURE;
 \\begin{figure}[!h]
 \\centering
-\\includegraphics[\\textwidth]{$file}
+\\includegraphics[width=\\linewidth]{$file}
 $caption$anchor\\end{figure}
 END_FIGURE
 }
