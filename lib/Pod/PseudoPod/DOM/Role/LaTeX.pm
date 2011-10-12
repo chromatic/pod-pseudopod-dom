@@ -452,9 +452,7 @@ sub emit_figure
                 : '';
 
     my $anchor  = $self->anchor;
-    $anchor     = defined $anchor
-                ? '\\label{' . $anchor->emit  . "}\n"
-                : '';
+    $anchor     = defined $anchor ? $anchor->emit : '';
 
     my $file    = $self->file->emit_kids( encode => 'none' );
 

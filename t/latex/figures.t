@@ -22,7 +22,7 @@ like_string $result, qr!{some/path/to/image_file.png}!,
     '... without quoting image file paths';
 like_string $result, qr!\\caption{A Figure with Caption}!,
     '... and caption';
-like_string $result, qr!\\label{figure_link}!,
+like_string $result, qr!\n\\label{figure_link}\n!,
     '... and label';
 like_string $result, qr!\\end{figure}!,
     '... and ending figure environment';
