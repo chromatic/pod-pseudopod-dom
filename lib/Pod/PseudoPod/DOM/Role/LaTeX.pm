@@ -244,7 +244,7 @@ sub emit_bold
 sub emit_file
 {
     my $self = shift;
-    return '\\emph{' . $self->emit_kids . '}';
+    return '\\emph{' . $self->emit_kids( @_ ) . '}';
 }
 
 use constant { BEFORE => 0, AFTER => 1 };
@@ -453,10 +453,10 @@ sub emit_figure
 
     my $anchor  = $self->anchor;
     $anchor     = defined $anchor
-                ? '\\label{' . $anchor->emit . "}\n"
+                ? '\\label{' . $anchor->emit  . "}\n"
                 : '';
 
-    my $file    = $self->file->emit_kids;
+    my $file    = $self->file->emit_kids( encode => 'none' );
 
     return <<END_FIGURE;
 \\begin{figure}[!h]

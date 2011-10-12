@@ -18,6 +18,8 @@ like_string $result, qr/\\begin{figure}\[!h\]\n\\centering/,
     'figure should start a figure environment';
 like_string $result, qr!\\includegraphics\[\\textwidth\]{some/path!,
     '... with path to graphics file';
+like_string $result, qr!{some/path/to/image_file.png}!,
+    '... without quoting image file paths';
 like_string $result, qr!\\caption{A Figure with Caption}!,
     '... and caption';
 like_string $result, qr!\\label{figure_link}!,
