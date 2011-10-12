@@ -40,6 +40,12 @@ for my $file (@ARGV)
     $parser->parse_file($file);
     my $doc = $parser->get_document;
     print {$fh} $doc->emit;
+
+    while (my ($name, $contents) = each %{ $doc->tables })
+    {
+        my $fh = open_fh( $name );
+        print {$fh} $contents;
+    }
 }
 
 sub open_fh

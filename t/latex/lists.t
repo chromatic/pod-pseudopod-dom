@@ -21,4 +21,8 @@ like_string $result,
     qr!\\item Something\.\n\n\\item Or\.\n\n\\item Other\.\n\n\\end{enumerate}!,
     '... and should use bare \\item';
 
+like_string $result,
+    qr!Basic bulleted list:\s+\\begin{itemize}\s+\\item First item!,
+    'Basic bulleted lists should be itemized';
+
 done_testing;

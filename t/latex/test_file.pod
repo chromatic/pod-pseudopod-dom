@@ -173,3 +173,51 @@ Other.
 Something
 
 =end foo
+
+Now here is a table.
+
+=begin table A Table of Fun Things
+
+=headrow
+
+=cell I<Left Column>
+
+=cell I<Right Column>
+
+=bodyrows
+
+=row
+
+=cell Left Cell One
+
+=cell
+
+=over 4
+
+=item * First item in right column
+
+=item * Second item in right column
+
+=item * Third item in right column
+
+=back
+
+=row
+
+=cell Left Cell Two
+
+=cell Right Cell Two
+
+=end table
+
+Basic bulleted list:
+
+=over 4
+
+=item * First item
+
+=item * Second item
+
+=item * Third item
+
+=back

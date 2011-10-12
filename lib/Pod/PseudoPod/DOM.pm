@@ -309,4 +309,52 @@ sub end_sidebar
     $self->reset_to_item( 'Block' );
 }
 
+sub start_table
+{
+    my ($self, $flags) = @_;
+    $self->push_element( Table => 'type' => 'table', title => $flags->{title} );
+}
+
+sub end_table
+{
+    my $self  = shift;
+    $self->reset_to_item( 'Table' )->fixup;
+}
+
+sub start_headrow
+{
+    my $self = shift;
+    $self->push_element( TableRow => 'type' => 'headrow' );
+}
+
+sub end_headrow
+{
+    my $self = shift;
+    $self->reset_to_item( 'TableRow' );
+}
+
+sub start_row
+{
+    my $self = shift;
+    $self->push_element( TableRow => 'type' => 'row' );
+}
+
+sub end_row
+{
+    my $self = shift;
+    $self->reset_to_item( 'TableRow' );
+}
+
+sub start_cell
+{
+    my $self = shift;
+    $self->push_element( TableCell => 'type' => 'cell' );
+}
+
+sub end_cell
+{
+    my $self = shift;
+    $self->reset_to_item( 'TableCell' );
+}
+
 1;

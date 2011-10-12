@@ -17,7 +17,9 @@ sub import
             @_
         );
         $parser->parse_string_document( $document, @_ );
-        $parser->get_document->emit;
+        my $doc  = $parser->get_document;
+        my $text = $doc->emit;
+        return wantarray ? ($doc, $text) : $text;
     };
 
     do { no strict 'refs'; *{ $caller[0] . '::' . 'parse' } = $sub };

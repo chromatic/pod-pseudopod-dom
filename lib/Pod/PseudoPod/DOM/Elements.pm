@@ -31,7 +31,7 @@ use Moose;
     sub add
     {
         my $self = shift;
-        push @{ $self->children }, @_;
+        push @{ $self->children }, grep { defined } @_;
     }
 
     sub add_children { push @{ shift->children }, @_ }
@@ -167,8 +167,42 @@ use Moose;
     package Pod::PseudoPod::DOM::Element::Table;
 
     use Moose;
+    use List::Util 'first';
+
+    has 'title', is => 'ro', default => '';
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
+
+    # make sure all kids are rows
+    sub fixup
+    {
+        my $self     = shift;
+        my $children = $self->children;
+        my $kidclass = 'Pod::PseudoPod::DOM::Element::TableRow';
+        my $prev     = first { $_->isa( $kidclass ) } @$children;
+
+        for my $kid (@$children)
+        {
+            if ($kid->isa( $kidclass ))
+            {
+                $prev = $kid;
+            }
+            else
+            {
+                $prev->add( $kid );
+            }
+        }
+
+        @$children = grep { $_->isa( $kidclass ) } @$children;
+
+        $_->fixup for @$children;
+    }
+
+    sub num_cols
+    {
+        my $self    = shift;
+        return $self->headrow->num_cells;
+    }
 
     sub headrow
     {
@@ -193,10 +227,37 @@ use Moose;
     package Pod::PseudoPod::DOM::Element::TableRow;
 
     use Moose;
+    use List::Util 'first';
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
 
-    sub cells { shift->children }
+    # if adding non-cell to row, add to previous cell
+
+    sub cells     { shift->children }
+    sub num_cells { 0 + @{ shift->children } }
+
+    # make sure all kids are cells
+    sub fixup
+    {
+        my $self     = shift;
+        my $children = $self->children;
+        my $kidclass = 'Pod::PseudoPod::DOM::Element::TableCell';
+        my $prev     = first { $_->isa( $kidclass ) } @$children;
+
+        for my $kid (@$children)
+        {
+            if ($kid->isa( $kidclass ))
+            {
+                $prev = $kid;
+            }
+            else
+            {
+                $prev->add( $kid );
+            }
+        }
+
+        @$children = grep { $_->isa( $kidclass ) } @$children;
+    }
 }
 
 {
@@ -211,6 +272,8 @@ use Moose;
     package Pod::PseudoPod::DOM::Element::Document;
 
     use Moose;
+
+    has 'externals', is => 'ro', default => sub { {} };
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
 }

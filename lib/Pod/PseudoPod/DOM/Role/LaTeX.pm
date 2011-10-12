@@ -7,10 +7,24 @@ use warnings;
 use Moose::Role;
 
 requires 'type';
-has 'emit_environments', is => 'ro', default => sub { {} };
+has 'tables',            is => 'rw', default => sub { {} };
 has 'filename',          is => 'ro', default => '';
+has 'emit_environments', is => 'ro', default => sub { {} };
 
 sub accept_targets { 'latex' }
+
+sub add_table
+{
+    my ($self, $table) = @_;
+    my $filename       = $self->filename;
+    my $tables         = $self->tables;
+    my $count          = keys %$tables;
+    (my $id            = $filename)
+                       =~ s/\.(\w+)$/'_table' . $count . '.tex'/e;
+
+    $tables->{$id} = $table;
+    return $id;
+}
 
 sub emit
 {
@@ -24,7 +38,7 @@ sub emit
 sub emit_document
 {
     my $self = shift;
-    return $self->emit_kids;
+    return $self->emit_kids( document => $self );
 }
 
 sub emit_kids
@@ -384,6 +398,49 @@ END_HEADER
 \\end{figure}
 END_FOOTER
 
+}
+
+sub emit_table
+{
+    my ($self, %args) = @_;
+    my $title         = $self->title;
+    my $num_cols      = $self->num_cols;
+    my $width         = 1.0 / $num_cols;
+    my $cols          = join ' | ', map { 'X' } 1 .. $num_cols;
+
+    my $document      = $args{document};
+    my $caption       = length $title
+                      ? "\\caption{" . $self->encode_index_text($title) . "}\n"
+                      : '';
+
+    my $start = "$caption\\begin{longtable}{| $cols |}\n";
+    my $end   = "\\end{longtable}\n";
+    my $id    = $document->add_table( $start . $self->emit_kids . $end );
+
+    return <<TABLE_REFERENCE;
+\\begin{center}
+\\LTXtable{\\linewidth}{$id}
+\\end{center}
+TABLE_REFERENCE
+}
+
+sub emit_headrow
+{
+    my $self = shift;
+    return "\\hline\n\\rowcolor[gray]{.9}\n" . $self->emit_row;
+}
+
+sub emit_row
+{
+    my $self     = shift;
+    my $contents = join ' & ', map { $_->emit } @{ $self->children };
+    return $contents . " \\\\ \\hline\n";
+}
+
+sub emit_cell
+{
+    my $self = shift;
+    return $self->emit_kids;
 }
 
 1;
