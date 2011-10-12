@@ -221,3 +221,11 @@ Basic bulleted list:
 =item * Third item
 
 =back
+
+=begin figure A Figure with Caption
+
+Z<figure_link>
+
+F<some/path/to/image.png>
+
+=end figure

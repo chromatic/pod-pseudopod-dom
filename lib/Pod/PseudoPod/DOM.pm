@@ -357,4 +357,17 @@ sub end_cell
     $self->reset_to_item( 'TableCell' );
 }
 
+sub start_figure
+{
+    my ($self, $flags) = @_;
+    $self->push_element( Figure  => type => 'figure',
+                         caption => $flags->{title} );
+}
+
+sub end_figure
+{
+    my $self   = shift;
+    $self->reset_to_item( 'Figure' )->fixup_figure;
+}
+
 1;

@@ -443,4 +443,27 @@ sub emit_cell
     return $self->emit_kids;
 }
 
+sub emit_figure
+{
+    my $self    = shift;
+    my $caption = $self->caption;
+    $caption    = defined $caption
+                ? '\\caption{' . $self->encode_text( $caption ) . "}\n"
+                : '';
+
+    my $anchor  = $self->anchor;
+    $anchor     = defined $anchor
+                ? '\\label{' . $anchor->emit . "}\n"
+                : '';
+
+    my $file    = $self->file->emit_kids;
+
+    return <<END_FIGURE;
+\\begin{figure}[!h]
+\\centering
+\\includegraphics[\\textwidth]{$file}
+$caption$anchor\\end{figure}
+END_FIGURE
+}
+
 1;

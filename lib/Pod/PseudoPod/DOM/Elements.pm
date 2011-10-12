@@ -145,11 +145,40 @@ use Moose;
 
     use Moose;
 
-    extends 'Pod::PseudoPod::DOM::Element';
+    extends 'Pod::PseudoPod::DOM::ParentElement';
 
-    has 'file',    is => 'rw', isa => 'Pod::PseudoPod::DOM::Element::File';
-    has 'anchor',  is => 'rw', isa => 'Pod::PsuedoPod::DOM::Element::Anchor';
-    has 'caption', is => 'rw', isa => 'Pod::PsuedoPod::DOM::Element::Text';
+    has 'caption', is => 'rw', default => '';
+    sub fixup_figure
+    {
+        my $self     = shift;
+        my $children = $self->children;
+        @$children = map
+        {
+            $_->type eq 'paragraph'
+            ? @{ $_->children }
+            : $_
+        } @$children;
+    }
+
+    sub anchor
+    {
+        my $self = shift;
+        for my $kid (@{ $self->children })
+        {
+            next unless $kid->type eq 'anchor';
+            return $kid;
+        }
+    }
+
+    sub file
+    {
+        my $self = shift;
+        for my $kid (@{ $self->children })
+        {
+            next unless $kid->type eq 'file';
+            return $kid;
+        }
+    }
 }
 
 {
