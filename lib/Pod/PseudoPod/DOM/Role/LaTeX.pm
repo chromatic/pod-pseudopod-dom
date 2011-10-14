@@ -80,7 +80,7 @@ sub encode_index_text
 
     my @terms;
 
-    for my $term (split /,/, $text)
+    for my $term (split /;/, $text)
     {
         $term =~ s/^\s+|\s+$//g;
         $term =~ s/"/""/g;
