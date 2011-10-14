@@ -247,12 +247,18 @@ sub emit_file
     return '\\emph{' . $self->emit_kids( @_ ) . '}';
 }
 
+sub emit_paragraph
+{
+    my $self             = shift;
+    my $has_visible_text = grep { $_->type ne 'index' } @{ $self->children };
+    return $self->emit_kids( @_ ) . ( $has_visible_text ? "\n\n" : '' );
+}
+
 use constant { BEFORE => 0, AFTER => 1 };
 my $escapes = "commandchars=\\\\\\{\\}";
 
 my %parent_items =
 (
-    paragraph      => [  q||,                                 q||       ],
     text_list      => [ qq|\\begin{description}\n\n|,
                         qq|\\end{description}|                          ],
     bullet_list    => [ qq|\\begin{itemize}\n\n|,

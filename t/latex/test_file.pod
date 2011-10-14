@@ -64,7 +64,9 @@ Hello, this is a sidebar
 
 =end
 
-X<Special formatting> is B<very> important, especially in C<code-like
+X<Special formatting>
+
+Special formatting is B<very> important, especially in C<code-like
 text>, for special F<emphasis>, and I<semantic-only emphasis>N<but
 beware of footnotes!>. Try to format correctly Google URL: U<<
 http://www.google.com/ >>.

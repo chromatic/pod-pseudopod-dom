@@ -37,4 +37,7 @@ like_string $result, qr!\\ppodxref{slightly-complex-heading}!,
 like_string $result, qr!\\ppodxref{next_heading}!,
     '... and non-quoting when appropriate';
 
+like_string $result, qr!\\index{Special formatting}\s*Special!,
+    'index tags in separate paragraphs should suppress newlines';
+
 done_testing;
