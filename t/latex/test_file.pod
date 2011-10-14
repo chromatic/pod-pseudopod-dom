@@ -231,3 +231,9 @@ Z<figure_link>
 F<some/path/to/image_file.png>
 
 =end figure
+
+=head0 *Another Suppressed Heading
+
+=head1 *A Suppressed Heading
+
+=head2 *Yet Another Suppressed Heading

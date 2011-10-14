@@ -28,6 +28,15 @@ like_string $result, qr/\\subsection{B heading}/,
 like_string $result, qr/\\subsubsection{c heading}/,
     'C heads should become subsubsection titles';
 
+like_string $result, qr/\\chapter\*{Another Suppressed Heading}/,
+    '... chapter title TOC suppression should work';
+
+like_string $result, qr/\\section\*{A Suppressed Heading}/,
+    '... section TOC suppression should work';
+
+like_string $result, qr/\\subsection\*{Yet Another Suppressed Heading}/,
+    '... subsection TOC suppression should work';
+
 like_string $result,
     qr/\\begin{Verbatim}.+"This text.+--.+\$text."\n\\end{Verbatim}/s,
     'programlistings should become unescaped, verbatim result';

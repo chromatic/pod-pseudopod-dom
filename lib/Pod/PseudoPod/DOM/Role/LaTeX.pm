@@ -49,13 +49,15 @@ sub emit_kids
 
 sub emit_header
 {
-    my $self  = shift;
-    my $level = $self->level;
+    my $self     = shift;
+    my $level    = $self->level;
+    my $text     = $self->emit_kids;
+    my $suppress = $text =~ s/^\*// ? '*' : '';
 
-    return q|\\chapter{| . $self->emit_kids . qq|}\n\n| if $level == 0;
+    return qq|\\chapter${suppress}{$text}\n\n| if $level == 0;
 
     my $subs = 'sub' x ($level - 1);
-    return qq|\\${subs}section{| . $self->emit_kids . qq|}\n\n|;
+    return qq|\\${subs}section${suppress}{$text}\n\n|;
 }
 
 sub emit_plaintext
