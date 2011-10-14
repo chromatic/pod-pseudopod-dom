@@ -55,7 +55,7 @@ sub emit_header
     return q|\\chapter{| . $self->emit_kids . qq|}\n\n| if $level == 0;
 
     my $subs = 'sub' x ($level - 1);
-    return qq|\\${subs}section*{| . $self->emit_kids . qq|}\n\n|;
+    return qq|\\${subs}section{| . $self->emit_kids . qq|}\n\n|;
 }
 
 sub emit_plaintext

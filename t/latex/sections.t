@@ -19,13 +19,13 @@ my $result = parse( $file );
 like_string $result, qr/\\chapter{Some Document}/,
     '0 heads should become chapter titles';
 
-like_string $result, qr/\\section\*{A Heading}/,
+like_string $result, qr/\\section{A Heading}/,
     'A heads should become section titles';
 
-like_string $result, qr/\\subsection\*{B heading}/,
+like_string $result, qr/\\subsection{B heading}/,
     'B heads should become subsection titles';
 
-like_string $result, qr/\\subsubsection\*{c heading}/,
+like_string $result, qr/\\subsubsection{c heading}/,
     'C heads should become subsubsection titles';
 
 like_string $result,
