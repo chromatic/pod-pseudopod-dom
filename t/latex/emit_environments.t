@@ -24,7 +24,7 @@ unlike_string $result, qr/\\(?:begin|end){A?sidebar}/,
 $result = parse( $file, emit_environments => { sidebar => 'Asidebar' } );
 
 like_string $result,
-    qr/\\begin{Asidebar}\s*Hello, this is a sidebar\s*\\end{Asidebar}/,
+    qr/\\begin{Asidebar}{\s*Hello, this is a sidebar\s*}\\end{Asidebar}/,
     'Emit abstract \begin{foo} when emit_environment option is set';
 
 done_testing;
