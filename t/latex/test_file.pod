@@ -247,3 +247,11 @@ They should have newlines in between them.
 ... and that is all.
 
 =end literal
+
+=begin tip Design Principle
+
+This is a design principle.
+
+It has multiple parts.
+
+=end tip

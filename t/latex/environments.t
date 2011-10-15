@@ -15,14 +15,17 @@ use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 my $file   = read_file( catfile( qw( t latex test_file.pod ) ) );
 my $result = parse( $file, emit_environments => { foo => 'foo' } );
 
-like_string $result, qr/\\LaTeX/,
+like_string $result, qr!\\LaTeX!,
     '\LaTeX in a =for latex section remains intact';
 
-like_string $result, qr/\\begin{foo}{Title}/, 'title passed is available';
+like_string $result, qr!\\begin{foo}\[Title\]!, 'title passed is available';
 
-like_string $result, qr/\\begin{programlisting}/,
+like_string $result, qr!\\begin{programlisting}!,
     '=begin programlisting should use programlisting environment';
 
-like_string $result, qr/\\end{programlisting}/, '... with end tag';
+like_string $result, qr!\\end{programlisting}!, '... with end tag';
+
+like_string $result, qr!\\begin{tip}\[Design Principle]\nThis is a design!,
+    'begin should add tag and optional title';
 
 done_testing;

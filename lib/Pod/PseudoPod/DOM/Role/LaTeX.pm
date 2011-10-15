@@ -362,11 +362,11 @@ sub make_basic_block
 {
     my ($self, $target, $title, @rest) = @_;
 
-    $title = defined $title ? qq|{$title}| : '';
+    $title = defined $title ? qq|[$title]| : '';
 
-    return qq|\\begin{$target}$title\n\n|
+    return qq|\\begin{$target}$title\n|
          . $self->emit_kids( @rest )
-         . qq|\n\\end{$target}\n|;
+         . qq|\\end{$target}\n|;
 }
 
 sub encode_E_contents {}
