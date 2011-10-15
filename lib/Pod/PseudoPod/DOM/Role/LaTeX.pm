@@ -395,7 +395,7 @@ END_TITLE
 \\begin{figure}[!h]
 \\begin{center}
 \\framebox{
-\\begin{minipage}{3.5in}
+\\begin{minipage}{0.9\\linewidth}
 \\vspace{3pt}
 $title
 END_HEADER
