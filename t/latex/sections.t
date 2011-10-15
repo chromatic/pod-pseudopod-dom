@@ -70,6 +70,9 @@ like_string $result,
     qr/\\item\[\] ook ook\n\nWhat.+says\.\n\n\\end{description}/,
     '... and to end';
 
+like_string $result, qr!\\begin{literal}.*?\\end{literal}!s,
+    'literal sections should work';
+
 TODO:
 {
     local $TODO = "Seems like an upstream bug here\n";

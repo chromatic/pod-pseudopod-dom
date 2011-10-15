@@ -152,7 +152,9 @@ sub encode_text
 sub emit_literal
 {
     my $self = shift;
-    return join " \\\\\n", map { $_->emit_kids } @{ $self->children };
+    return qq|\\begin{literal}\n|
+         . join( "\n\n", map { $_->emit_kids } @{ $self->children } )
+         . qq|\\end{literal}\n|;
 }
 
 sub emit_anchor
