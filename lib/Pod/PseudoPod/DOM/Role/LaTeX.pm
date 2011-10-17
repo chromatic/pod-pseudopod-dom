@@ -444,13 +444,23 @@ sub emit_row
 {
     my $self     = shift;
     my $contents = join ' & ', map { $_->emit } @{ $self->children };
-    return $contents . " \\\\ \\hline\n";
+    return $contents . "\\\\\\hline\n";
 }
 
 sub emit_cell
 {
     my $self = shift;
-    return $self->emit_kids;
+    my @contents;
+
+    for my $child (@{ $self->children })
+    {
+        my $contents = $child->emit( @_ );
+        $contents =~ s/\n+$//g;
+        next unless $contents =~ /\S/;
+        push @contents, $contents;
+    }
+
+    return join '\\newline\\newline ', @contents;
 }
 
 sub emit_figure

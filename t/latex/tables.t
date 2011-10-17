@@ -27,15 +27,15 @@ ok exists $tables->{'tables_test_table0.tex'},
 $result = $tables->{'tables_test_table0.tex'};
 like $result, qr!\\begin{longtable}{\| X \| X \|}\n\\hline!,
     '... containing appropriate table header';
-like $result, qr!\\emph{Left Column} & \\emph{Right Column} \\\\ \\hline!,
+like $result, qr!\\emph{Left Column} & \\emph{Right Column}\\\\\\hline!,
     '... and head row';
 like $result, qr!Left Cell One & \\begin{itemize}\n!,
     '... and body cell';
 like $result, qr!\\item First.+\\item Second.+\\item Third.+\\end{itemize}!s,
     '... with list in cell';
-like $result, qr!\\end{itemize}\s+\\\\ \\hline!s,
+like $result, qr!\\end{itemize}\\\\\\hline!s,
     '... and list ending';
-like $result, qr!Left Cell Two & Right Cell Two \\\\ \\hline\n\\end{longtable}!,
+like $result, qr!Left Cell Two & Right Cell Two\\\\\\hline\n\\end{longtable}!,
     '... and table ending';
 
 done_testing;
