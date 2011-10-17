@@ -197,10 +197,7 @@ sub emit_bullet_item
     my $kids  = $self->children;
     return qq|\\item\n| unless @$kids;
 
-    my $first = shift @$kids;
-
-    return q|\\item | . $first->emit . "\n\n"
-         . join( '', map { $_->emit } @$kids );
+    return q|\\item | . join( '', map { $_->emit } @$kids ) . qq|\n\n|;
 }
 
 sub emit_code
