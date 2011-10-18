@@ -30,4 +30,7 @@ like_string $result, qr!\\begin{tip}\[Design Principle]{\nThis is a design!,
 like_string $result, qr!}\\end{tip}!,
     '... and end block';
 
+like_string $result, qr!^\\pagebreak$!m,
+    '=for latex should produce literal command';
+
 done_testing;
