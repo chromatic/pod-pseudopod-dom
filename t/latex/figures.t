@@ -14,7 +14,7 @@ use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 my $file   = read_file( catfile( qw( t latex test_file.pod ) ) );
 my ( $doc, $result) = parse( $file );
 
-like_string $result, qr/\\begin{figure}\[!h\]\n\\centering/,
+like_string $result, qr/\\begin{figure}\[H\]\n\\centering/,
     'figure should start a figure environment';
 like_string $result, qr!\\includegraphics\[width=\\linewidth\]{some/path!,
     '... with path to graphics file';

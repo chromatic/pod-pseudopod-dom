@@ -391,7 +391,7 @@ END_TITLE
     }
 
     return <<END_HEADER . $self->emit_kids( @_ ) . <<END_FOOTER;
-\\begin{figure}[!h]
+\\begin{figure}[H]
 \\begin{center}
 \\framebox{
 \\begin{minipage}{0.9\\linewidth}
@@ -474,7 +474,7 @@ sub emit_figure
     my $file    = $self->file->emit_kids( encode => 'none' );
 
     return <<END_FIGURE;
-\\begin{figure}[!h]
+\\begin{figure}[H]
 \\centering
 \\includegraphics[width=\\linewidth]{$file}
 $caption$anchor\\end{figure}
