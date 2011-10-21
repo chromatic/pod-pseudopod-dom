@@ -215,7 +215,7 @@ sub emit_footnote
 sub emit_url
 {
     my $self = shift;
-    return q|\\url{| . $self->emit_kids . '}';
+    return q|\\url{| . $self->emit_kids( encode => 'none' ) . '}';
 }
 
 sub emit_link
@@ -420,8 +420,8 @@ sub emit_table
                       ? "\\caption{" . $self->encode_index_text($title) . "}\n"
                       : '';
 
-    my $start = "$caption\\begin{longtable}{| $cols |}\n";
-    my $end   = "\\end{longtable}\n";
+    my $start = "\\begin{longtable}{| $cols |}\n";
+    my $end   = "$caption\\end{longtable}\n";
     my $id    = $document->add_table( $start . $self->emit_kids . $end );
 
     return <<TABLE_REFERENCE;
