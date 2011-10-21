@@ -68,13 +68,21 @@ sub emit_plaintext
     if (my $encode = $args{encode})
     {
         my $method = 'encode_' . $encode;
-        return $self->$method( $content );
+        return $self->$method( $content, %args );
     }
 
-    return $self->encode_text( $content );
+    return $self->encode_text( $content, %args );
 }
 
 sub encode_none { return $_[1] }
+
+sub encode_split
+{
+    my ($self, $content, %args) = @_;
+    my $target                  = $args{target};
+    return join $args{joiner},
+        map { $self->encode_text( $_ ) } split /\Q$target\E/, $content;
+}
 
 sub encode_index_text
 {
@@ -152,9 +160,21 @@ sub encode_text
 sub emit_literal
 {
     my $self = shift;
-    return qq|\\begin{literal}\n|
-         . join( "\n\n", map { $_->emit_kids } @{ $self->children } )
-         . qq|\\end{literal}\n|;
+
+    if (my $title = $self->title)
+    {
+        return join "\n\n",
+            map
+            {
+                $_->emit_kids(
+                    encode => 'split', target => $title, joiner => "\\\\\n"
+                )
+            } @{ $self->children };
+    }
+
+    return qq||
+         . join( "\\\\\n", map { $_->emit_kids } @{ $self->children } )
+         . qq|\n|;
 }
 
 sub emit_anchor

@@ -70,8 +70,13 @@ like_string $result,
     qr/\\item\[\] ook ook\n\nWhat.+says\.\n\n\\end{description}/,
     '... and to end';
 
-like_string $result, qr!\\begin{literal}.*?\\end{literal}!s,
+like_string $result, qr!Here are several paragraphs.\\\\\s+They should!s,
     'literal sections should work';
+like_string $result,
+    qr!They should have \\emph{newlines} in between them.\\\\\s+!s,
+    '... even with subelements of paragraphs';
+like_string $result, qr!them.\\\\\s+\\\\\s+!,
+    '... even with extra embedded newlines';
 
 TODO:
 {

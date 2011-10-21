@@ -238,12 +238,10 @@ F<some/path/to/image_file.png>
 
 =head2 *Yet Another Suppressed Heading
 
-=begin literal
+=begin literal \\
 
-Here are several paragraphs.
-
-They should have newlines in between them.
-
+Here are several paragraphs.\\
+They should have I<newlines> in between them.\\\\
 ... and that is all.
 
 =end literal
