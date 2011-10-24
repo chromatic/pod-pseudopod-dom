@@ -454,7 +454,9 @@ TABLE_REFERENCE
 sub emit_headrow
 {
     my $self = shift;
-    return "\\hline\n\\rowcolor[gray]{.9}\n" . $self->emit_row;
+    my $row  = $self->emit_row;
+    $row =~ s{(\\hline\n)$}{\\endhead$1}s;
+    return "\\hline\n\\rowcolor[gray]{.9}\n$row";
 }
 
 sub emit_row

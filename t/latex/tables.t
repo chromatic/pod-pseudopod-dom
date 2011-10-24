@@ -27,7 +27,8 @@ ok exists $tables->{'tables_test_table0.tex'},
 $result = $tables->{'tables_test_table0.tex'};
 like $result, qr!\\begin{longtable}{\| X \| X \|}\n\\hline!,
     '... containing appropriate table header';
-like $result, qr!\\emph{Left Column} & \\emph{Right Column}\\\\\\hline!,
+like $result,
+    qr!\\emph{Left Column} & \\emph{Right Column}\\\\\\endhead\\hline!,
     '... and head row';
 like $result, qr!Left Cell One & \\begin{itemize}\n!,
     '... and body cell';
