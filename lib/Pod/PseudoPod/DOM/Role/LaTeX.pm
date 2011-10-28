@@ -116,6 +116,7 @@ sub encode_verbatim_text
 
     $text =~ s/([{}])/\\$1/g;
     $text =~ s/\\(?![{}])/\\textbackslash{}/g;
+    $text =~ s/([#\$&%_])/\\$1/g;
 
     return $text;
 }

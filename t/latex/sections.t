@@ -38,11 +38,11 @@ like_string $result, qr/\\subsection\*{Yet Another Suppressed Heading}/,
     '... subsection TOC suppression should work';
 
 like_string $result,
-    qr/\\begin{Verbatim}.+"This text.+--.+\$text."\n\\end{Verbatim}/s,
+    qr/\\begin{Verbatim}.+"This text.+--.+\\\$text."\n/s,
     'programlistings should become unescaped, verbatim result';
 
 like_string $result,
-    qr/\\begin{Verbatim}.*label=.+This should also be \$unm0d\+ified\n\\end{V/s,
+    qr/\\begin{Verbatim}.*label=.+This should also be \\\$unm0d\+ified\n\\end/s,
     'screens should become unescaped, verbatim result';
 
 like_string $result, qr/Blockquoted text.+``escaped''\./,

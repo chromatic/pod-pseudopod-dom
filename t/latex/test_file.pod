@@ -14,6 +14,8 @@ This is part of some document (L<startofdocument>; A<startofdocument>).
 
   "This text should not be escaped -- it is normal $text."
 
+    #!/bin/perl does need escaping, as do \ (backslashes)
+
 =end programlisting
 
   This indented text should come through unmodified too -- it is also "normal"

@@ -15,8 +15,12 @@ my $file   = read_file( catfile( qw( t latex test_file.pod ) ) );
 my $result = parse( $file );
 
 like_string $result,
-    qr/"This text should not be escaped -- it is normal \$text\."/,
+    qr/"This text should not be escaped -- it is normal \\\$text\."/,
     'verbatim sections should be unescaped';
+
+like_string $result,
+    qr|\\#!/bin/perl does need escaping, as do \\textbackslash\{\}|,
+    '... except for a few metacharacters';
 
 like_string $result, qr/-- it is also "normal".+\$text./s, '... indented too';
 
