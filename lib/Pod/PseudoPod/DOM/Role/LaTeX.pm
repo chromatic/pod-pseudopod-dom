@@ -288,7 +288,7 @@ my %parent_items =
     number_list    => [ qq|\\begin{enumerate}\n\n|,
                         qq|\\end{enumerate}|                            ],
      map { $_ => [ qq|\\begin{$_}\n|, qq|\\end{$_}\n\n| ] }
-         qw( programlisting epigraph blockquote )
+         qw( epigraph blockquote )
 );
 
 while (my ($tag, $values) = each %parent_items)
@@ -302,12 +302,24 @@ while (my ($tag, $values) = each %parent_items)
     do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
 }
 
+sub emit_programlisting
+{
+    my $self = shift;
+
+    # should be only a single Verbatim
+    my $kid  = $self->children->[0];
+
+    return qq|\\begin{CodeListing}\n|
+         . $kid->emit_kids( encode => 'verbatim_text' )
+         . qq|\\end{CodeListing}\n|;
+}
+
 sub emit_verbatim
 {
     my $self = shift;
-    return qq|\\scriptsize\n\\begin{Verbatim}[$escapes]\n|
+    return qq|\\begin{Verbatim}[$escapes]\n|
          . $self->emit_kids( encode => 'verbatim_text' )
-         . qq|\n\\end{Verbatim}\n\\normalsize\n|;
+         . qq|\n\\end{Verbatim}\n|;
 }
 
 sub emit_screen

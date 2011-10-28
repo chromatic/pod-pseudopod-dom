@@ -20,10 +20,10 @@ like_string $result, qr!\\LaTeX!,
 
 like_string $result, qr!\\begin{foo}\[Title\]!, 'title passed is available';
 
-like_string $result, qr!\\begin{programlisting}!,
+like_string $result, qr!\\begin{CodeListing}!,
     '=begin programlisting should use programlisting environment';
 
-like_string $result, qr!\\end{programlisting}!, '... with end tag';
+like_string $result, qr!\\end{CodeListing}!, '... with end tag';
 
 like_string $result, qr!\\begin{tip}\[Design Principle]{\nThis is a design!,
     'begin should add tag and optional title';

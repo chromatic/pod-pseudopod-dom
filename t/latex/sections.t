@@ -38,7 +38,7 @@ like_string $result, qr/\\subsection\*{Yet Another Suppressed Heading}/,
     '... subsection TOC suppression should work';
 
 like_string $result,
-    qr/\\begin{Verbatim}.+"This text.+--.+\\\$text."\n/s,
+    qr/\\begin{CodeListing}.+"This text.+--.+\\\$text."\n/s,
     'programlistings should become unescaped, verbatim result';
 
 like_string $result,
