@@ -413,14 +413,15 @@ END_TITLE
 
     return <<END_HEADER . $self->emit_kids( @_ ) . <<END_FOOTER;
 \\begin{figure}[H]
-\\framebox{
+\\begin{center}
+\\begin{Sbox}
 \\begin{minipage}{\\linewidth}
-\\vspace{3pt}
 $title
 END_HEADER
-\\vspace{3pt}
 \\end{minipage}
-}
+\\end{Sbox}
+\\framebox{\\TheSbox}
+\\end{center}
 \\end{figure}
 END_FOOTER
 
