@@ -43,8 +43,14 @@ like_string $result, qr/\\textbf{very} important/,
 like_string $result, qr/\\texttt{code-like text}/,
     'code-marked text needs a formatting directive';
 
+like_string $result, qr/such as \\texttt\{0\}/,
+    '... even if text is Perl-like false';
+
 like_string $result, qr/special \\emph{emphasis}/,
     'file paths need an emphasis directive';
+
+like_string $result, qr/or \\emph\{0\} should/,
+    '... even if text is Perl-like false';
 
 like_string $result, qr/\\emph{semantic-only emphasis}/,
     '... and so does italicized text';

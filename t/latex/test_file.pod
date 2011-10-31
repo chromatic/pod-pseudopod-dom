@@ -68,10 +68,10 @@ Hello, this is a sidebar
 
 X<Special formatting>
 
-Special formatting is B<very> important, especially in C<code-like
-text>, for special F<emphasis>, and I<semantic-only emphasis>N<but
-beware of footnotes!>. Try to format correctly Google URL: U<<
-http://www.google.com/ >>.
+Special formatting is B<very> important, especially in C<code-like text>, for
+special F<emphasis>, and I<semantic-only emphasis>N<but beware of footnotes!>.
+Try to format correctly Google URL: U<< http://www.google.com/ >>. A false
+value such as C<0> or I<0> should work even in inline markup.
 
 Index entries are more fun, as more special characters must be escaped, with
 a quote sign. E.g. X<negation ! operator>, X<array @ sigil>, X<the pipe |>

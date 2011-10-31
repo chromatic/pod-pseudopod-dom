@@ -63,7 +63,7 @@ sub emit_header
 sub emit_plaintext
 {
     my ($self, %args) = @_;
-    my $content       = $self->content || '';
+    my $content       = defined $self->content ? $self->content : '';
 
     if (my $encode = $args{encode})
     {
@@ -174,7 +174,7 @@ sub emit_literal
     }
 
     return qq||
-         . join( "\\\\\n", map { $_->emit_kids } @{ $self->children } )
+         . join( "\\\\\n", map { $_->emit_kids( @_ ) } @{ $self->children } )
          . qq|\n|;
 }
 
@@ -187,7 +187,7 @@ sub emit_anchor
 sub emit_italics
 {
     my $self = shift;
-    return '\\emph{' . $self->emit_kids . '}';
+    return '\\emph{' . $self->emit_kids( @_ ) . '}';
 }
 
 sub emit_number_item
@@ -195,7 +195,7 @@ sub emit_number_item
     my $self   = shift;
     my $marker = $self->marker;
     my $number = $marker ? qq| number="$marker"| : '';
-    return "\\item " . $self->emit_kids . "\n\n";
+    return "\\item " . $self->emit_kids( @_ ) . "\n\n";
 }
 
 sub emit_text_item
@@ -224,19 +224,19 @@ sub emit_bullet_item
 sub emit_code
 {
     my $self = shift;
-    return '\\texttt{' . $self->emit_kids . '}';
+    return '\\texttt{' . $self->emit_kids( @_ ) . '}';
 }
 
 sub emit_footnote
 {
     my $self = shift;
-    return '\\footnote{' . $self->emit_kids . '}';
+    return '\\footnote{' . $self->emit_kids( @_ ) . '}';
 }
 
 sub emit_url
 {
     my $self = shift;
-    return q|\\url{| . $self->emit_kids( encode => 'none' ) . '}';
+    return q|\\url{| . $self->emit_kids( encode => 'verbatim_text' ) . '}';
 }
 
 sub emit_link
@@ -248,19 +248,19 @@ sub emit_link
 sub emit_superscript
 {
     my $self = shift;
-    return '$^{' . $self->emit_kids . '}$';
+    return '$^{' . $self->emit_kids( @_ ) . '}$';
 }
 
 sub emit_subscript
 {
     my $self = shift;
-    return '$_{' . $self->emit_kids . '}$';
+    return '$_{' . $self->emit_kids( @_ ) . '}$';
 }
 
 sub emit_bold
 {
     my $self = shift;
-    return '\\textbf{' . $self->emit_kids . '}';
+    return '\\textbf{' . $self->emit_kids( @_ ) . '}';
 }
 
 sub emit_file
@@ -296,7 +296,9 @@ while (my ($tag, $values) = each %parent_items)
     my $sub = sub
     {
         my $self = shift;
-        return $values->[BEFORE] . $self->emit_kids . $values->[AFTER] . "\n\n";
+        return $values->[BEFORE]
+             . $self->emit_kids( @_ )
+             . $values->[AFTER] . "\n\n";
     };
 
     do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
@@ -306,12 +308,12 @@ sub emit_programlisting
 {
     my $self = shift;
 
-    # should be only a single Verbatim
+    # should be only a single Verbatim; may need to fix with hoisting
     my $kid  = $self->children->[0];
 
     return qq|\\begin{CodeListing}\n|
          . $kid->emit_kids( encode => 'verbatim_text' )
-         . qq|\\end{CodeListing}\n|;
+         . qq|\n\\end{CodeListing}\n|;
 }
 
 sub emit_verbatim
@@ -325,9 +327,12 @@ sub emit_verbatim
 sub emit_screen
 {
     my $self = shift;
+    # should be only a single Verbatim; may need to fix with hoisting
+    my $kid  = $self->children->[0];
+
     return qq|\\begin{Verbatim}[$escapes,label=Program output]\n|
-         . $self->emit_kids( encode => 'verbatim_text' )
-         . qq|\n\\end{Verbatim}|;
+         . $kid->emit_kids( encode => 'verbatim_text' )
+         . qq|\n\\end{Verbatim}\n|;
 }
 
 my %characters = (
@@ -345,7 +350,7 @@ sub emit_character
 {
     my $self    = shift;
 
-    my $content = eval { $self->emit_kids };
+    my $content = eval { $self->emit_kids( @_ ) };
     return unless defined $content;
 
     if (my ($char, $class) = $content =~ /(\w)(\w+)/)
@@ -454,7 +459,7 @@ sub emit_table
 
     my $start = "\\begin{longtable}{| $cols |}\n";
     my $end   = "$caption\\end{longtable}\n";
-    my $id    = $document->add_table( $start . $self->emit_kids . $end );
+    my $id    = $document->add_table( $start . $self->emit_kids( @_ ) . $end );
 
     return <<TABLE_REFERENCE;
 \\begin{center}
