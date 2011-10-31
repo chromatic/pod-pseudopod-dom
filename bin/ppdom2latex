@@ -51,7 +51,7 @@ for my $file (@ARGV)
 sub open_fh
 {
     my $file = shift;
-    open my $fh, '>', $file;
+    open my $fh, '>:utf8', $file;
     return $fh;
 }
 
