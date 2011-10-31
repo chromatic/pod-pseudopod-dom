@@ -198,7 +198,7 @@ use Moose;
     use Moose;
     use List::Util 'first';
 
-    has 'title', is => 'ro', default => '';
+    has 'title', is => 'rw', default => '';
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
 

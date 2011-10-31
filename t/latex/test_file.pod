@@ -180,7 +180,7 @@ Something
 
 Now here is a table.
 
-=begin table A Table of Fun Things
+=begin table A Table of I<Fun> Things
 
 =headrow
 

@@ -38,7 +38,8 @@ like $result, qr!\\end{itemize}\\\\\\hline!s,
     '... and list ending';
 like $result, qr!Left Cell Two & Right Cell Two\\\\\\hline\n\\caption{!,
     '... ending with caption';
-like $result, qr!\\caption{A Table of Fun Things}\n\\end{longtable}!,
+like_string $result,
+    qr!\\caption{A Table of \\emph{Fun} Things}\n\\end{longtable}!,
     '... and table ending';
 
 done_testing;

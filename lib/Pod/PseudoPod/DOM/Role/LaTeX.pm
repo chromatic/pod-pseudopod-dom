@@ -447,14 +447,14 @@ END_FOOTER
 sub emit_table
 {
     my ($self, %args) = @_;
-    my $title         = $self->title;
+    my $title         = $self->title->emit_kids( encode => 'text' );
     my $num_cols      = $self->num_cols;
     my $width         = 1.0 / $num_cols;
     my $cols          = join ' | ', map { 'X' } 1 .. $num_cols;
 
     my $document      = $args{document};
     my $caption       = length $title
-                      ? "\\caption{" . $self->encode_index_text($title) . "}\n"
+                      ? "\\caption{" . $title . "}\n"
                       : '';
 
     my $start = "\\begin{longtable}{| $cols |}\n";

@@ -127,6 +127,12 @@ sub add_element
     $self->{active_elements}[-1]->add( $child );
 }
 
+sub start_new_element
+{
+    my $self = shift;
+    push @{ $self->{active_elements} }, $self->make( @_ );
+}
+
 sub reset_to_item
 {
     my ($self, $type, %attributes) = @_;
@@ -318,7 +324,39 @@ sub start_table
 sub end_table
 {
     my $self  = shift;
-    $self->reset_to_item( 'Table' )->fixup;
+    my $table = $self->reset_to_item( 'Table' );
+
+    $self->fix_title( $table ) if $table->title;
+    $table->fixup;
+}
+
+sub fix_title
+{
+    my ($self, $element) = @_;
+    my $title            = $element->title;
+    my $title_elem       = $self->start_new_element(
+                                Paragraph => type => 'paragraph' );
+    my $tag_regex        = qr/([IC]<+\s*.+?\s*>+)/;
+    my @parts;
+
+    for my $part (split /$tag_regex/, $title)
+    {
+        if ($part =~ /$tag_regex/)
+        {
+            my ($type, $content) = $part =~ /^([IC])<+\s*(.+?)\s*>+/;
+            my $start = "start_$type";
+            my $end   = "end_$type";
+            $self->$start;
+            $self->handle_text( $content );
+            $self->$end;
+        }
+        else
+        {
+            $self->handle_text( $part );
+        }
+    }
+
+    $element->title( $self->end_Para );
 }
 
 sub start_headrow
