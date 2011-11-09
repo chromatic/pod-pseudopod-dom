@@ -337,14 +337,15 @@ sub emit_screen
 }
 
 my %characters = (
-    acute   => sub { qq|\\'| . shift },
-    grave   => sub { qq|\\`| . shift },
-    uml     => sub { qq|\\"| . shift },
-    cedilla => sub { '\c' },              # ccedilla
-    opy     => sub { '\copyright' },      # copy
-    dash    => sub { '---' },             # mdash
-    lusmn   => sub { '\pm' },             # plusmn
-    mp      => sub { '\&' },              # amp
+    acute    => sub { qq|\\'| . shift },
+    grave    => sub { qq|\\`| . shift },
+    uml      => sub { qq|\\"| . shift },
+    cedilla  => sub { '\c' },              # ccedilla
+    opy      => sub { '\copyright' },      # copy
+    dash     => sub { '---' },             # mdash
+    lusmn    => sub { '\pm' },             # plusmn
+    mp       => sub { '\&' },              # amp
+    rademark => sub { '\texttrademark' }
 );
 
 sub emit_character

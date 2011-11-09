@@ -29,6 +29,9 @@ like_string $result, qr/attach\\`e/,
 
 like_string $result, qr/Fran\\caise/, 'cedilla should translate to \c';
 
+like_string $result, qr/fun ones\\texttrademark./,
+    '... and trademark symbol needs an escape';
+
 like_string $result, qr/\\copyright caper/,
     'copyright symbol should get escaped';
 

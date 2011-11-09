@@ -58,7 +58,7 @@ need a bit of work to make the typography work out nicely.
 
 Diacritics are more difficult E<aacute> la the naE<iuml>ve attachE<egrave> and
 the E<copy> caper, E<plusmn> some constant.  FranE<ccedilla>aise has some fun
-ones.
+onesE<trademark>.
 
 =for sidebar
 
