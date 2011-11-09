@@ -186,7 +186,7 @@ use Moose;
 
     use Moose;
 
-    has 'title',  is => 'ro', default => '';
+    has 'title',  is => 'rw', default => '';
     has 'target', is => 'ro', default => '';
 
     extends 'Pod::PseudoPod::DOM::ParentElement';

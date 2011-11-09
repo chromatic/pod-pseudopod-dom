@@ -25,8 +25,11 @@ like_string $result, qr!\\begin{CodeListing}!,
 
 like_string $result, qr!\\end{CodeListing}!, '... with end tag';
 
-like_string $result, qr!\\begin{tip}\[Design Principle]{\nThis is a design!,
+like_string $result, qr!\\begin{tip}\[Design Principle.+]{\nThis is a design!,
     'begin should add tag and optional title';
+
+like_string $result, qr!\[Design Principle of \\texttt{Code}.+]!,
+    '... with code tag handled in title';
 like_string $result, qr!}\\end{tip}!,
     '... and end block';
 

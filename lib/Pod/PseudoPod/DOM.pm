@@ -299,8 +299,13 @@ sub start_for
 
 sub end_for
 {
-    my $self = shift;
-    $self->reset_to_item( 'Block' );
+    my $self  = shift;
+    my $block = $self->reset_to_item( 'Block' );
+
+    if (my $title = $block->title)
+    {
+        $block->title( $self->fix_title( $title ) );
+    }
 }
 
 sub start_sidebar

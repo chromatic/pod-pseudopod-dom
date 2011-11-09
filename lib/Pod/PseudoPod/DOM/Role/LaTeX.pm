@@ -164,11 +164,12 @@ sub emit_literal
 
     if (my $title = $self->title)
     {
+        my $target = $title->emit_kids( encode => 'none' );
         return join "\n\n",
             map
             {
                 $_->emit_kids(
-                    encode => 'split', target => $title, joiner => "\\\\\n"
+                    encode => 'split', target => $target, joiner => "\\\\\n"
                 )
             } @{ $self->children };
     }
@@ -378,7 +379,7 @@ sub emit_latex
 sub emit_block
 {
     my $self   = shift;
-    my $title  = $self->title;
+    my $title  = $self->title ? $self->title->emit_kids( encode => 'text' ) :'';
     my $target = $self->target;
 
     if (my $environment = $self->emit_environments->{$target})
@@ -390,7 +391,7 @@ sub emit_block
         return $self->$meth( @_ );
     }
 
-    return $self->make_basic_block( $self->target, $self->title, @_ );
+    return $self->make_basic_block( $self->target, $title, @_ );
 }
 
 sub make_basic_block

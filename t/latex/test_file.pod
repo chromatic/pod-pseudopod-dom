@@ -248,7 +248,7 @@ They should have I<newlines> in between them.\\\\
 
 =end literal
 
-=begin tip Design Principle
+=begin tip Design Principle of C<Code> I<fun>
 
 This is a design principle.
 
