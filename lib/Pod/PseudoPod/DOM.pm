@@ -326,17 +326,20 @@ sub end_table
     my $self  = shift;
     my $table = $self->reset_to_item( 'Table' );
 
-    $self->fix_title( $table ) if $table->title;
+    if (my $title = $table->title)
+    {
+        $table->title( $self->fix_title( $title ) );
+    }
+
     $table->fixup;
 }
 
 sub fix_title
 {
-    my ($self, $element) = @_;
-    my $title            = $element->title;
-    my $title_elem       = $self->start_new_element(
+    my ($self, $title) = @_;
+    my $title_elem     = $self->start_new_element(
                                 Paragraph => type => 'paragraph' );
-    my $tag_regex        = qr/([IC]<+\s*.+?\s*>+)/;
+    my $tag_regex      = qr/([IC]<+\s*.+?\s*>+)/;
     my @parts;
 
     for my $part (split /$tag_regex/, $title)
@@ -356,7 +359,7 @@ sub fix_title
         }
     }
 
-    $element->title( $self->end_Para );
+    return $self->end_Para;
 }
 
 sub start_headrow
