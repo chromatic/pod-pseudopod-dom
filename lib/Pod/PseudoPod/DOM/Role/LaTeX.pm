@@ -117,6 +117,7 @@ sub encode_verbatim_text
     $text =~ s/([{}])/\\$1/g;
     $text =~ s/\\(?![{}])/\\textbackslash{}/g;
     $text =~ s/([#\$&%_])/\\$1/g;
+    $text =~ s/--/-\\mbox{}-/g;
 
     return $text;
 }
@@ -225,7 +226,7 @@ sub emit_bullet_item
 sub emit_code
 {
     my $self = shift;
-    return '\\texttt{' . $self->emit_kids( @_ ) . '}';
+    return '\\texttt{' . $self->emit_kids( encode => 'verbatim_text', @_ ) . '}'
 }
 
 sub emit_footnote

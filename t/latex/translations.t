@@ -49,6 +49,9 @@ like_string $result, qr/\\texttt{code-like text}/,
 like_string $result, qr/such as \\texttt\{0\}/,
     '... even if text is Perl-like false';
 
+like_string $result, qr/\$some\\_variable-\\mbox\{\}-/,
+    '... and if it contains special characters';
+
 like_string $result, qr/special \\emph{emphasis}/,
     'file paths need an emphasis directive';
 
