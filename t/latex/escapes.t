@@ -68,6 +68,9 @@ like_string $result, qr/\\index{the pipe "|}/,
 like_string $result, qr/\\index{strange quote a""a}/,
     'non-escaped " must be quoted with another " in an index entry';
 
+like_string $result, qr/\$\\char`\^W}!carats}/,
+    '... and carat needs special treatment';
+
 like_string $result, qr/\\index{hierarchical terms!omitting trailing spaces}/,
     'trailing spaces in hierarchical terms should be ignored';
 

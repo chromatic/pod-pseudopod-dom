@@ -96,6 +96,7 @@ sub encode_index_text
         $term =~ s/"/""/g;
         $term =~ s/([!|@])/"$1/g;
         $term =~ s/([#\$&%_{}])/\\$1/g;
+        $term =~ s/\^/\\char`\^/g;
         push @terms, $term;
     }
 

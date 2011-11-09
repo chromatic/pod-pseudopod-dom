@@ -75,7 +75,7 @@ value such as C<0> or I<0> should work even in inline markup.
 
 Index entries are more fun, as more special characters must be escaped, with
 a quote sign. E.g. X<negation ! operator>, X<array @ sigil>, X<the pipe |>
-and X<strange quote a"a>.
+and X<strange quote a"a>, not to mention X<C<$^W>; carats>.
 
 More, we should be able to have superscripts like I<E = mcG<2>> or
 subscripts, like I<HH<2>O>.
