@@ -90,9 +90,8 @@ sub encode_index_text
 
     my @terms;
 
-    for my $term (split /;/, $text)
+    for my $term (split /\s*;\s*/, $text)
     {
-        $term =~ s/^\s+|\s+$//g;
         $term =~ s/"/""/g;
         $term =~ s/([!|@])/"$1/g;
         $term =~ s/([#\$&%_{}])/\\$1/g;
@@ -366,10 +365,11 @@ sub emit_character
 
 sub emit_index
 {
-    my $self = shift;
-    return '\\index{'
-         . $self->emit_kids( encode => 'index_text' )
-         . '}';
+    my $self    = shift;
+    my $content = $self->emit_kids( encode => 'index_text' );
+    $content    =~ s/^\s+|\s+$//g;
+
+    return '\\index{' . $content . '}';
 }
 
 sub emit_latex

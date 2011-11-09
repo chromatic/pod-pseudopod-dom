@@ -74,6 +74,9 @@ like_string $result, qr/\$\\char`\^W}!carats}/,
 like_string $result, qr/\\index{hierarchical terms!omitting trailing spaces}/,
     'trailing spaces in hierarchical terms should be ignored';
 
+like_string $result, qr/\\index{\\texttt{code} and \\emph{italics} text}/,
+    '... but interior space should remain';
+
 like_string $result, qr/\\\$BANG BANG\\\$/,
     'escapes works inside items first line';
 
