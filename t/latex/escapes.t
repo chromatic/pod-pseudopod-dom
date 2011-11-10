@@ -19,21 +19,22 @@ like_string $result,
     'verbatim sections should be unescaped';
 
 like_string $result,
-    qr|\\#!/bin/perl does need escaping, as do \\textbackslash\{\}|,
+    qr|\\#!/bin/perl does need escaping, as do \$\\textbackslash\$|,
     '... except for a few metacharacters';
 
 like_string $result, qr/\\mbox{}- it is also "normal".+\$text./s,
     '... indented too';
 
 like_string $result, qr/octothorpe, \\#/,            '# should get quoted';
-like_string $result, qr/escaping: \$\\backslash\$/,  '\ should get quoted';
 like_string $result, qr/\\\$/,                       '$ should get quoted';
 like_string $result, qr/\\&/,                        '& should get quoted';
 like_string $result, qr/\\%/,                        '% should get quoted';
 like_string $result, qr/ \\_\./,                     '_ should get quoted';
-like_string $result, qr/\\{\\},/,                    '{ and } should get quoted';
-like_string $result, qr/ \$\\sim\$/,                 '~ should get quoted';
+like_string $result, qr/ \\textasciitilde{}/,        '~ should get quoted';
 like_string $result, qr/caret \\char94\{\}/,         '^  should get quoted';
+
+like_string $result, qr/escaping: \$\\textbackslash\$/, '\ should get quoted';
+like_string $result, qr/\\{\\},/, '{ and } should get quoted';
 
 like_string $result, qr/``The interesting/,
     'starting double quotes should turn into double opening single quotes';
@@ -69,14 +70,20 @@ like_string $result, qr/\\index{the pipe "|}/,
 like_string $result, qr/\\index{strange quote a""a}/,
     'non-escaped " must be quoted with another " in an index entry';
 
-like_string $result, qr/\$\\char`\^W}!carats}/,
+like_string $result, qr/\$\\char94{}W}!carats}/,
     '... and carat needs special treatment';
 
 like_string $result, qr/\\index{hierarchical terms!omitting trailing spaces}/,
     'trailing spaces in hierarchical terms should be ignored';
 
-like_string $result, qr/\\index{\\texttt{code} and \\emph{italics} text}/,
+like_string $result, qr/\\index{code\@\\texttt{code} and \\emph{italics} text}/,
     '... but interior space should remain';
+
+like_string $result, qr/\\index{arrays!splice\@\\texttt{splice}} is even more/,
+    '... and formatting in indexes should still work';
+
+like_string $result, qr/\\index{\\textless{}=\\textgreater{}\@\\texttt/,
+    '... even with escaped symbols';
 
 like_string $result, qr/\\\$BANG BANG\\\$/,
     'escapes works inside items first line';

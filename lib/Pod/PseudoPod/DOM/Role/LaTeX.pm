@@ -88,18 +88,11 @@ sub encode_index_text
 {
     my ($self, $text) = @_;
 
-    my @terms;
+    $text =~ s/"/""/g;
+    $text = $self->escape_characters( $text );
+    $text =~ s/([!|@])/"$1/g;
 
-    for my $term (split /\s*;\s*/, $text)
-    {
-        $term =~ s/"/""/g;
-        $term =~ s/([!|@])/"$1/g;
-        $term =~ s/([#\$&%_{}])/\\$1/g;
-        $term =~ s/\^/\\char`\^/g;
-        push @terms, $term;
-    }
-
-    return join '!', @terms;
+    return $text;
 }
 
 sub encode_label_text
@@ -114,9 +107,7 @@ sub encode_verbatim_text
 {
     my ($self, $text) = @_;
 
-    $text =~ s/([{}])/\\$1/g;
-    $text =~ s/\\(?![{}])/\\textbackslash{}/g;
-    $text =~ s/([#\$&%_])/\\$1/g;
+    $text = $self->escape_characters( $text );
     $text =~ s/--/-\\mbox{}-/g;
 
     return $text;
@@ -126,14 +117,7 @@ sub encode_text
 {
     my ($self, $text) = @_;
 
-    # Escape LaTeX-specific characters
-    $text =~ s/\\/\\backslash/g;          # backslashes are special
-    $text =~ s/([#\$&%_{}])/\\$1/g;
-    $text =~ s/(\^)/\\char94{}/g;         # carets are special
-    $text =~ s/</\\textless{}/g;
-    $text =~ s/>/\\textgreater{}/g;
-
-    $text =~ s/(\\backslash)/\$$1\$/g;    # add unescaped dollars
+    $text = $self->escape_characters( $text );
 
     # use the right beginning quotes
     $text =~ s/(^|\s)"/$1``/g;
@@ -150,11 +134,25 @@ sub encode_text
     # fix emdashes
     $text =~ s/\s--\s/---/g;
 
-    # fix tildes
-    $text =~ s/~/\$\\sim\$/g;
-
     # suggest hyphenation points for module names
     $text =~ s/::/::\\-/g;
+
+    return $text;
+}
+
+sub escape_characters
+{
+    my ($self, $text) = @_;
+
+    # Escape LaTeX-specific characters
+    $text =~ s/\\/\\textbackslash/g;        # backslashes are special
+    $text =~ s/([#\$&%_{}])/\\$1/g;
+    $text =~ s/(\^)/\\char94{}/g;             # carets are special
+    $text =~ s/</\\textless{}/g;
+    $text =~ s/>/\\textgreater{}/g;
+    $text =~ s/~/\\textasciitilde{}/g;
+
+    $text =~ s/(\\textbackslash)/\$$1\$/g;    # add unescaped dollars
 
     return $text;
 }
@@ -225,8 +223,13 @@ sub emit_bullet_item
 
 sub emit_code
 {
-    my $self = shift;
-    return '\\texttt{' . $self->emit_kids( encode => 'verbatim_text', @_ ) . '}'
+    my ($self, %args) = @_;
+    my $kids          = $self->emit_kids( encode => 'verbatim_text' );
+    my $tag           = '\\texttt{' . $kids . '}';
+
+    $args{encode}     ||= '';
+    return $tag unless $args{encode} eq 'index_text';
+    return $kids . '@' . $tag;
 }
 
 sub emit_footnote
@@ -366,9 +369,24 @@ sub emit_character
 
 sub emit_index
 {
-    my $self    = shift;
-    my $content = $self->emit_kids( encode => 'index_text' );
-    $content    =~ s/^\s+|\s+$//g;
+    my $self = shift;
+
+    my $content;
+    for my $kid (@{ $self->children })
+    {
+        if ($kid->type eq 'plaintext')
+        {
+            my $kid_content = $kid->emit( encode => 'index_text' );
+            $kid_content    =~ s/\s*;\s*/!/g;
+            $content       .= $kid_content;
+        }
+        else
+        {
+            $content .= $kid->emit( encode => 'index_text' );
+        }
+    }
+
+    $content =~ s/^\s+|\s+$//g;
 
     return '\\index{' . $content . '}';
 }
