@@ -146,8 +146,9 @@ sub escape_characters
     my ($self, $text) = @_;
 
     # Escape LaTeX-specific characters
-    $text =~ s/\\/\\textbackslash/g;        # backslashes are special
-    $text =~ s/([#\$&%_{}])/\\$1/g;
+    $text =~ s/([{}])/\\$1/g;
+    $text =~ s/\\(?![{}])/\\textbackslash{}/g;        # backslashes are special
+    $text =~ s/([#\$&%_])/\\$1/g;
     $text =~ s/(\^)/\\char94{}/g;             # carets are special
     $text =~ s/</\\textless{}/g;
     $text =~ s/>/\\textgreater{}/g;

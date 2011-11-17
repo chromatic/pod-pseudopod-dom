@@ -19,7 +19,7 @@ like_string $result,
     'verbatim sections should be unescaped';
 
 like_string $result,
-    qr|\\#!/bin/perl does need escaping, but not \\textbackslash \(back|,
+    qr|\\#!/bin/perl does need escaping, but not \\textbackslash\{\} \(back|,
     '... except for a few metacharacters';
 
 like_string $result, qr/\\mbox{}- it is also "normal".+\$text./s,
