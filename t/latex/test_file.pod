@@ -14,7 +14,7 @@ This is part of some document (L<startofdocument>; A<startofdocument>).
 
   "This text should not be escaped -- it is normal $text."
 
-    #!/bin/perl does need escaping, as do \ (backslashes)
+    #!/bin/perl does need escaping, but not \ (backslashes)
 
 =end programlisting
 

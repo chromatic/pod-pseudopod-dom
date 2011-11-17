@@ -118,6 +118,7 @@ sub encode_text
     my ($self, $text) = @_;
 
     $text = $self->escape_characters( $text );
+    $text =~ s/(\\textbackslash)/\$$1\$/g;    # add unescaped dollars
 
     # use the right beginning quotes
     $text =~ s/(^|\s)"/$1``/g;
@@ -151,8 +152,6 @@ sub escape_characters
     $text =~ s/</\\textless{}/g;
     $text =~ s/>/\\textgreater{}/g;
     $text =~ s/~/\\textasciitilde{}/g;
-
-    $text =~ s/(\\textbackslash)/\$$1\$/g;    # add unescaped dollars
 
     return $text;
 }
