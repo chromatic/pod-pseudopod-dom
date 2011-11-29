@@ -6,7 +6,7 @@ use warnings;
 use autodie;
 
 use Pod::PseudoPod::DOM;
-use File::Basename;
+use Pod::PseudoPod::DOM::App qw( open_fh );
 
 sub process_files_with_output
 {
@@ -36,17 +36,6 @@ sub process_files_with_output
             print {$fh} $contents;
         }
     }
-}
-
-sub open_fh
-{
-    my ($file, $mode) = @_;
-
-    # default to reading
-    $mode ||= '<';
-
-    open my $fh, $mode . ':utf8', $file;
-    return $fh;
 }
 
 1;
