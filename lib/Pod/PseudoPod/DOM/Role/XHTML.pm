@@ -9,6 +9,7 @@ use HTML::Entities;
 
 requires 'type';
 has 'add_body_tags', is => 'ro', default => 0;
+has 'emit_environments', is => 'ro', default => sub { {} };
 
 sub accept_targets { qw( html HTML xhtml XHTML ) }
 
@@ -174,12 +175,34 @@ sub emit_file
 
 use constant { BEFORE => 0, AFTER => 1 };
 
-my %parent_items =
+my %block_items =
 (
     programlisting => [ qq|<div class="programlisting">\n\n|, q|</div>| ],
     sidebar        => [ qq|<div class="sidebar">\n\n|,        q|</div>| ],
     epigraph       => [ qq|<div class="epigraph">\n\n|,       q|</div>| ],
     blockquote     => [ qq|<div class="blockquote">\n\n|,     q|</div>| ],
+);
+
+while (my ($tag, $values) = each %block_items)
+{
+    my $sub = sub
+    {
+        my $self  = shift;
+        my $title = $self->title;
+        my $env   = $self->emit_environments;
+
+        return $self->make_basic_block( $env->{$tag}, $title, @_ )
+            if exists $env->{$tag};
+
+        # deal with title somehow
+        return $values->[BEFORE] . $self->emit_kids . $values->[AFTER] . "\n\n";
+    };
+
+    do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
+}
+
+my %parent_items =
+(
     paragraph      => [  q|<p>|,                              q|</p>|   ],
     text_list      => [ qq|<ul>\n\n|,                         q|</ul>|  ],
     bullet_list    => [ qq|<ul>\n\n|,                         q|</ul>|  ],
@@ -201,12 +224,97 @@ while (my ($tag, $values) = each %parent_items)
 sub emit_block
 {
     my $self   = shift;
+    my $title  = $self->title ? $self->title->emit_kids : '';
     my $target = $self->target;
 
-    if (my $meth = $self->can( 'emit_' . $target ))
+    if (my $environment = $self->emit_environments->{$target})
+    {
+        $target = $environment;
+    }
+    elsif (my $meth = $self->can( 'emit_' . $target))
     {
         return $self->$meth( @_ );
     }
+
+    return $self->make_basic_block( $self->target, $title, @_ );
+}
+
+sub make_basic_block
+{
+    my ($self, $target, $title, @rest) = @_;
+
+    $title = defined $title ? qq|<h2>$title</h2>\n| : '';
+
+    return qq|<div class="$target">\n$title|
+         . $self->emit_kids( @rest )
+         . qq|</div>|;
+}
+
+sub emit_index
+{
+    my $self = shift;
+    # index count must increment for multiple instances in the same file
+    # keep track of this location in gestalt index
+
+    my $content = $self->emit_kids;;
+    return qq|<a name="#$content"></a>|;
+}
+
+sub emit_table
+{
+    my $self    = shift;
+    my $title   = $self->title->emit_kids;
+
+    my $content = '<table>';
+    $content   .= qq|<caption>$title</caption>| if $title;
+    $content   .= $self->emit_kids;
+
+    return $content;
+}
+
+sub emit_headrow
+{
+    my $self = shift;
+
+    # kids should be cells
+    my $content = '<tr>';
+
+    for my $kid (@{ $self->children })
+    {
+        $content .= '<th>' . $kid->emit_kids . '</th>';
+    }
+
+    return $content . "</tr>\n";
+}
+
+sub emit_row
+{
+    my $self = shift;
+
+    return '<tr>' . $self->emit_kids . qq|</tr>\n|;
+}
+
+sub emit_cell
+{
+    my $self = shift;
+    return '<td>' . $self->emit_kids . qq|</td>\n|;
+}
+
+sub emit_figure
+{
+    my $self    = shift;
+    my $caption = $self->caption;
+    my $anchor  = $self->anchor;
+    $anchor     = defined $anchor ? $anchor->emit : '';
+    my $file    = $self->file->emit_kids;
+    my $content = '<p>';
+
+    $content   .= qq|<a name="$anchor"></a>|    if $anchor;
+    $content   .= qq|<img src="$file" />|;
+    $content   .= qq|<br />\n<em>$caption</em>| if $caption;
+    $content   .= '</p>';
+
+    return $content;
 }
 
 1;
