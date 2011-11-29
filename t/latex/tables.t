@@ -11,7 +11,7 @@ use File::Slurp;
 
 use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 
-my $file           = read_file( catfile( qw( t latex test_file.pod ) ) );
+my $file           = read_file( catfile( qw( t test_file.pod ) ) );
 my ($doc, $result) = parse( $file, filename => 'tables_test.tex' );
 
 like $result,

@@ -12,7 +12,7 @@ use File::Spec::Functions;
 
 use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 
-my $file   = read_file( catfile( qw( t latex test_file.pod ) ) );
+my $file   = read_file( catfile( qw( t test_file.pod ) ) );
 my $result = parse( $file );
 
 like_string $result, qr|\\begin{figure}\[H\]\n\\begin{center}\n\\begin{Sbox}|,
