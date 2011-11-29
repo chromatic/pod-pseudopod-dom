@@ -90,6 +90,12 @@ subscripts, like I<HH<2>O>.
 
 =end
 
+=for html
+
+  <p>HTML here</p>
+
+=end
+
 Hierarchical terms are also possible, separating single terms with a semicolon.
 Spaces around comma (e.g. in X< hierarchical terms ; omitting trailing spaces>)
 should be ignored, as they influence sorting order.

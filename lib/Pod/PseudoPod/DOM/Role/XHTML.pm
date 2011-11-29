@@ -243,7 +243,7 @@ sub make_basic_block
 {
     my ($self, $target, $title, @rest) = @_;
 
-    $title = defined $title ? qq|<h2>$title</h2>\n| : '';
+    $title = defined $title ? qq|<p class="title">$title</p>\n| : '';
 
     return qq|<div class="$target">\n$title|
          . $self->emit_kids( @rest )
