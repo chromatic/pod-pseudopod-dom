@@ -2,10 +2,7 @@
 
 use strict;
 use warnings;
-use autodie;
-use Pod::PseudoPod::DOM::App::ToLaTeX;
 
-use Pod::PseudoPod::DOM;
 use File::Basename;
 
 my %files = map
