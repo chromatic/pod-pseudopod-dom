@@ -337,9 +337,10 @@ sub emit_table
     my $self    = shift;
     my $title   = $self->title->emit_kids;
 
-    my $content = '<table>';
-    $content   .= qq|<caption>$title</caption>| if $title;
+    my $content = qq|<table>\n|;
+    $content   .= qq|<caption>$title</caption>\n| if $title;
     $content   .= $self->emit_kids;
+    $content   .= qq|</table>\n\n|;
 
     return $content;
 }
