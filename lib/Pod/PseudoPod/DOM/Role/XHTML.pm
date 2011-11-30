@@ -53,10 +53,13 @@ sub emit_kids
 
 sub emit_header
 {
-    my $self  = shift;
+    my $self    = shift;
+    my $content = $self->emit_kids( @_ );
+    return $self->emit_index( @_ ) if $content =~ /^\*/;
+
     my $level = 'h' . ($self->level + 1);
 
-    return "<$level>" . $self->emit_kids( @_ ) . "</$level>\n\n";
+    return "<$level>" . $content . "</$level>\n\n";
 }
 
 sub emit_plaintext
@@ -74,6 +77,14 @@ sub emit_plaintext
 }
 
 sub encode_none { $_[1] }
+
+sub encode_split
+{
+    my ($self, $content, %args) = @_;
+    my $target                  = $args{target};
+    return join $args{joiner},
+        map { $self->encode_text( $_ ) } split /\s*\Q$target\E\s*/, $content;
+}
 
 sub encode_text
 {
@@ -103,9 +114,27 @@ sub encode_verbatim_text
 
 sub emit_literal
 {
-    my $self      = shift;
-    my @grandkids = map { $_->emit_kids( @_ ) } @{ $self->children };
-    return qq|<div class="literal">| . join( "\n", @grandkids ) . "</div>\n\n";
+    my $self = shift;
+    my @kids;
+
+    if (my $title = $self->title)
+    {
+        my $target = $title->emit_kids( encode => 'none' );
+        @kids = map
+        {
+            $_->emit_kids(
+                encode => 'split', target => $target, joiner => "</p>\n\n<p>",
+            )
+        } @{ $self->children };
+    }
+    else
+    {
+        @kids = map { $_->emit_kids( @_ ) } @{ $self->children };
+    }
+
+    return qq|<div class="literal"><p>|
+         . join( "\n", @kids )
+         . qq|</p></div>\n\n|;
 }
 
 
@@ -142,6 +171,7 @@ sub emit_text_item
     return "<li></li>\n\n" unless @$kids;
 
     my $first = shift @$kids;
+    return '<li>' . $first->emit( @_ ) . qq|</li>\n\n| unless @$kids;
 
     return "<li><p>" . $first->emit . "</p>\n\n"
          . join( '', map { $_->emit } @$kids ) . "</li>\n\n";
@@ -249,7 +279,8 @@ while (my ($tag, $values) = each %parent_items)
     my $sub = sub
     {
         my $self = shift;
-        return $values->[BEFORE] . $self->emit_kids . $values->[AFTER] . "\n\n";
+        return $values->[BEFORE] . $self->emit_kids( @_ ) . $values->[AFTER]
+                                 . "\n\n";
     };
 
     do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
@@ -297,6 +328,7 @@ sub emit_index
     # keep track of this location in gestalt index
 
     my $content = $self->emit_kids( encode => 'index_text' );
+    $content    =~ s/^\*//;
     return qq|<a name="#$content"></a>|;
 }
 
