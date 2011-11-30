@@ -329,7 +329,7 @@ sub emit_index
 
     my $content = $self->emit_kids( encode => 'index_text' );
     $content    =~ s/^\*//;
-    return qq|<a name="#$content"></a>|;
+    return qq|<a name="$content"></a>|;
 }
 
 sub emit_table
@@ -381,7 +381,7 @@ sub emit_figure
     my $file    = $self->file->emit_kids;
     my $content = '<p>';
 
-    $content   .= qq|<a name="$anchor"></a>|    if $anchor;
+    $content   .= $anchor if $anchor;
     $content   .= qq|<img src="$file" />|;
     $content   .= qq|<br />\n<em>$caption</em>| if $caption;
     $content   .= '</p>';

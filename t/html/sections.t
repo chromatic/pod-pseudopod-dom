@@ -28,13 +28,13 @@ like_string $result, qr!<h3>B heading</h3>!,
 like_string $result, qr!<h4>c heading</h4>!,
     'C heads should become subsubsection titles';
 
-like_string $result, qr/<a name="#AnotherSuppressedHeading">/,
+like_string $result, qr/<a name="AnotherSuppressedHeading">/,
     '... chapter title TOC suppression should create anchor, not heading';
 
-like_string $result, qr/<a name="#ASuppressedHeading">/,
+like_string $result, qr/<a name="ASuppressedHeading">/,
     '... section TOC suppression should work';
 
-like_string $result, qr/<a name="#YetAnotherSuppressedHeading">/,
+like_string $result, qr/<a name="YetAnotherSuppressedHeading">/,
     '... subsection TOC suppression should work';
 
 like_string $result,
