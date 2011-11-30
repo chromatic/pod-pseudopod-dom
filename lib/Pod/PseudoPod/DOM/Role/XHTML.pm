@@ -8,7 +8,7 @@ use Moose::Role;
 use HTML::Entities;
 
 requires 'type';
-has 'add_body_tags', is => 'ro', default => 0;
+has 'add_body_tags',     is => 'ro', default => 0;
 has 'emit_environments', is => 'ro', default => sub { {} };
 
 sub accept_targets { qw( html HTML xhtml XHTML ) }
@@ -26,13 +26,13 @@ sub emit_document
 {
     my $self = shift;
     return $self->emit_body if $self->add_body_tags;
-    return $self->emit_kids;
+    return $self->emit_kids( @_ );
 }
 
 sub emit_body
 {
     my $self = shift;
-    return <<END_HTML_HEAD . $self->emit_kids . <<END_HTML;
+    return <<END_HTML_HEAD . $self->emit_kids( @_ ) . <<END_HTML;
 <html>
 <head>
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -56,7 +56,7 @@ sub emit_header
     my $self  = shift;
     my $level = 'h' . ($self->level + 1);
 
-    return "<$level>" . $self->emit_kids . "</$level>\n\n";
+    return "<$level>" . $self->emit_kids( @_ ) . "</$level>\n\n";
 }
 
 sub emit_plaintext
@@ -64,23 +64,47 @@ sub emit_plaintext
     my ($self, %args) = @_;
     my $content       = $self->content || '';
 
-    if ($args{encode_html})
+    if (my $encode = $args{encode})
     {
-        $content = encode_entities($content);
-    }
-    else
-    {
-        $content =~ s/\s*---\s*/&#8213;/g;
-        $content =~ s/\s*--\s*/&mdash;/g;
+        my $method = 'encode_' . $encode;
+        return $self->$method( $content, %args );
     }
 
-    return $content;
+    return $self->encode_text( $content, %args );
+}
+
+sub encode_none { $_[1] }
+
+sub encode_text
+{
+    my ($self, $text) = @_;
+
+    $text = encode_entities($text);
+    $text =~ s/\s*---\s*/&#8213;/g;
+    $text =~ s/\s*--\s*/&mdash;/g;
+
+    return $text;
+}
+
+sub encode_index_text
+{
+    my ($self, $text) = @_;
+    $text =~ s/[\s"]//g;
+    $text =~ s/</&lt;/g;
+    $text =~ s/>/&gt;/g;
+    return $text;
+}
+
+sub encode_verbatim_text
+{
+    my ($self, $text) = @_;
+    return encode_entities( $text );
 }
 
 sub emit_literal
 {
     my $self      = shift;
-    my @grandkids = map { $_->emit_kids } @{ $self->children };
+    my @grandkids = map { $_->emit_kids( @_ ) } @{ $self->children };
     return qq|<div class="literal">| . join( "\n", @grandkids ) . "</div>\n\n";
 }
 
@@ -88,13 +112,19 @@ sub emit_literal
 sub emit_anchor
 {
     my $self = shift;
-    return qq|<a name="| . $self->emit_kids . qq|"></a>|;
+    return qq|<a name="|
+         . $self->emit_kids( encode => 'index_text' )
+         . qq|"></a>|;
 }
 
 sub emit_italics
 {
-    my $self = shift;
-    return '<em>' . $self->emit_kids . '</em>';
+    my ($self, %args) = @_;
+    my $kids          = $self->emit_kids( encode => 'verbatim_text', %args );
+    $args{encode}   ||= '';
+
+    return $kids if $args{encode} eq 'index_text';
+    return '<em>' . $kids . '</em>';
 }
 
 sub emit_number_item
@@ -120,14 +150,18 @@ sub emit_text_item
 sub emit_verbatim
 {
     my $self = shift;
-    return "<pre><code>" . $self->emit_kids( encode_html => 1 )
+    return "<pre><code>" . $self->emit_kids( encode => 'verbatim_text', @_ )
          . "</code></pre>\n\n";
 }
 
 sub emit_code
 {
-    my $self = shift;
-    return "<code>" . $self->emit_kids( encode_html => 1 ) . "</code>";
+    my ($self, %args) = @_;
+    my $kids          = $self->emit_kids( encode => 'verbatim_text', %args );
+    $args{encode}   ||= '';
+
+    return $kids if $args{encode} eq 'index_text';
+    return '<code>' . $kids . '</code>';
 }
 
 sub emit_footnote
@@ -239,6 +273,12 @@ sub emit_block
     return $self->make_basic_block( $self->target, $title, @_ );
 }
 
+sub emit_html
+{
+    my $self = shift;
+    return $self->emit_kids( encode => 'none' );
+}
+
 sub make_basic_block
 {
     my ($self, $target, $title, @rest) = @_;
@@ -256,7 +296,7 @@ sub emit_index
     # index count must increment for multiple instances in the same file
     # keep track of this location in gestalt index
 
-    my $content = $self->emit_kids;;
+    my $content = $self->emit_kids( encode => 'index_text' );
     return qq|<a name="#$content"></a>|;
 }
 

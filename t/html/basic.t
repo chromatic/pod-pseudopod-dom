@@ -53,7 +53,7 @@ my $html =
   '<p>B: Now, Pinky, if by any chance you are captured during this mission, '
 . 'remember you are Gunther Heindriksen from Appenzell. You moved to '
 . "Grindelwald to drive the cog train to Murren. Can you repeat that?</p>\n\n"
-. "<p>P: Mmmm, no, Brain, don't think I can.</p>\n\n";
+. "<p>P: Mmmm, no, Brain, don&#39;t think I can.</p>\n\n";
 
 is $result, $html, "multiple paragraphs";
 
