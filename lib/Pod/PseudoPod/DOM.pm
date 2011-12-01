@@ -43,7 +43,7 @@ sub parse_string_document
         $self->{formatter_args}{emit_environments} = $environments;
     }
 
-    return $self->SUPER::parse_string_document( $document );
+    $self->SUPER::parse_string_document( $document );
 }
 
 sub _treat_Es

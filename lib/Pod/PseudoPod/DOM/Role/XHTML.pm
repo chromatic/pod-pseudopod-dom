@@ -62,6 +62,7 @@ sub emit_body
     return <<END_HTML_HEAD . $self->emit_kids( @_ ) . <<END_HTML;
 <html>
 <head>
+<!-- this will not be valid without a TITLE element -->
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 <body>
@@ -70,6 +71,19 @@ END_HTML_HEAD
 </body>
 </html>
 END_HTML
+}
+
+sub emit_section
+{
+    my $self = shift;
+    return sprintf(
+        # in HTML5, you might want <section> instead of <div>
+        '<div class="%s %s-level-%d">%s</div>',
+        $self->type,
+        $self->type,
+        $self->level + 1,  # in HTML headings, $[ = 1
+        $self->emit_kids,
+        );
 }
 
 sub emit_kids
