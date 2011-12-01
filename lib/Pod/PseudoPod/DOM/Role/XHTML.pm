@@ -355,11 +355,19 @@ sub make_basic_block
 {
     my ($self, $target, $title, @rest) = @_;
 
-    $title = defined $title ? qq|<p class="title">$title</p>\n| : '';
+    $title = $self->make_block_title( $title );
 
     return qq|<div class="$target">\n$title|
          . $self->emit_kids( @rest )
          . qq|</div>|;
+}
+
+sub make_block_title
+{
+    my ($self, $title) = @_;
+
+    return '' unless defined $title and length $title;
+    return qq|<p class="title">$title</p>\n|;
 }
 
 sub emit_index

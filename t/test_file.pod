@@ -66,6 +66,12 @@ Hello, this is a sidebar
 
 =end
 
+=begin sidebar Sidebar Has Title
+
+Hello, this is a =begin sidebar.
+
+=end sidebar
+
 X<Special formatting>
 
 Special formatting is B<very> important, especially in C<code-like text>, for
