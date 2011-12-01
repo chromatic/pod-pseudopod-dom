@@ -12,6 +12,33 @@ has 'add_body_tags',     is => 'ro', default => 0;
 has 'emit_environments', is => 'ro', default => sub { {} };
 
 sub accept_targets { qw( html HTML xhtml XHTML ) }
+sub encode_E_contents {}
+
+my %characters = (
+    acute    => sub { '&' . shift . 'acute;' },
+    grave    => sub { '&' . shift . 'grave;' },
+    uml      => sub { '&' . shift . 'uml;'   },
+    cedilla  => sub { '&' . shift . 'cedil;' },
+    opy      => sub { '&copy;'               },
+    dash     => sub { '&mdash;'              },
+    lusmn    => sub { '&plusmn;'             },
+    mp       => sub { '&amp;'                },
+    rademark => sub { '&#8482;'              },
+);
+
+sub emit_character
+{
+    my $self    = shift;
+    my $content = eval { $self->emit_kids( @_ ) };
+    return '' unless defined $content;
+
+    if (my ($char, $class) = $content =~ /(\w)(\w+)/)
+    {
+        return $characters{$class}->($char) if exists $characters{$class};
+    }
+
+    return Pod::Escapes::e2char( $content )
+}
 
 sub emit
 {
@@ -65,7 +92,8 @@ sub emit_header
 sub emit_plaintext
 {
     my ($self, %args) = @_;
-    my $content       = $self->content || '';
+    my $content       = $self->content;
+    $content          = '' unless defined $content;
 
     if (my $encode = $args{encode})
     {
@@ -259,15 +287,28 @@ while (my ($tag, $values) = each %block_items)
             if exists $env->{$tag};
 
         # deal with title somehow
-        return $values->[BEFORE] . $self->emit_kids . $values->[AFTER] . "\n\n";
+        return $values->[BEFORE]
+             . $self->make_block_title( $title )
+             . $self->emit_kids . $values->[AFTER]
+             . "\n\n";
     };
 
     do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
 }
 
+sub emit_paragraph
+{
+    my $self             = shift;
+    my @kids             = @{ $self->children };
+    my $has_visible_text = grep { $_->type ne 'index' } @kids;
+    my $content          = $self->emit_kids( @_ );
+
+    return         $content unless $has_visible_text;
+    return '<p>' . $content . qq|</p>\n\n|;
+}
+
 my %parent_items =
 (
-    paragraph      => [  q|<p>|,                              q|</p>|   ],
     text_list      => [ qq|<ul>\n\n|,                         q|</ul>|  ],
     bullet_list    => [ qq|<ul>\n\n|,                         q|</ul>|  ],
     bullet_item    => [ qq|<li>|,                             q|</li>|  ],
