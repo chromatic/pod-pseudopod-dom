@@ -165,7 +165,6 @@ sub emit_literal
          . qq|</p></div>\n\n|;
 }
 
-
 sub emit_anchor
 {
     my $self = shift;
@@ -238,7 +237,9 @@ sub emit_url
 sub emit_link
 {
     my $self = shift;
-    return qq|<a href="#| . $self->emit_kids . q|">link</a>|;
+    return '<a href="#'
+         . $self->emit_kids( encode => 'index_text' )
+         . q|">link</a>|;
 }
 
 sub emit_superscript
@@ -296,11 +297,13 @@ while (my ($tag, $values) = each %block_items)
     do { no strict 'refs'; *{ 'emit_' . $tag } = $sub };
 }
 
+my %invisibles = map { $_ => 1 } qw( index anchor );
+
 sub emit_paragraph
 {
     my $self             = shift;
     my @kids             = @{ $self->children };
-    my $has_visible_text = grep { $_->type ne 'index' } @kids;
+    my $has_visible_text = grep { ! exists $invisibles{ $_->type } } @kids;
     my $content          = $self->emit_kids( @_ );
 
     return         $content unless $has_visible_text;
