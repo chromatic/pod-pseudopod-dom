@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Moose::Role;
+use File::Basename;
 
 requires 'type';
 has 'tables',            is => 'rw', default => sub { {} };
@@ -16,7 +17,9 @@ sub accept_targets { 'latex' }
 sub add_table
 {
     my ($self, $table) = @_;
-    my $filename       = $self->filename;
+
+    # TeX includes are RELATIVE
+    my $filename       = basename($self->filename);
     my $tables         = $self->tables;
     my $count          = keys %$tables;
     (my $id            = $filename)
