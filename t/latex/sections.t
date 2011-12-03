@@ -42,7 +42,7 @@ like_string $result,
     'programlistings should become unescaped, verbatim result';
 
 like_string $result,
-    qr/\\begin{Verbatim}.*label=.+This should also be \\\$unm0d\+ified\n\\end/s,
+    qr/\\begin{Screen}\s*This should also be \\\$unm0d\+ified\n\\end{Screen}/s,
     'screens should become unescaped, verbatim result';
 
 like_string $result, qr/Blockquoted text.+``escaped''\./,

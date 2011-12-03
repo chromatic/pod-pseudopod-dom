@@ -338,9 +338,9 @@ sub emit_screen
     # should be only a single Verbatim; may need to fix with hoisting
     my $kid  = $self->children->[0];
 
-    return qq|\\begin{Verbatim}[$escapes,label=Program output]\n|
+    return qq|\\begin{Screen}\n|
          . $kid->emit_kids( encode => 'verbatim_text' )
-         . qq|\n\\end{Verbatim}\n|;
+         . qq|\n\\end{Screen}\n|;
 }
 
 my %characters = (
