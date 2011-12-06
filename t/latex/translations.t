@@ -27,7 +27,7 @@ like_string $result, qr/na\\"ive/,
 like_string $result, qr/attach\\`e/,
     'grave diacritic should translate to single backquote escape';
 
-like_string $result, qr/Fran\\caise/, 'cedilla should translate to \c';
+like_string $result, qr/Fran\\c\{c\}aise/, 'cedilla should translate to \c';
 
 like_string $result, qr/fun ones\\texttrademark./,
     '... and trademark symbol needs an escape';
