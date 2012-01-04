@@ -156,6 +156,7 @@ sub escape_characters
     $text =~ s/</\\textless{}/g;
     $text =~ s/>/\\textgreater{}/g;
     $text =~ s/~/\\textasciitilde{}/g;
+    $text =~ s/'/\\textquotesingle{}/g;
 
     return $text;
 }

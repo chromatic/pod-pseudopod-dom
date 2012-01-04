@@ -46,6 +46,10 @@ like_string $result, qr/\\textbf{very} important/,
 like_string $result, qr/\\texttt{code-like text}/,
     'code-marked text needs a formatting directive';
 
+like_string $result,
+    qr/\\texttt{\\textquotesingle{}single quotes\\textquotesingle{}}/,
+    '... and needs special treatment for single quotes';
+
 like_string $result, qr/such as \\texttt\{0\}/,
     '... even if text is Perl-like false';
 
