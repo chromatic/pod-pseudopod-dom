@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use Pod::PseudoPod::DOM;
+use Pod::PseudoPod::DOM::App::ToLateX;
 use File::Basename;
 
 my %files = map
