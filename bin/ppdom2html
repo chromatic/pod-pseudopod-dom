@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use File::Basename;
-use Pod::PseudoPod::DOM::App::ToLaTeX;
+use Pod::PseudoPod::DOM::App::ToHTML;
 
 my %files = map
 {
