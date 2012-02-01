@@ -13,7 +13,7 @@ use File::Spec::Functions;
 use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 
 my $file   = read_file( catfile( qw( t test_file.pod ) ) );
-my $result = parse( $file, emit_environments => { foo => 'foo' } );
+my $result = parse_with_anchors( $file, emit_environments => { foo => 'foo' } );
 
 unlike_string $result, qr!\\LaTeX!,
     'A =for latex section should have disappeared';

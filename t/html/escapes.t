@@ -12,7 +12,7 @@ use File::Slurp;
 use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 
 my $file   = read_file( catfile( qw( t test_file.pod ) ) );
-my $result = parse( $file );
+my $result = parse_with_anchors( $file );
 
 like_string $result,
     qr/&quot;This text should not be escaped -- it is normal \$text\.&quot;/,

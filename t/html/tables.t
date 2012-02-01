@@ -12,7 +12,7 @@ use File::Slurp;
 use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 
 my $file           = read_file( catfile( qw( t test_file.pod ) ) );
-my ($doc, $result) = parse( $file, filename => 'tables_test.tex' );
+my ($doc, $result) = parse_with_anchors( $file, filename => 'tables_test.tex' );
 
 like $result, qr!<table>!, 'table should translate to <table>';
 

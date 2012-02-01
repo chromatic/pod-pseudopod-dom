@@ -11,8 +11,8 @@ use File::Slurp;
 
 use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 
-my $file   = read_file( catfile( qw( t test_file.pod ) ) );
-my ( $doc, $result) = parse( $file );
+my $file           = read_file( catfile( qw( t test_file.pod ) ) );
+my ($doc, $result) = parse_with_anchors( $file );
 
 like_string $result, qr/<p><a name="figure_link">/,
     'figure should start a figure environment';
