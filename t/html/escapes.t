@@ -59,28 +59,28 @@ like_string $result, qr/ineffable/, 'ff ligature also gets no marking';
 like_string $result, qr/ligatures&mdash;and/,
     'spacey double dash should become a real emdash';
 
-like_string $result, qr/<a name="negation!operator">/,
+like_string $result, qr/<a name="negation!operator1">/,
     '! is fine as-is in index anchor';
 
-like_string $result, qr/<a name="array\@sigil">/,
+like_string $result, qr/<a name="array\@sigil1">/,
     '@ is also fine as-is in index anchor';
 
-like_string $result, qr/<a name="thepipe|">/,
+like_string $result, qr/<a name="thepipe|1">/,
     'spaces removed from index anchors';
 
-like_string $result, qr/<a name="strangequoteaa">/,
+like_string $result, qr/<a name="strangequoteaa1">/,
     'quotes removed from index anchors';
 
-like_string $result, qr/<a name="\$\^W;carats">/,
+like_string $result, qr/<a name="\$\^W;carats1">/,
     '... carat gets no special treatment in anchor';
 
-like_string $result, qr/<a name="hierarchicalterms;omittingtrailingspaces">/,
+like_string $result, qr/<a name="hierarchicalterms;omittingtrailingspaces1">/,
     'trailing spaces in hierarchical terms should be ignored';
 
-like_string $result, qr/<a name="codeanditalicstext">/,
+like_string $result, qr/<a name="codeanditalicstext1">/,
     '... and code/italics formatting';
 
-like_string $result, qr/<a name="&lt;=&gt;;numericcomparisonoperator">/,
+like_string $result, qr/<a name="&lt;=&gt;;numericcomparisonoperator1">/,
     '... and should escape <> symbols';
 
 like_string $result, qr/<li>\$BANG BANG\$<p>/,

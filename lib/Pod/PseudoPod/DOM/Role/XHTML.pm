@@ -21,6 +21,18 @@ sub get_link_for_anchor
     return map { $heading->$_ } qw( get_filename get_anchor get_link_text );
 }
 
+sub resolve_index
+{
+    my $self = shift;
+
+    my %count;
+    for my $entry (@{ $self->index })
+    {
+        my $text = $entry->emit_kids( encode => 'index_text' );
+        $entry->id( ++$count{ $text } );
+    }
+}
+
 sub accept_targets { qw( html HTML xhtml XHTML ) }
 sub encode_E_contents {}
 
@@ -62,6 +74,7 @@ sub emit
 sub emit_document
 {
     my $self = shift;
+    $self->resolve_index;
     return $self->emit_body if $self->add_body_tags;
     return $self->emit_kids( @_ );
 }
@@ -138,9 +151,12 @@ sub encode_text
 sub encode_index_text
 {
     my ($self, $text) = @_;
+
+    $text =~ s/^\*//;
     $text =~ s/[\s"]//g;
     $text =~ s/</&lt;/g;
     $text =~ s/>/&gt;/g;
+
     return $text;
 }
 
@@ -386,12 +402,11 @@ sub make_block_title
 
 sub emit_index
 {
-    my $self = shift;
-    # index count must increment for multiple instances in the same file
-    # keep track of this location in gestalt index
+    my $self    = shift;
 
     my $content = $self->emit_kids( encode => 'index_text' );
-    $content    =~ s/^\*//;
+    $content   .= $self->id if $self->type eq 'index';
+
     return qq|<a name="$content"></a>|;
 }
 

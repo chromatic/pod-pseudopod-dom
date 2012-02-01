@@ -81,6 +81,8 @@ value such as C<0> or I<0> should work even in inline markup. Decrement
 behavior (C<$some_variable-->) should be fine too. C<'single quotes'> need to
 be single quotes, not fancy curly apostrophes.
 
+X<Special formatting>
+
 Index entries are more fun, as more special characters must be escaped, with a
 quote sign. E.g. X<negation ! operator>, X<array @ sigil>, X<the pipe |> and
 X<strange quote a"a>, not to mention X<C<$^W>; carats>. X<C<code> and

@@ -92,6 +92,7 @@ use Moose;
     package Pod::PseudoPod::DOM::Element::Text::Index;
 
     use Moose;
+    has 'id', is => 'rw', default => 1;
 
     extends 'Pod::PseudoPod::DOM::Element::Linkable';
 }

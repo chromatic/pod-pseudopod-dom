@@ -66,8 +66,11 @@ like_string $result, qr!<em>semantic-only emphasis</em>!,
 like_string $result, qr|<span class="footnote">but beware of footnotes!</span>|,
     'footnotes need special escaping too';
 
-like_string $result, qr!^<a name="Specialformatting"></a><p>!m,
+like_string $result, qr!^<a name="Specialformatting1"></a><p>!m,
     'indexed items need even more special escaping';
+
+like_string $result, qr!<a name="Specialformatting2"></a>!m,
+    '... and de-duplication';
 
 like_string $result, qr!mc<sup>2</sup>!, 'superscript works';
 
