@@ -222,15 +222,21 @@ is($result, <<"EOHTML", "Link anchor entity in a paragraph");
 
 EOHTML
 
-$result = parse( <<'EOPOD' );
+$result = parse_with_anchors( <<'EOPOD' );
 =pod
+
+=head1 XREF header
+
+Z<crossreferencelink>
+
+=head2 No XREF Header
 
 A plain paragraph with a A<crossreferencelink>.
 EOPOD
-is($result, <<"EOHTML", "Link entity in a paragraph");
-<p>A plain paragraph with a <a href="#crossreferencelink">link</a>.</p>
 
-EOHTML
+like $result,
+     qr!paragraph with a <a href="$0\.tex#crossreferencelink">XREF header</a>!,
+    'Link entity in a paragraph';
 
 $result = parse( <<'EOPOD' );
 =pod

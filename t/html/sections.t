@@ -8,13 +8,15 @@ use Test::LongString;
 
 use lib 't/lib';
 use TestDOM 'Pod::PseudoPod::DOM::Role::XHTML';
+use Pod::PseudoPod::DOM::App;
 use File::Spec::Functions;
 use File::Slurp;
 
 use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 
+my %anchors;
 my $file   = read_file( catfile( qw( t test_file.pod ) ) );
-my $result = parse( $file );
+my $result = parse_with_anchors( $file );
 
 like_string $result, qr!<h1>Some Document</h1>!,
     '0 heads should become chapter titles';
@@ -81,6 +83,10 @@ like_string $result,
 
 like_string $result, qr!them\.</p>\s*<p></p>!,
     '... even with extra embedded newlines';
+
+like_string $result,
+    qr!part of some document \(.+?>Some Document</a>; .+?>Some Document</a>\)!,
+    'Z<> and A<> tags should use contents of previous heading for text';
 
 TODO:
 {

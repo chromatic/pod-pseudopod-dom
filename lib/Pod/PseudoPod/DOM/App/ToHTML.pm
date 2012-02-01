@@ -12,11 +12,15 @@ sub process_files_with_output
 {
     my %files = @_;
 
+    my @docs;
+    my %anchors;
+
     while (my ($source, $output) = each %files)
     {
         my $parser = Pod::PseudoPod::DOM->new(
             formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML',
-            formatter_args => { add_body_tags => 1 },
+            formatter_args => { add_body_tags => 1, anchors => \%anchors },
+            filename       => $output,
         );
 
         my $HTMLOUT = open_fh( $output, '>' );
@@ -27,9 +31,27 @@ sub process_files_with_output
 
         die "Unable to open file\n" unless -e $source;
         $parser->parse_file($source);
-        my $doc = $parser->get_document;
+
+        push @docs, $parser->get_document;
+    }
+
+    # turn anchor text contents into link destinations
+    # create link descriptions from anchor headers
+    # generate unique IDs for index anchors
+    # must process index display info?
+    Pod::PseudoPod::DOM::App->resolve_anchors( \%anchors,
+        [ map { @{ $_->anchor } } @docs ]
+    );
+
+    for my $doc (@docs)
+    {
+        my $output  = $doc->filename;
+        my $HTMLOUT = open_fh( $output, '>' );
         print {$HTMLOUT} $doc->emit;
     }
+
+    # merge index links
+    # do not merge anchor links; throw error on duplicates!
 }
 
 1;

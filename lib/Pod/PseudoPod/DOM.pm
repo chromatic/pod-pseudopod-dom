@@ -33,6 +33,12 @@ sub new
     return $self;
 }
 
+sub add_link
+{
+    my ($self, $type, $link) = @_;
+    push @{ $self->{Document}->$type }, $link;
+}
+
 sub parse_string_document
 {
     my ($self, $document, %args) = @_;
@@ -118,6 +124,26 @@ sub push_element
 
     $self->{active_elements}[-1]->add_children( $child );
     push @{ $self->{active_elements } }, $child;
+
+    return $child;
+}
+
+sub push_heading_element
+{
+    my $self  = shift;
+    my $child = $self->push_element( @_ );
+
+    $self->{latest_heading} = $child;
+}
+
+sub push_link_element
+{
+    my ($self, $class, %args) = @_;
+    my $child                 = $self->push_element(
+        $class, heading => $self->{latest_heading}, %args
+    );
+
+    $self->add_link( $args{type} => $child );
 }
 
 sub add_element
@@ -163,7 +189,7 @@ BEGIN
         my $start_meth = sub
         {
             my $self = shift;
-            $self->push_element(
+            $self->push_heading_element(
                 Heading => level => $heading, type => 'header'
             );
         };
@@ -182,22 +208,49 @@ BEGIN
         };
     }
 
+    my %link_types =
+    (
+        X => 'index',
+        Z => 'anchor',
+        L => 'link',
+        A => 'link',
+    );
+
+    while (my ($tag, $type) = each %link_types)
+    {
+        my $start_meth = sub
+        {
+            my $self   = shift;
+            $self->push_link_element( 'Text::' . ucfirst $type,
+                                    type => $type, link => $self->{filename} );
+        };
+
+        my $end_meth = sub
+        {
+            my $self = shift;
+            $self->reset_to_item( 'Text::' . ucfirst $type, type => $type );
+        };
+
+        do
+        {
+            no strict 'refs';
+            *{ 'start_' . $tag } = $start_meth;
+            *{ 'end_'   . $tag } = $end_meth;
+        };
+    }
+
     my %text_types =
     (
-        Z => 'Anchor',
         I => 'Italics',
         C => 'Code',
         N => 'Footnote',
         U => 'URL',
-        A => 'Link',
         G => 'Superscript',
         H => 'Subscript',
         B => 'Bold',
         R => 'Italics',
         F => 'File',
         E => 'Character',
-        X => 'Index',
-        L => 'Link',
     );
 
     while (my ($tag, $type) = each %text_types)

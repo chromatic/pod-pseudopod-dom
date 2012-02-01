@@ -10,6 +10,16 @@ use HTML::Entities;
 requires 'type';
 has 'add_body_tags',     is => 'ro', default => 0;
 has 'emit_environments', is => 'ro', default => sub { {} };
+has 'anchors',           is => 'rw', default => sub { {} };
+
+sub get_link_for_anchor
+{
+    my ($self, $anchor) = @_;
+    my $anchors         = $self->anchors;
+
+    return unless my $heading = $anchors->{$anchor};
+    return map { $heading->$_ } qw( get_filename get_anchor get_link_text );
+}
 
 sub accept_targets { qw( html HTML xhtml XHTML ) }
 sub encode_E_contents {}
@@ -236,10 +246,11 @@ sub emit_url
 
 sub emit_link
 {
-    my $self = shift;
-    return '<a href="#'
-         . $self->emit_kids( encode => 'index_text' )
-         . q|">link</a>|;
+    my $self                 = shift;
+    my $anchor               = $self->emit_kids;
+
+    my ($file, $frag, $text) = $self->get_link_for_anchor( $anchor );
+    return qq|<a href="$file#$frag">$text</a>|;
 }
 
 sub emit_superscript

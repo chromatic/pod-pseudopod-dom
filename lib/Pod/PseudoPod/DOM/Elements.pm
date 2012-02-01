@@ -65,15 +65,55 @@ use Moose;
 }
 
 {
+    package Pod::PseudoPod::DOM::Element::Linkable;
+
+    use Moose;
+
+    extends 'Pod::PseudoPod::DOM::ParentElement';
+
+    has 'link',    is => 'rw', default  => '';
+    has 'heading', is => 'rw', required => 1;
+}
+
+{
+    package Pod::PseudoPod::DOM::Element::Text::Anchor;
+
+    use Moose;
+
+    extends 'Pod::PseudoPod::DOM::Element::Linkable';
+
+    # XXX: this shouldn't be here
+    sub get_filename  { shift->link               }
+    sub get_anchor    { shift->emit_kids( encode => 'index_text' ) }
+    sub get_link_text { shift->heading->emit_kids }
+}
+
+{
+    package Pod::PseudoPod::DOM::Element::Text::Index;
+
+    use Moose;
+
+    extends 'Pod::PseudoPod::DOM::Element::Linkable';
+}
+
+{
+    package Pod::PseudoPod::DOM::Element::Text::Link;
+
+    use Moose;
+
+    extends 'Pod::PseudoPod::DOM::Element::Linkable';
+}
+
+{
     my $parent = 'Pod::PseudoPod::DOM::Element::Text';
 
     for my $text_item (qw(
-        Anchor Bold Character Code Entity File Footnote Italics Index Link
+        Bold Character Code Entity File Footnote Italics
         Subscript Superscript URL ))
     {
         Class::MOP::Class->create(
-            $parent . '::' . $text_item =>
-            superclasses                => [ 'Pod::PseudoPod::DOM::ParentElement' ]
+            "${parent}::${text_item}" =>
+            superclasses              => ['Pod::PseudoPod::DOM::ParentElement']
         );
     }
 }
@@ -303,6 +343,10 @@ use Moose;
     use Moose;
 
     has 'externals', is => 'ro', default => sub { {} };
+    has 'filename',  is => 'ro', default => '';
+    has 'index',     is => 'ro', default => sub { [] };
+    has 'anchor',    is => 'ro', default => sub { [] };
+    has 'link',      is => 'ro', default => sub { [] };
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
 }

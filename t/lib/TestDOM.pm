@@ -1,6 +1,10 @@
 package TestDOM;
 
+use strict;
+use warnings;
+
 use Pod::PseudoPod::DOM;
+use Pod::PseudoPod::DOM::App;
 
 sub import
 {
@@ -8,21 +12,44 @@ sub import
 
     my @caller   = caller;
     my $filename = $caller[1] . '.tex';
-    my $sub      = sub
+    my $parse    = sub
     {
-        my $document = shift;
-        my $parser   = Pod::PseudoPod::DOM->new(
-            formatter_role => $formatter,
-            filename       => $filename,
-            @_
-        );
-        $parser->parse_string_document( $document, @_ );
-        my $doc  = $parser->get_document;
+        my $doc  = parse_document( $formatter, $filename, @_ );
         my $text = $doc->emit;
         return wantarray ? ($doc, $text) : $text;
     };
 
-    do { no strict 'refs'; *{ $caller[0] . '::' . 'parse' } = $sub };
+    my $parse_with_anchors = sub
+    {
+        my ($document, %args) = @_;
+        my $anchors           = $args{formatter_args}{anchors} ||= {};
+        my $doc               = parse_document( $formatter, $filename,
+                                                $document,  %args );
+
+        Pod::PseudoPod::DOM::App->resolve_anchors( $anchors, $doc->anchor );
+        my $text = $doc->emit;
+        return wantarray ? ($doc, $text) : $text;
+    };
+
+    do
+    {
+        no strict 'refs';
+        *{ $caller[0] . '::' . 'parse' }              = $parse;
+        *{ $caller[0] . '::' . 'parse_with_anchors' } = $parse_with_anchors;
+
+    };
+}
+
+sub parse_document
+{
+    my ($formatter, $filename, $document) = splice @_, 0, 3;
+    my $parser   = Pod::PseudoPod::DOM->new(
+        formatter_role => $formatter,
+        filename       => $filename,
+        @_
+    );
+    $parser->parse_string_document( $document, @_ );
+    return $parser->get_document;
 }
 
 1;
