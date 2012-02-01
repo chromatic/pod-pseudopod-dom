@@ -21,6 +21,17 @@ sub get_link_for_anchor
     return map { $heading->$_ } qw( get_filename get_anchor get_link_text );
 }
 
+sub resolve_anchors
+{
+    my $self    = shift;
+    my $anchors = $self->anchors;
+
+    for my $anchor (@{ $self->anchor })
+    {
+        $anchors->{$anchor->emit_kids} = $anchor;
+    }
+}
+
 sub resolve_index
 {
     my $self = shift;
@@ -74,7 +85,10 @@ sub emit
 sub emit_document
 {
     my $self = shift;
+
     $self->resolve_index;
+    $self->resolve_anchors;
+
     return $self->emit_body if $self->add_body_tags;
     return $self->emit_kids( @_ );
 }

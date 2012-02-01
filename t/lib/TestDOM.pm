@@ -26,7 +26,6 @@ sub import
         my $doc               = parse_document( $formatter, $filename,
                                                 $document,  %args );
 
-        Pod::PseudoPod::DOM::App->resolve_anchors( $anchors, $doc->anchor );
         my $text = $doc->emit;
         return wantarray ? ($doc, $text) : $text;
     };

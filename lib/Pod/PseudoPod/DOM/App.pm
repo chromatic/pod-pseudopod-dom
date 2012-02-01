@@ -18,14 +18,4 @@ sub open_fh
     return $fh;
 }
 
-sub resolve_anchors
-{
-    my ($self, $anchors, $dom_anchors) = @_;
-
-    for my $anchor (@$dom_anchors)
-    {
-        $anchors->{$anchor->emit_kids} = $anchor;
-    }
-}
-
 1;

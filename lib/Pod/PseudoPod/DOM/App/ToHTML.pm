@@ -39,9 +39,6 @@ sub process_files_with_output
     # create link descriptions from anchor headers
     # generate unique IDs for index anchors
     # must process index display info?
-    Pod::PseudoPod::DOM::App->resolve_anchors( \%anchors,
-        [ map { @{ $_->anchor } } @docs ]
-    );
 
     for my $doc (@docs)
     {
@@ -50,7 +47,6 @@ sub process_files_with_output
         print {$HTMLOUT} $doc->emit;
     }
 
-    # merge index links
     # do not merge anchor links; throw error on duplicates!
 }
 
