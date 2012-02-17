@@ -427,7 +427,7 @@ sub emit_index
 sub emit_table
 {
     my $self    = shift;
-    my $title   = $self->title->emit_kids;
+    my $title   = $self->title ? $self->title->emit_kids : '';
 
     my $content = qq|<table>\n|;
     $content   .= qq|<caption>$title</caption>\n| if $title;
