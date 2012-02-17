@@ -35,6 +35,8 @@ sub process_files_with_output
         push @docs, $parser->get_document;
     }
 
+    $_->resolve_references for @docs;
+
     # turn anchor text contents into link destinations
     # create link descriptions from anchor headers
     # generate unique IDs for index anchors

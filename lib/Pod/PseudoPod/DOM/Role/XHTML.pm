@@ -82,12 +82,17 @@ sub emit
     $self->$emit( @_ );
 }
 
-sub emit_document
+sub resolve_references
 {
     my $self = shift;
 
     $self->resolve_index;
     $self->resolve_anchors;
+}
+
+sub emit_document
+{
+    my $self = shift;
 
     return $self->emit_body if $self->add_body_tags;
     return $self->emit_kids( @_ );

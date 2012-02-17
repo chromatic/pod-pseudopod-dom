@@ -26,6 +26,7 @@ sub import
         my $doc               = parse_document( $formatter, $filename,
                                                 $document,  %args );
 
+        $doc->resolve_references;
         my $text = $doc->emit;
         return wantarray ? ($doc, $text) : $text;
     };
