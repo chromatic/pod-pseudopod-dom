@@ -127,6 +127,7 @@ use Moose;
     extends 'Pod::PseudoPod::DOM::ParentElement';
 
     has 'level', is => 'ro', required => 1;
+    sub exclude_from_toc { scalar shift->emit_kids =~ /^\*/ }
 }
 
 {

@@ -42,14 +42,24 @@ sub process_files_with_output
     # generate unique IDs for index anchors
     # must process index display info?
 
+    my @toc;
+
     for my $doc (@docs)
     {
         my $output  = $doc->filename;
         my $HTMLOUT = open_fh( $output, '>' );
         print {$HTMLOUT} $doc->emit;
+        push @toc, $doc->emit_toc;
     }
 
+    write_toc( @toc );
     # do not merge anchor links; throw error on duplicates!
+}
+
+sub write_toc
+{
+    my $toc = open_fh( 'index.html', '>' );
+    print {$toc} "<ul>\n", @_, "</ul>\n";
 }
 
 1;

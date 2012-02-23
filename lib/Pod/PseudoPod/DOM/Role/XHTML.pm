@@ -6,6 +6,7 @@ use warnings;
 
 use Moose::Role;
 use HTML::Entities;
+use Scalar::Util 'blessed';
 
 requires 'type';
 has 'add_body_tags',     is => 'ro', default => 0;
@@ -98,6 +99,94 @@ sub emit_document
     return $self->emit_kids( @_ );
 }
 
+sub extract_headings
+{
+    my $self          = shift;
+    my $full_toc      = '';
+    my $current_level = 1;
+    my @headings;
+    my $heading_level = \@headings;
+
+    for my $kid (@{ $self->children })
+    {
+        next unless $kid->type eq 'header';
+        next if     $kid->exclude_from_toc;
+
+        my $level = $kid->level;
+
+        if ($level == $current_level)
+        {
+            # do nothing!
+        }
+        elsif ($level > $current_level)
+        {
+            push @{ $heading_level }, [];
+            $heading_level = $heading_level->[-1];
+        }
+        else
+        {
+            $heading_level = pop @{ $heading_level }
+                for $current_level .. $level;
+        }
+
+        $current_level = $level;
+        push @{ $heading_level }, $kid;
+    }
+
+    return \@headings;
+}
+
+sub emit_toc
+{
+    my $self     = shift;
+    my $headings = $self->extract_headings;
+
+    return $self->walk_headings( $headings, filename => $self->filename );
+}
+
+sub walk_headings
+{
+    my ($self, $headings, %args) = @_;
+    $args{indent}              ||= '';
+
+    my $toc = '';
+
+    for my $heading (@$headings)
+    {
+        $toc .= $args{indent} . '<li>';
+
+        if (blessed($heading))
+        {
+            $toc .= $heading->get_heading_link( %args );
+        }
+        else
+        {
+            my $indent = $args{indent} . '  ';
+            $toc .= qq|\n$args{indent}|
+                 .  $args{indent} . qq|<ul>\n|
+                 .  $self->walk_headings( $heading, %args, indent => $indent )
+                 .  $args{indent} . qq|</ul>\n|;
+
+        }
+
+        $toc .= qq|</li>\n|;
+    }
+
+    return $toc . qq|\n|;
+}
+
+sub get_heading_link
+{
+    my ($self, %args) = @_;
+    my $content       = $self->emit_kids;
+    my $filename      = $args{filename};
+
+    return '' if $content =~ /^\*/;
+
+    my $href    = $self->emit_kids( encode => 'index_text' );
+    return qq|<a href="$filename#$href">$content</a>|;
+}
+
 sub emit_body
 {
     my $self = shift;
@@ -124,11 +213,11 @@ sub emit_header
 {
     my $self    = shift;
     my $content = $self->emit_kids( @_ );
-    return $self->emit_index( @_ ) if $content =~ /^\*/;
+    my $no_toc  = $content =~ s/^\*//;
+    my $level   = 'h' . ($self->level + 1);
+    my $header  = "<$level>" . $content . "</$level>\n\n";
 
-    my $level = 'h' . ($self->level + 1);
-
-    return "<$level>" . $content . "</$level>\n\n";
+    return $no_toc ? $header : $self->emit_index( @_ ) . $header;
 }
 
 sub emit_plaintext

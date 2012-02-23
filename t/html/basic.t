@@ -13,18 +13,20 @@ my $parser = Pod::PseudoPod::DOM->new(
 isa_ok $parser, 'Pod::PseudoPod::DOM';
 
 my $result = parse( "=head0 Narf!" );
-is $result, "<h1>Narf!</h1>\n\n", "head0 level output";
+is $result, qq|<a name="Narf!"></a><h1>Narf!</h1>\n\n|, "head0 level output";
 $result = parse( "=head1 Poit!" );
-is $result, "<h2>Poit!</h2>\n\n", "head1 level output";
+is $result, qq|<a name="Poit!"></a><h2>Poit!</h2>\n\n|, "head1 level output";
 
 $result = parse( "=head2 I think so Brain." );
-is $result, "<h3>I think so Brain.</h3>\n\n", "head2 level output";
+is $result, qq|<a name="IthinksoBrain."></a><h3>I think so Brain.</h3>\n\n|,
+     "head2 level output";
 
 $result = parse( "=head3 I say, Brain..." );
-is $result, "<h4>I say, Brain...</h4>\n\n", "head3 level output";
+is $result, qq|<a name="Isay,Brain..."></a><h4>I say, Brain...</h4>\n\n|,
+    "head3 level output";
 
 $result = parse( "=head4 Zort!" );
-is $result, "<h5>Zort!</h5>\n\n", "head4 level output";
+is $result, qq|<a name="Zort!"></a><h5>Zort!</h5>\n\n|, "head4 level output";
 
 
 $result = parse( <<'EOPOD' );

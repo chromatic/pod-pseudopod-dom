@@ -56,7 +56,7 @@ like $result, qr!<h2>Some Title.+?<em>Emphasized</em>!,
 like $result, qr!<h2>Some Title.+?<strong>Bold</strong>!,
     'B<> tag nested in =headn';
 
-like $result, qr!<div class="sidebar">[^>]+<h3>A Header!,
+like $result, qr|<div class="sidebar">[^>]+<a name="AHeade.+"></a><h3>A Header|,
     '=headn nested in sidebar';
 
 like $result, qr!<ul>[^>]+<li>One.*</div>!s,
