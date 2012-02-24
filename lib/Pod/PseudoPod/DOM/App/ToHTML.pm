@@ -35,7 +35,8 @@ sub process_files_with_output
         push @docs, $parser->get_document;
     }
 
-    $_->resolve_references for @docs;
+    my %full_index;
+    $_->resolve_references( \%full_index ) for @docs;
 
     # turn anchor text contents into link destinations
     # create link descriptions from anchor headers
@@ -54,12 +55,20 @@ sub process_files_with_output
 
     write_toc( @toc );
     # do not merge anchor links; throw error on duplicates!
+    write_index( $doc->[-1]->emit_full_index( \%full_index );
 }
 
 sub write_toc
 {
-    my $toc = open_fh( 'index.html', '>' );
-    print {$toc} "<ul>\n", @_, "</ul>\n";
+    my $fh = open_fh( 'index.html', '>' );
+    print {$fh} "<ul>\n", @_, "</ul>\n";
+}
+
+sub write_index
+{
+    my $index = shift;
+    my $fh    = open_fh( 'bookindex.html', '>' );
+    print {$fh} $index;
 }
 
 1;

@@ -35,12 +35,14 @@ sub resolve_anchors
 
 sub resolve_index
 {
-    my $self = shift;
+    my ($self, $full_index) = @_;
 
     my %count;
     for my $entry (@{ $self->index })
     {
-        my $text = $entry->emit_kids( encode => 'index_text' );
+        my $title = $entry->emit_kids;
+        push @{ $full_index->{ $title } }, $entry;
+        my $text  = $entry->emit_kids( encode => 'index_text' );
         $entry->id( ++$count{ $text } );
     }
 }
@@ -85,9 +87,9 @@ sub emit
 
 sub resolve_references
 {
-    my $self = shift;
+    my ($self, $full_index) = @_;
 
-    $self->resolve_index;
+    $self->resolve_index( $full_index );
     $self->resolve_anchors;
 }
 
@@ -185,6 +187,31 @@ sub get_heading_link
 
     my $href    = $self->emit_kids( encode => 'index_text' );
     return qq|<a href="$filename#$href">$content</a>|;
+}
+
+sub emit_full_index
+{
+    my ($self, $full_index) = @_;
+
+    my $seen_char = '';
+    my $output    = "<h1>Index</h1>\n";
+
+    for my $entry_name (sort keys %$full_index)
+    {
+        my $first_char = substr $entry_name, 0, 1;
+
+        if ($first_char ne $seen_char)
+        {
+            $output   .= qq|\n<h2>\u$first_char\E</h2>\n|;
+            $seen_char = $first_char;
+        }
+        $output .= qq|<p>\u$entry_name\E |
+                . join( ' ', map { '[' . $_->emit_index_link . ']' }
+                                @{ $full_index->{$entry_name} } )
+                . qq|</p>\n|;
+    }
+
+    return $output;
 }
 
 sub emit_body
@@ -516,6 +543,16 @@ sub emit_index
     $content   .= $self->id if $self->type eq 'index';
 
     return qq|<a name="$content"></a>|;
+}
+
+sub emit_index_link
+{
+    my $self    = shift;
+    my $id      = $self->id;
+    my $content = $self->emit_kids( encode => 'index_text' ) . $id;
+    my $file    = $self->link;
+
+    return qq|<a href="$file#$content">$id</a>|;
 }
 
 sub emit_table

@@ -26,9 +26,10 @@ sub import
         my $doc               = parse_document( $formatter, $filename,
                                                 $document,  %args );
 
-        $doc->resolve_references;
+        my %full_index;
+        $doc->resolve_references( \%full_index );
         my $text = $doc->emit;
-        return wantarray ? ($doc, $text) : $text;
+        return wantarray ? ($doc, $text, \%full_index) : $text;
     };
 
     do
