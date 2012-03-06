@@ -112,6 +112,38 @@ sub test_subentries
 
 sub test_subsubentries
 {
+    my $index = make_index_nodes(
+        'X<animals; a-letter; aardvark>',
+        'X<animals; b-letter; blue-footed boobie>',
+        'X<animals; c-letter; cardinal>',
+        'X<animals; a-letter; anteater>',
+    );
+
+    my $output = $index->emit_index;
+
+    like $output, qr!<h2>A</h2>!, 'index should contain top-level keys';
+    like $output, qr!<li><p>animals</p>\n<ul>!,
+        '... with top levels of nested index entries creating lists';
+    like $output, qr!<li>aardvark \[.+?\]</li>!,
+        '... with each subelement in a list item';
+    like $output, qr!<li>blue-footed boobie \[.+?\]</li>!,
+        '... with each subelement in a list item';
+    like $output, qr!<li>cardinal \[.+?\]</li>!,
+        '... with each subelement in a list item';
+    like $output, qr!<li>aardvark.+<li>blue-footed boobie.+<li>cardinal!s,
+        '... in alphabetical order';
+    unlike $output, qr!<li>aardvark.+?</li>.+aardvark!s,
+        '... but no duplicate entries unless necessary';
+
+    like $output, qr!<li><p>animals</p>\n<ul>\n<li><p>a-letter</p>!,
+        '... nesting sub-entries appropriately';
+    like $output, qr!<p>a-letter.+<p>b-letter.+<p>c-letter!s,
+        '... in alphabetical order';
+    like $output, qr!<li>aardvark.+?<li>anteater!s,
+        '... with entries in alphabetical order too';
+
+    like $output, qr!#animals;a-letter;aardvark1!,
+        '... and full anchors';
 }
 
 sub test_subentry_with_entry
