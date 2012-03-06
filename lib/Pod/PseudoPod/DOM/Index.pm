@@ -51,36 +51,49 @@ sub add
     my $node         = pop @_;
     my $elements     = $contents->{$key} ||= [];
 
-    # this is a nested entry
-    if (@_)
-    {
-        my $entry_list = Pod::PseudoPod::DOM::Index::EntryList->new(
-            key => shift @_,
-        );
-        $entry_list->add( @_, $node );
-        push @{ $elements }, $entry_list;
-    }
-    else
-    {
-        for my $element (@$elements)
-        {
-            next unless $element->isa( 'Pod::PseudoPod::DOM::Index::Entry' );
-            $element->add_location( $node );
-            return;
-        }
+    return $self->add_nested_entry( $key, $node, $elements, @_ ) if @_;
+    $self->add_entry(               $key, $node, $elements );
+}
 
-        my $entry = Pod::PseudoPod::DOM::Index::Entry->new( key => $key );
-        $entry->add_location( $node );
-        push @{ $elements }, $entry;
+sub add_nested_entry
+{
+    my ($self, $key, $node, $elements, @path) = @_;
+
+    for my $element (@$elements)
+    {
+        next unless $element->isa( 'Pod::PseudoPod::DOM::Index::EntryList' );
+        $element->add( @path, $node );
+        return;
     }
+
+    my $entry_list = Pod::PseudoPod::DOM::Index::EntryList->new( key => $key );
+
+    $entry_list->add( @path, $node );
+    push @{ $elements }, $entry_list;
+}
+
+sub add_entry
+{
+    my ($self, $key, $node, $elements, @path) = @_;
+
+    for my $element (@$elements)
+    {
+        next unless $element->isa( 'Pod::PseudoPod::DOM::Index::Entry' );
+        $element->add_location( $node );
+        return;
+    }
+
+    my $entry = Pod::PseudoPod::DOM::Index::Entry->new( key => $key );
+    $entry->add_location( $node );
+    push @{ $elements }, $entry;
 }
 
 sub emit
 {
     my $self    = shift;
     my $key     = $self->key;
-    return qq|<p>$key</p>\n|
-         . $self->emit_contents;
+
+    return qq|<p>$key</p>\n| . $self->emit_contents;
 }
 
 sub emit_contents
@@ -91,8 +104,8 @@ sub emit_contents
 
     for my $key (sort keys %$contents)
     {
-        $content .= join "\n", map { '<li>' . $_->emit . '</li>' }
-                                  @{ $contents->{$key} };
+        $content .= join( "\n", map { '<li>' . $_->emit . "</li>\n" }
+                                  @{ $contents->{$key} } );
     }
 
     return $content . qq|</ul>\n|;
@@ -140,6 +153,7 @@ sub emit
 {
     my $self  = shift;
     my $entry = $self->entry;
+
     return '[' . $entry->emit_index_link . ']';
 }
 
@@ -158,6 +172,7 @@ sub emit
 {
     my $self = shift;
     my $key  = $self->key;
+
     return qq|<h2>$key</h2>\n\n| . $self->emit_contents;
 }
 

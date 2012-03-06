@@ -84,11 +84,30 @@ sub test_multiple_entries_in_one_index
     like $output,
         qr!aardvark \[<a href=".+?#aardvark1">1</a>\] \[.+?vark2">2</a>\]!,
         '... with multiple entries merged';
-
 }
 
 sub test_subentries
 {
+    my $index = make_index_nodes(
+        'X<animals; aardvark>', 'X<animals; blue-footed boobie>',
+        'X<animals; cardinal>'
+    );
+
+    my $output = $index->emit_index;
+
+    like $output, qr!<h2>A</h2>!, 'index should contain top-level keys';
+    like $output, qr!<li><p>animals</p>\n<ul>!,
+        '... with top levels of nested index entries creating lists';
+    like $output, qr!<li>aardvark \[.+?\]</li>!,
+        '... with each subelement in a list item';
+    like $output, qr!<li>blue-footed boobie \[.+?\]</li>!,
+        '... with each subelement in a list item';
+    like $output, qr!<li>cardinal \[.+?\]</li>!,
+        '... with each subelement in a list item';
+    like $output, qr!<li>aardvark.+<li>blue-footed boobie.+<li>cardinal!s,
+        '... in alphabetical order';
+    unlike $output, qr!<li>aardvark.+?</li>.+aardvark!s,
+        '... but no duplicate entries unless necessary';
 }
 
 sub test_subsubentries
