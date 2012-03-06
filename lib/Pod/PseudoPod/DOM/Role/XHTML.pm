@@ -33,18 +33,19 @@ sub resolve_anchors
     }
 }
 
-sub resolve_index
+sub get_index_entries
 {
-    my ($self, $full_index) = @_;
+    my $self = shift;
+    my (@entries, %count);
 
-    my %count;
     for my $entry (@{ $self->index })
     {
-        my $title = $entry->emit_kids;
-        push @{ $full_index->{ $title } }, $entry;
-        my $text  = $entry->emit_kids( encode => 'index_text' );
+        my $text = $entry->emit_kids( encode => 'index_text' );
         $entry->id( ++$count{ $text } );
+        push @entries, $entry;
     }
+
+    return @entries;
 }
 
 sub accept_targets { qw( html HTML xhtml XHTML ) }
