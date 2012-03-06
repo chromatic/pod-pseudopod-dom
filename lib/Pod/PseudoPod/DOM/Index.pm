@@ -62,6 +62,13 @@ sub add
     }
     else
     {
+        for my $element (@$elements)
+        {
+            next unless $element->isa( 'Pod::PseudoPod::DOM::Index::Entry' );
+            $element->add_location( $node );
+            return;
+        }
+
         my $entry = Pod::PseudoPod::DOM::Index::Entry->new( key => $key );
         $entry->add_location( $node );
         push @{ $elements }, $entry;

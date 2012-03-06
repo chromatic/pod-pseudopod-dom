@@ -14,6 +14,10 @@ sub main
 
     test_simple_index();
     test_multiple_index();
+    test_multiple_entries_in_one_index();
+    test_subentries();
+    test_subsubentries();
+    test_subentry_with_entry();
 
     done_testing();
     return 0;
@@ -36,7 +40,7 @@ sub make_index_nodes
     );
     my $dom   = $parser->parse_string_document( $doc )->get_document;
     my $index = Pod::PseudoPod::DOM::Index->new;
-    $index->add_entry( $_ ) for @{ $dom->index };
+    $index->add_entry( $_ ) for $dom->get_index_entries;
 
     return $index;
 }
@@ -65,4 +69,32 @@ sub test_multiple_index
     like $output, qr!some entry!,       '... with text of entry';
     like $output, qr!some other entry!, '... for each entry';
     like $output, qr!yet more entries!, '... added to index';
+}
+
+sub test_multiple_entries_in_one_index
+{
+    my $index = make_index_nodes(
+        'X<aardvark>', 'X<Balloonkeeper>', 'X<aardvark>'
+    );
+
+    my $output = $index->emit_index;
+    like $output, qr!<h2>A</h2>!, 'index should contain top-level keys';
+    like $output, qr!<h2>B</h2>!, '... with proper capitalization';
+
+    like $output,
+        qr!aardvark \[<a href=".+?#aardvark1">1</a>\] \[.+?vark2">2</a>\]!,
+        '... with multiple entries merged';
+
+}
+
+sub test_subentries
+{
+}
+
+sub test_subsubentries
+{
+}
+
+sub test_subentry_with_entry
+{
 }
