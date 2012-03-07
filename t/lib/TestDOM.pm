@@ -27,6 +27,7 @@ sub import
                                                 $document,  %args );
 
         my %full_index;
+        $doc->get_index_entries;
         $doc->resolve_references( \%full_index );
         my $text = $doc->emit;
         return wantarray ? ($doc, $text, \%full_index) : $text;
