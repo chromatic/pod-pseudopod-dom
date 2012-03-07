@@ -20,9 +20,9 @@ sub get_top_entry
 {
     my ($self, $key) = @_;
     my $entries      = $self->entries;
-    my $top_key      = uc substr $key, 0, 1;
-    return $entries->{$top_key}
-        ||= Pod::PseudoPod::DOM::Index::TopEntryList->new( key => $top_key );
+    my ($top_key)    = $key =~ /(\w)/;
+    return $entries->{uc $top_key}
+        ||= Pod::PseudoPod::DOM::Index::TopEntryList->new( key => uc $top_key );
 }
 
 sub emit_index
@@ -96,18 +96,32 @@ sub emit
     return qq|<p>$key</p>\n| . $self->emit_contents;
 }
 
+sub sort_content_hash
+{
+    my ($self, $hash) = @_;
+
+    return  map { $_->[1] }
+           sort { $a->[0] cmp $b->[0] }
+            map { my $key = $_; $key =~ s/[^\w\s]//g; [ lc( $key ), $_ ] }
+            keys %$hash;
+}
+
 sub emit_contents
 {
     my $self     = shift;
     my $contents = $self->contents;
     my $content  = qq|<ul>\n|;
 
-    for my $key (sort keys %$contents)
+    for my $key ($self->sort_content_hash( $contents ))
     {
-        my @sorted = map  { $_->[0] }
-                       sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] }
-                       map  { [ $_, ref $contents->{$_} ] }
-                       @{ $contents->{$key} };
+        my @sorted = map  { $_->[2] }
+                     sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] }
+                     map  {
+                            my $title = $_->key;
+                            $title    =~ s/[^\w\s]//g;
+                            [ lc( $title ), ref $_, $_ ]
+                          }
+                         @{ $contents->{$key} };
 
         $content .= join "\n", map { '<li>' . $_->emit . "</li>\n" } @sorted;
     }
@@ -130,8 +144,8 @@ has 'locations', is => 'ro', default  => sub { [] };
 sub emit
 {
     my $self = shift;
-    my $key  = $self->key;
-    return $key . ' ' . join ' ', map { $_->emit } @{ $self->locations };
+
+    return $self->key . ' ' . join ' ', map { $_->emit } @{ $self->locations };
 }
 
 sub add_location
