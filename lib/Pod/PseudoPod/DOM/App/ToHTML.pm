@@ -6,6 +6,8 @@ use warnings;
 use autodie;
 
 use Pod::PseudoPod::DOM;
+use Pod::PseudoPod::DOM::Corpus;
+
 use Pod::PseudoPod::DOM::App qw( open_fh );
 
 sub process_files_with_output
@@ -14,6 +16,7 @@ sub process_files_with_output
 
     my @docs;
     my %anchors;
+    my $corpus = Pod::PseudoPod::DOM::Corpus->new;
 
     while (my ($source, $output) = each %files)
     {
@@ -32,7 +35,7 @@ sub process_files_with_output
         die "Unable to open file\n" unless -e $source;
         $parser->parse_file($source);
 
-        push @docs, $parser->get_document;
+        $corpus->add_document( $parser->get_document );
     }
 
     my %full_index;
@@ -55,7 +58,7 @@ sub process_files_with_output
 
     write_toc( @toc );
     # do not merge anchor links; throw error on duplicates!
-    write_index( $doc->[-1]->emit_full_index( \%full_index );
+    write_index( $corpus->get_index );
 }
 
 sub write_toc
