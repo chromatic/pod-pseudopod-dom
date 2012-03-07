@@ -102,7 +102,7 @@ sub emit
     my $self    = shift;
     my $key     = $self->key;
 
-    return qq|<p>$key</p>\n| . $self->emit_contents;
+    return qq|$key\n| . $self->emit_contents;
 }
 
 sub sort_content_hash

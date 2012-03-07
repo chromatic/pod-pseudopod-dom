@@ -96,7 +96,7 @@ sub test_subentries
     my $output = $index->emit_index;
 
     like $output, qr!<h2>A</h2>!, 'index should contain top-level keys';
-    like $output, qr!<li><p>animals</p>\n<ul>!,
+    like $output, qr!<li>animals\n<ul>!,
         '... with top levels of nested index entries creating lists';
     like $output, qr!<li>aardvark \[.+?\]</li>!,
         '... with each subelement in a list item';
@@ -122,7 +122,7 @@ sub test_subsubentries
     my $output = $index->emit_index;
 
     like $output, qr!<h2>A</h2>!, 'index should contain top-level keys';
-    like $output, qr!<li><p>animals</p>\n<ul>!,
+    like $output, qr!<li>animals\n<ul>!,
         '... with top levels of nested index entries creating lists';
     like $output, qr!<li>aardvark \[.+?\]</li>!,
         '... with each subelement in a list item';
@@ -135,9 +135,9 @@ sub test_subsubentries
     unlike $output, qr!<li>aardvark.+?</li>.+aardvark!s,
         '... but no duplicate entries unless necessary';
 
-    like $output, qr!<li><p>animals</p>\n<ul>\n<li><p>a-letter</p>!,
+    like $output, qr!<li>animals\n<ul>\n<li>a-letter\n!,
         '... nesting sub-entries appropriately';
-    like $output, qr!<p>a-letter.+<p>b-letter.+<p>c-letter!s,
+    like $output, qr!<li>a-letter.+<li>b-letter.+<li>c-letter!s,
         '... in alphabetical order';
     like $output, qr!<li>aardvark.+?<li>anteater!s,
         '... with entries in alphabetical order too';
@@ -161,6 +161,6 @@ sub test_subentry_with_entry
     like $output, qr!<li>aardvark \[!, '... and top-level sub-entries';
     like $output, qr!<li>Cerebus \[!,  '... and top-level sub-sub-entries';
 
-    like $output, qr!<li>animals.+<p>animals!s,
+    like $output, qr!<li>animals.+<li>animals\n!s,
         '... entries should come before subentries with the same key';
 }
