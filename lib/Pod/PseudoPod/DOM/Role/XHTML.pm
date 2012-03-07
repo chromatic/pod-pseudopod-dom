@@ -35,13 +35,15 @@ sub resolve_anchors
 
 sub get_index_entries
 {
-    my $self = shift;
-    my (@entries, %count);
+    my ($self, $seen) = @_;
+    $seen           ||= {};
+
+    my @entries;
 
     for my $entry (@{ $self->index })
     {
         my $text = $entry->emit_kids( encode => 'index_anchor' );
-        $entry->id( ++$count{ $text } );
+        $entry->id( ++$seen->{ $text } );
         push @entries, $entry;
     }
 

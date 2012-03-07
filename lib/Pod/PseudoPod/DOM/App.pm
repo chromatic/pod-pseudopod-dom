@@ -14,7 +14,7 @@ sub open_fh
     # default to reading
     $mode ||= '<';
 
-    open my $fh, $mode . ':utf8', $file;
+    open my $fh, $mode . ':encoding(UTF-8)', $file;
     return $fh;
 }
 

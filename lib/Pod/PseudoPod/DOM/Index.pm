@@ -6,7 +6,16 @@ use warnings;
 
 use Moose;
 
-has 'entries', is => 'ro', default => sub { {} };
+has 'entries',      is => 'ro', default => sub { {} };
+has 'seen_entries', is => 'ro', default => sub { {} };
+
+sub add_document
+{
+    my ($self, $document) = @_;
+    my $seen_entries      = $self->seen_entries;
+    $self->add_entry( $_ )
+        for $document->get_index_entries( $seen_entries );
+}
 
 sub add_entry
 {

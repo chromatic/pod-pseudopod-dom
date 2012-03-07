@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use open qw( :encoding(UTF-8) :std );
 use File::Basename;
 use Pod::PseudoPod::DOM::App::ToHTML;
 
