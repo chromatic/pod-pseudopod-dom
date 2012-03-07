@@ -87,7 +87,7 @@ sub encode_split
         map { $self->encode_text( $_ ) } split /\Q$target\E/, $content;
 }
 
-sub encode_index_text
+sub encode_index_anchor
 {
     my ($self, $text) = @_;
 
@@ -232,7 +232,7 @@ sub emit_code
     my $tag           = '\\texttt{' . $kids . '}';
 
     $args{encode}     ||= '';
-    return $tag unless $args{encode} eq 'index_text';
+    return $tag unless $args{encode} =~ /^index_/;
     return $kids . '@' . $tag;
 }
 
@@ -380,13 +380,13 @@ sub emit_index
     {
         if ($kid->type eq 'plaintext')
         {
-            my $kid_content = $kid->emit( encode => 'index_text' );
+            my $kid_content = $kid->emit( encode => 'index_anchor' );
             $kid_content    =~ s/\s*;\s*/!/g;
             $content       .= $kid_content;
         }
         else
         {
-            $content .= $kid->emit( encode => 'index_text' );
+            $content .= $kid->emit( encode => 'index_anchor' );
         }
     }
 

@@ -84,7 +84,7 @@ use Moose;
 
     # XXX: this shouldn't be here
     sub get_filename  { shift->link               }
-    sub get_anchor    { shift->emit_kids( encode => 'index_text' ) }
+    sub get_anchor    { shift->emit_kids( encode => 'index_anchor' ) }
     sub get_link_text { shift->heading->emit_kids }
 }
 
@@ -95,6 +95,12 @@ use Moose;
     has 'id', is => 'rw', default => 1;
 
     extends 'Pod::PseudoPod::DOM::Element::Linkable';
+
+    sub get_key
+    {
+        my $self = shift;
+        split /\s*;\s*/, join ' ', $self->emit_kids( encode => 'index_key' );
+    }
 }
 
 {

@@ -40,7 +40,7 @@ sub get_index_entries
 
     for my $entry (@{ $self->index })
     {
-        my $text = $entry->emit_kids( encode => 'index_text' );
+        my $text = $entry->emit_kids( encode => 'index_anchor' );
         $entry->id( ++$count{ $text } );
         push @entries, $entry;
     }
@@ -185,7 +185,7 @@ sub get_heading_link
 
     return '' if $content =~ /^\*/;
 
-    my $href    = $self->emit_kids( encode => 'index_text' );
+    my $href    = $self->emit_kids( encode => 'index_anchor' );
     return qq|<a href="$filename#$href">$content</a>|;
 }
 
@@ -208,7 +208,7 @@ END_HTML
 sub emit_kids
 {
     my $self = shift;
-    join '', map { $_->emit( @_ ) } @{ $self->children }
+    join '', map { $_->emit( @_ ) } @{ $self->children };
 }
 
 sub emit_header
@@ -258,7 +258,7 @@ sub encode_text
     return $text;
 }
 
-sub encode_index_text
+sub encode_index_anchor
 {
     my ($self, $text) = @_;
 
@@ -267,6 +267,13 @@ sub encode_index_text
     $text =~ s/</&lt;/g;
     $text =~ s/>/&gt;/g;
 
+    return $text;
+}
+
+sub encode_index_key
+{
+    my ($self, $text) = @_;
+    $text =~ s/^\s+|\s+$//g;
     return $text;
 }
 
@@ -305,7 +312,7 @@ sub emit_anchor
 {
     my $self = shift;
     return qq|<a name="|
-         . $self->emit_kids( encode => 'index_text' )
+         . $self->emit_kids( encode => 'index_anchor' )
          . qq|"></a>|;
 }
 
@@ -315,7 +322,7 @@ sub emit_italics
     my $kids          = $self->emit_kids( encode => 'verbatim_text', %args );
     $args{encode}   ||= '';
 
-    return $kids if $args{encode} eq 'index_text';
+    return $kids if $args{encode} =~ /^index_/;
     return '<em>' . $kids . '</em>';
 }
 
@@ -353,7 +360,7 @@ sub emit_code
     my $kids          = $self->emit_kids( encode => 'verbatim_text', %args );
     $args{encode}   ||= '';
 
-    return $kids if $args{encode} eq 'index_text';
+    return $kids if $args{encode} =~ /^index_/;
     return '<code>' . $kids . '</code>';
 }
 
@@ -514,7 +521,7 @@ sub emit_index
 {
     my $self    = shift;
 
-    my $content = $self->emit_kids( encode => 'index_text' );
+    my $content = $self->emit_kids( encode => 'index_anchor' );
     $content   .= $self->id if $self->type eq 'index';
 
     return qq|<a name="$content"></a>|;
@@ -524,7 +531,7 @@ sub emit_index_link
 {
     my $self    = shift;
     my $id      = $self->id;
-    my $content = $self->emit_kids( encode => 'index_text' ) . $id;
+    my $content = $self->emit_kids( encode => 'index_anchor' ) . $id;
     my $file    = $self->link;
 
     return qq|<a href="$file#$content">$id</a>|;

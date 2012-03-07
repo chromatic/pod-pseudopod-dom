@@ -11,7 +11,7 @@ has 'entries', is => 'ro', default => sub { {} };
 sub add_entry
 {
     my ($self, $node)        = @_;
-    my ($title, @subentries) = split /\s*;\s*/, $node->emit_kids;
+    my ($title, @subentries) = $node->get_key;
     my $entry                = $self->get_top_entry( $title );
     $entry->add( $title, @subentries, $node );
 }
