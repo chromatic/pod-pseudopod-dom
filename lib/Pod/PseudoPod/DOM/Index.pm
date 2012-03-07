@@ -104,8 +104,12 @@ sub emit_contents
 
     for my $key (sort keys %$contents)
     {
-        $content .= join( "\n", map { '<li>' . $_->emit . "</li>\n" }
-                                  @{ $contents->{$key} } );
+        my @sorted = map  { $_->[0] }
+                       sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] }
+                       map  { [ $_, ref $contents->{$_} ] }
+                       @{ $contents->{$key} };
+
+        $content .= join "\n", map { '<li>' . $_->emit . "</li>\n" } @sorted;
     }
 
     return $content . qq|</ul>\n|;

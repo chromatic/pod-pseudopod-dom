@@ -114,8 +114,8 @@ sub test_subsubentries
 {
     my $index = make_index_nodes(
         'X<animals; a-letter; aardvark>',
-        'X<animals; b-letter; blue-footed boobie>',
         'X<animals; c-letter; cardinal>',
+        'X<animals; b-letter; blue-footed boobie>',
         'X<animals; a-letter; anteater>',
     );
 
@@ -148,4 +148,19 @@ sub test_subsubentries
 
 sub test_subentry_with_entry
 {
+    my $index = make_index_nodes(
+        'X<animals; aardvark>',
+        'X<animals>',
+        'X<animals; aardvark; Cerebus>',
+    );
+
+    my $output = $index->emit_index;
+
+    like $output, qr!<h2>A</h2>!, 'index should contain top-level keys';
+    like $output, qr!<li>animals \[!,  '... and top-level entries';
+    like $output, qr!<li>aardvark \[!, '... and top-level sub-entries';
+    like $output, qr!<li>Cerebus \[!,  '... and top-level sub-sub-entries';
+
+    like $output, qr!<li>animals.+<p>animals!s,
+        '... entries should come before subentries with the same key';
 }
