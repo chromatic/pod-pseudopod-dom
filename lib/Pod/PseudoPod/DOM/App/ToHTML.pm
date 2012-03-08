@@ -48,7 +48,7 @@ sub process_files_with_output
     # do not merge anchor links; throw error on duplicates!
 
     $corpus->write_documents;
-    $copus->write_index;
+    $corpus->write_index;
 }
 
 # move into Corpus
