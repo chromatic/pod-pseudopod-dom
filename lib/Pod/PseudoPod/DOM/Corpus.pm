@@ -49,9 +49,10 @@ sub write_documents
     my $self      = shift;
     my $documents = $self->documents;
 
+    $_->resolve_anchors for @$documents;
+
     for my $doc (@$documents)
     {
-        $doc->resolve_references;
         my $output = $doc->filename;
         my $outfh  = open_fh( $output, '>' );
         print {$outfh} $doc->emit;
@@ -62,7 +63,7 @@ sub write_index
 {
     my $self  = shift;
     my $outfh = open_fh( 'book_index.html', '>' );
-    priht {$outfh} $self->get_index;
+    print {$outfh} $self->get_index;
 }
 
 __PACKAGE__->meta->make_immutable;
