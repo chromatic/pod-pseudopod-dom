@@ -28,7 +28,7 @@ sub import
 
         my %full_index;
         $doc->get_index_entries;
-        $doc->resolve_references( \%full_index );
+        $doc->resolve_anchors;
         my $text = $doc->emit;
         return wantarray ? ($doc, $text, \%full_index) : $text;
     };

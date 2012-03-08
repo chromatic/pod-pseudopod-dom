@@ -88,13 +88,6 @@ sub emit
     $self->$emit( @_ );
 }
 
-sub resolve_references
-{
-    my ($self, $full_index) = @_;
-
-    $self->resolve_anchors;
-}
-
 sub emit_document
 {
     my $self = shift;
