@@ -38,40 +38,24 @@ sub process_files_with_output
         $corpus->add_document( $parser->get_document );
     }
 
-    my %full_index;
-    $_->resolve_references( \%full_index ) for @docs;
-
     # turn anchor text contents into link destinations
     # create link descriptions from anchor headers
     # generate unique IDs for index anchors
     # must process index display info?
 
     my @toc;
-
-    for my $doc (@docs)
-    {
-        my $output  = $doc->filename;
-        my $HTMLOUT = open_fh( $output, '>' );
-        print {$HTMLOUT} $doc->emit;
-        push @toc, $doc->emit_toc;
-    }
-
     write_toc( @toc );
     # do not merge anchor links; throw error on duplicates!
-    write_index( $corpus->get_index );
+
+    $corpus->write_documents;
+    $copus->write_index;
 }
 
+# move into Corpus
 sub write_toc
 {
     my $fh = open_fh( 'index.html', '>' );
     print {$fh} "<ul>\n", @_, "</ul>\n";
-}
-
-sub write_index
-{
-    my $index = shift;
-    my $fh    = open_fh( 'bookindex.html', '>' );
-    print {$fh} $index;
 }
 
 1;
