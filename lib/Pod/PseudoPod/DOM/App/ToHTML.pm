@@ -35,27 +35,12 @@ sub process_files_with_output
         die "Unable to open file ($source)\n" unless -e $source;
         $parser->parse_file($source);
 
-        $corpus->add_document( $parser->get_document );
+        $corpus->add_document( $parser->get_document, $parser );
     }
-
-    # turn anchor text contents into link destinations
-    # create link descriptions from anchor headers
-    # generate unique IDs for index anchors
-    # must process index display info?
-
-    my @toc;
-    write_toc( @toc );
-    # do not merge anchor links; throw error on duplicates!
 
     $corpus->write_documents;
     $corpus->write_index;
-}
-
-# move into Corpus
-sub write_toc
-{
-    my $fh = open_fh( 'index.html', '>' );
-    print {$fh} "<ul>\n", @_, "</ul>\n";
+    $corpus->write_toc;
 }
 
 1;

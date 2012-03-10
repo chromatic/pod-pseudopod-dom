@@ -98,36 +98,14 @@ sub emit_document
 
 sub extract_headings
 {
-    my $self          = shift;
-    my $full_toc      = '';
-    my $current_level = 1;
+    my ($self, %args) = @_;
     my @headings;
-    my $heading_level = \@headings;
 
     for my $kid (@{ $self->children })
     {
         next unless $kid->type eq 'header';
-        next if     $kid->exclude_from_toc;
-
-        my $level = $kid->level;
-
-        if ($level == $current_level)
-        {
-            # do nothing!
-        }
-        elsif ($level > $current_level)
-        {
-            push @{ $heading_level }, [];
-            $heading_level = $heading_level->[-1];
-        }
-        else
-        {
-            $heading_level = pop @{ $heading_level }
-                for $current_level .. $level;
-        }
-
-        $current_level = $level;
-        push @{ $heading_level }, $kid;
+        next if     $kid->exclude_from_toc( $args{max_depth} );
+        push @headings, $kid;
     }
 
     return \@headings;
@@ -150,11 +128,11 @@ sub walk_headings
 
     for my $heading (@$headings)
     {
-        $toc .= $args{indent} . '<li>';
+        $toc .= $args{indent};
 
         if (blessed($heading))
         {
-            $toc .= $heading->get_heading_link( %args );
+            $toc .= '<li>' . $heading->get_heading_link( %args );
         }
         else
         {
@@ -175,12 +153,12 @@ sub walk_headings
 sub get_heading_link
 {
     my ($self, %args) = @_;
+
     my $content       = $self->emit_kids;
-    my $filename      = $args{filename};
+    my $filename      = $self->anchor->link || $args{filename};
+    my $href          = $self->emit_kids( encode => 'index_anchor' );
 
-    return '' if $content =~ /^\*/;
-
-    my $href    = $self->emit_kids( encode => 'index_anchor' );
+    $content          =~ s/^\*//;
     return qq|<a href="$filename#$href">$content</a>|;
 }
 

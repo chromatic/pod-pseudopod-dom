@@ -129,11 +129,20 @@ use Moose;
     package Pod::PseudoPod::DOM::Element::Heading;
 
     use Moose;
+    use Scalar::Util ();
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
 
-    has 'level', is => 'ro', required => 1;
-    sub exclude_from_toc { scalar shift->emit_kids =~ /^\*/ }
+    has 'level',  is => 'ro', required => 1;
+    has 'anchor', is => 'rw';
+
+    sub exclude_from_toc
+    {
+        my ($self, $max_depth) = @_;
+
+        return scalar $self->emit_kids =~ /^\*/ unless defined $max_depth;
+        return $self->level > $max_depth;
+    }
 }
 
 {
@@ -350,11 +359,11 @@ use Moose;
 
     use Moose;
 
-    has 'externals', is => 'ro', default => sub { {} };
-    has 'filename',  is => 'ro', default => '';
-    has 'index',     is => 'ro', default => sub { [] };
-    has 'anchor',    is => 'ro', default => sub { [] };
-    has 'link',      is => 'ro', default => sub { [] };
+    has 'externals', is => 'ro', default  => sub { {} };
+    has 'filename',  is => 'ro', default  => '';
+    has 'index',     is => 'ro', default  => sub { [] };
+    has 'anchor',    is => 'ro', default  => sub { [] };
+    has 'link',      is => 'ro', default  => sub { [] };
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
 }
