@@ -7,17 +7,17 @@ use Pod::PseudoPod::DOM;
 use Pod::PseudoPod::DOM::App::ToLateX;
 use File::Basename;
 
-my %files = map
+my @files = map
 {
-    my $file    = $_;
+    my $file = $_;
 
     # LaTeX output goes to the current working directory,
     # not the source directory.
     my $outfile = fileparse( $file, qr{\..*} ) . '.tex';
 
-    $file => $outfile
+    [ $file => $outfile ]
 } @ARGV;
 
-Pod::PseudoPod::DOM::App::ToLaTeX::process_files_with_output( %files );
+Pod::PseudoPod::DOM::App::ToLaTeX::process_files_with_output( @files );
 
 exit;

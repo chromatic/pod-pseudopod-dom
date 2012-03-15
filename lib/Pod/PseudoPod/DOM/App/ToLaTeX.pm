@@ -10,10 +10,10 @@ use Pod::PseudoPod::DOM::App qw( open_fh );
 
 sub process_files_with_output
 {
-    my %files = @_;
-
-    while (my ($source, $output) = each %files)
+    for my $file ( @_ )
     {
+        my ($source, $output) = @$file;
+
         my $parser  = Pod::PseudoPod::DOM->new(
             formatter_role => 'Pod::PseudoPod::DOM::Role::LaTeX',
             filename       => $output,

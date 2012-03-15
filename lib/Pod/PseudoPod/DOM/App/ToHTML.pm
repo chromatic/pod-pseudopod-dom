@@ -12,14 +12,14 @@ use Pod::PseudoPod::DOM::App qw( open_fh );
 
 sub process_files_with_output
 {
-    my %files = @_;
-
     my @docs;
     my %anchors;
     my $corpus = Pod::PseudoPod::DOM::Corpus->new;
 
-    while (my ($source, $output) = each %files)
+    for my $file (@_)
     {
+        my ($source, $output) = @$file;
+
         my $parser = Pod::PseudoPod::DOM->new(
             formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML',
             formatter_args => { add_body_tags => 1, anchors => \%anchors },
