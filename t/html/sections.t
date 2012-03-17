@@ -33,20 +33,20 @@ like_string $result, qr!<h4>c heading</h4>!,
 like_string $result, qr!<h1>Another Suppressed Heading</h1>!,
     '... chapter title TOC suppression should create heading';
 
-unlike_string $result, qr/<a name="AnotherSuppressedHeading">/,
-    '... without anchor';
+like_string $result, qr/<a name="AnotherSuppressedHeading">/,
+    '... but with anchor';
 
 like_string $result, qr!<h2>A Suppressed Heading</h2>!,
     '... section title suppression should create heading';
 
-unlike_string $result, qr/<a name="ASuppressedHeading">/,
-    '... without anchor';
+like_string $result, qr/<a name="ASuppressedHeading">/,
+    '... but with anchor';
 
 like_string $result, qr!<h3>Yet Another Suppressed Heading</h3>!,
     '... subsection title suppression should create heading';
 
-unlike_string $result, qr/<a name="YetAnotherSuppressedHeading">/,
-    '... without anchor';
+like_string $result, qr/<a name="YetAnotherSuppressedHeading">/,
+    '... but with anchor';
 
 like_string $result,
     qr/<pre><code>\s*&quot;This text.+--.+ \$text.&quot;\n/s,
@@ -66,7 +66,8 @@ like_string $result, qr!<ul>\s*<li>Verbatim</li>!s,
 like_string $result, qr!<li>items</li>\s*</ul>!,
     '... and to end';
 
-like_string $result, qr!rule too:</p>\s*<ul>!s;
+like_string $result, qr!rule too:</p>\s*<ul>!s,
+    'bulleted lists need to start as unordered lists';
 
 like_string $result, qr!<ul>\s*<li>BANG</li>!s,
     'bulleted lists need itemized formatting to start';

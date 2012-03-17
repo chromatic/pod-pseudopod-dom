@@ -139,10 +139,12 @@ sub push_heading_element
 sub push_link_element
 {
     my ($self, $class, %args) = @_;
+    my $heading               = $self->{latest_heading};
     my $child                 = $self->push_element(
-        $class, heading => $self->{latest_heading}, %args
+        $class, heading => $heading, %args
     );
 
+    $heading->anchor( $child ) if $heading and $args{type} eq 'anchor';
     $self->add_link( $args{type} => $child );
 }
 
@@ -197,7 +199,11 @@ BEGIN
         my $end_meth = sub
         {
             my $self = shift;
-            $self->reset_to_item( Heading => level => $heading );
+            my $head = $self->reset_to_item( Heading => level => $heading );
+
+            $self->start_Z;
+            $self->handle_text( $head->emit_kids( encode => 'index_anchor' ) );
+            $self->end_Z;
         };
 
         do
