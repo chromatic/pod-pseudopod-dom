@@ -14,13 +14,15 @@ use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 my $file   = read_file( catfile( qw( t test_file.pod ) ) );
 my $result = parse_with_anchors( $file );
 
-like_string $result, qr!<a name="startofdocument"></a>!m,
+like_string $result,
+    qr!<a name="startofdocument" id="nav_startofdocument"></a>!m,
     'Z<> tags should become anchors';
 
-like_string $result, qr!<a name="next_heading"></a>!m,
+like_string $result, qr!<a name="next_heading" id="nav_next_heading"></a>!m,
     '... without normal escaping';
 
-like_string $result, qr!<a name="slightlycomplex\?heading"></a>!,
+like_string $result,
+    qr!<a name="slightlycomplex\?heading" id="nav_slightlycomplex\?heading"></a!,
     '... and escaping non-alphanumerics';
 
 like_string $result, qr!<a class="url" href="http://www.google.com/">!,

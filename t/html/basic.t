@@ -220,7 +220,7 @@ $result = parse( <<'EOPOD' );
 A plain paragraph with a Z<crossreferenceendpoint>.
 EOPOD
 is($result, <<"EOHTML", "Link anchor entity in a paragraph");
-<p>A plain paragraph with a <a name="crossreferenceendpoint"></a>.</p>
+<p>A plain paragraph with a <a name="crossreferenceendpoint" id="nav_crossreferenceendpoint"></a>.</p>
 
 EOHTML
 
