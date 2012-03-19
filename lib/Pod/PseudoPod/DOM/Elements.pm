@@ -40,6 +40,17 @@ use Moose;
 }
 
 {
+    package Pod::PseudoPod::DOM::Element::Section;
+
+    use Moose;
+    has 'level',
+        is      => 'ro',
+        isa     => 'Num';
+
+    extends 'Pod::PseudoPod::DOM::ParentElement';
+}
+
+{
     package Pod::PseudoPod::DOM::Element::Paragraph;
 
     use Moose;
