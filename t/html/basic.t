@@ -13,20 +13,27 @@ my $parser = Pod::PseudoPod::DOM->new(
 isa_ok $parser, 'Pod::PseudoPod::DOM';
 
 my $result = parse( "=head0 Narf!" );
-like $result, qr|<a name="Narf!"></a><h1>Narf!</h1>\n\n|, "head0 level output";
+like $result, qr|<a name="Narf!"></a><h1 id="narf">Narf!</h1>\n\n|,
+    "head0 level output";
+
 $result = parse( "=head1 Poit!" );
-like $result, qr|<a name="Poit!"></a><h2>Poit!</h2>\n\n|, "head1 level output";
+like $result, qr|<a name="Poit!"></a><h2 id="poit">Poit!</h2>\n\n|,
+    "head1 level output";
 
 $result = parse( "=head2 I think so Brain." );
-like $result, qr|<a name="IthinksoBrain."></a><h3>I think so Brain.</h3>\n\n|,
+like $result,
+    qr|<a name="IthinksoBrain."></a><h3 id="ithinksobrain">I think so Brain.</h3>\n\n|,
      "head2 level output";
 
 $result = parse( "=head3 I say, Brain..." );
-like $result, qr|<a name="Isay,Brain..."></a><h4>I say, Brain...</h4>\n\n|,
+like $result,
+    qr|<a name="Isay,Brain..."></a><h4 id="isaybrain">I say, Brain...</h4>\n\n|,
     "head3 level output";
 
 $result = parse( "=head4 Zort!" );
-like $result, qr|<a name="Zort!"></a><h5>Zort!</h5>\n\n|, "head4 level output";
+like $result,
+    qr|<a name="Zort!"></a><h5 id="zort">Zort!</h5>\n\n|,
+    "head4 level output";
 
 
 $result = parse( <<'EOPOD' );

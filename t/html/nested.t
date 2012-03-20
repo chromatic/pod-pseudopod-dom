@@ -47,16 +47,18 @@ Is it not nifty?
 
 END_POD
 
-like $result, qr!<h1>Some Title</h1>!, '=head0 to <h1> title';
+like $result, qr!<h1 id="sometitle">Some Title</h1>!, '=head0 to <h1> title';
 
-like $result, qr!<h2>Some Title with <code>Code</code>!,
+like $result,
+    qr!<h2 id="sometitlewithcodeand.+">Some Title with <code>Code</code>!,
     'C<> tag nested in =headn';
-like $result, qr!<h2>Some Title.+?<em>Emphasized</em>!,
+like $result, qr!<h2 id="someti.+andemph.+">Some Title.+?<em>Emphasized</em>!,
     'I<> tag nested in =headn';
-like $result, qr!<h2>Some Title.+?<strong>Bold</strong>!,
+like $result, qr!<h2 id="someti.+andbold">Some Title.+?<strong>Bold</strong>!,
     'B<> tag nested in =headn';
 
-like $result, qr|<div class="sidebar">[^>]+<a name="AHeade.+"></a><h3>A Header|,
+like $result,
+    qr|<div class="sidebar">[^>]+<a name="AHeade.+"></a><h3 id="ahe.+">A Head|,
     '=headn nested in sidebar';
 
 like $result, qr!<ul>[^>]+<li>One.*</div>!s,

@@ -188,9 +188,10 @@ sub emit_header
 {
     my $self    = shift;
     my $content = $self->emit_kids( @_ );
+    my $id      = $self->emit_kids( encode => 'id' );
     my $no_toc  = $content =~ s/^\*//;
     my $level   = 'h' . ($self->level + 1);
-    my $header  = "<$level>" . $content . "</$level>\n\n";
+    my $header  = qq|<$level id="$id">$content</$level>\n\n|;
 
     return $no_toc ? $header : $self->emit_index( @_ ) . $header;
 }
@@ -229,6 +230,14 @@ sub encode_text
     $text =~ s/\s*--\s*/&mdash;/g;
 
     return $text;
+}
+
+sub encode_id
+{
+    my ($self, $text) = @_;
+    $text =~ s/<.+?>//g;
+    $text =~ s/\W//g;
+    return lc $text;
 }
 
 sub encode_index_anchor
@@ -289,16 +298,6 @@ sub emit_anchor
          . qq|"></a>|;
 }
 
-sub emit_italics
-{
-    my ($self, %args) = @_;
-    my $kids          = $self->emit_kids( encode => 'verbatim_text', %args );
-    $args{encode}   ||= '';
-
-    return $kids if $args{encode} =~ /^index_/;
-    return '<em>' . $kids . '</em>';
-}
-
 sub emit_number_item
 {
     my $self   = shift;
@@ -327,14 +326,18 @@ sub emit_verbatim
          . "</code></pre>\n\n";
 }
 
-sub emit_code
+sub emit_italics { shift->emit_tagged_kids( 'em',     @_ ) }
+sub emit_code    { shift->emit_tagged_kids( 'code',   @_ ) }
+sub emit_bold    { shift->emit_tagged_kids( 'strong', @_ ) }
+
+sub emit_tagged_kids
 {
-    my ($self, %args) = @_;
+    my ($self, $tag, %args) = @_;
     my $kids          = $self->emit_kids( encode => 'verbatim_text', %args );
     $args{encode}   ||= '';
 
-    return $kids if $args{encode} =~ /^index_/;
-    return '<code>' . $kids . '</code>';
+    return $kids if $args{encode} =~ /^(index_|id$)/;
+    return qq|<$tag>$kids</$tag>|;
 }
 
 sub emit_footnote
@@ -369,12 +372,6 @@ sub emit_subscript
 {
     my $self = shift;
     return "<sub>" . $self->emit_kids . "</sub>";
-}
-
-sub emit_bold
-{
-    my $self = shift;
-    return "<strong>" . $self->emit_kids . "</strong>";
 }
 
 sub emit_file

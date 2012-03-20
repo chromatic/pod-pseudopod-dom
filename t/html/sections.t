@@ -18,31 +18,31 @@ my %anchors;
 my $file   = read_file( catfile( qw( t test_file.pod ) ) );
 my $result = parse_with_anchors( $file );
 
-like_string $result, qr!<h1>Some Document</h1>!,
+like_string $result, qr!<h1 id="somedocument">Some Document</h1>!,
     '0 heads should become chapter titles';
 
-like_string $result, qr!<h2>A Heading</h2>!,
+like_string $result, qr!<h2 id="aheading">A Heading</h2>!,
     'A heads should become section titles';
 
-like_string $result, qr!<h3>B heading</h3>!,
+like_string $result, qr!<h3 id="bheading">B heading</h3>!,
     'B heads should become subsection titles';
 
-like_string $result, qr!<h4>c heading</h4>!,
+like_string $result, qr!<h4 id="cheading">c heading</h4>!,
     'C heads should become subsubsection titles';
 
-like_string $result, qr!<h1>Another Suppressed Heading</h1>!,
+like_string $result, qr!<h1 id="another.+">Another Suppressed Heading</h1>!,
     '... chapter title TOC suppression should create heading';
 
 like_string $result, qr/<a name="AnotherSuppressedHeading">/,
     '... but with anchor';
 
-like_string $result, qr!<h2>A Suppressed Heading</h2>!,
+like_string $result, qr!<h2 id="asuppressed.+">A Suppressed Heading</h2>!,
     '... section title suppression should create heading';
 
 like_string $result, qr/<a name="ASuppressedHeading">/,
     '... but with anchor';
 
-like_string $result, qr!<h3>Yet Another Suppressed Heading</h3>!,
+like_string $result, qr!<h3 id="yet.+ing">Yet Another Suppressed Heading</h3>!,
     '... subsection title suppression should create heading';
 
 like_string $result, qr/<a name="YetAnotherSuppressedHeading">/,
