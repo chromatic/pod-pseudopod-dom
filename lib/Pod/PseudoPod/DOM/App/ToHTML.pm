@@ -33,7 +33,7 @@ sub process_files_with_output
         $parser->complain_stderr(1);   # output errors on STDERR instead
 
         die "Unable to open file ($source)\n" unless -e $source;
-        $parser->parse_file($source);
+        $parser->parse_file( open_fh( $source ) );
 
         $corpus->add_document( $parser->get_document, $parser );
     }
