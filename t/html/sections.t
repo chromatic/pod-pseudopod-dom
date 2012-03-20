@@ -33,22 +33,19 @@ like_string $result, qr!<h4>c heading</h4>!,
 like_string $result, qr!<h1>Another Suppressed Heading</h1>!,
     '... chapter title TOC suppression should create heading';
 
-like_string $result,
-    qr/<a name="AnotherSuppressedHeading" id="nav_AnotherSuppressedHeading">/,
+like_string $result, qr/<a name="AnotherSuppressedHeading">/,
     '... but with anchor';
 
 like_string $result, qr!<h2>A Suppressed Heading</h2>!,
     '... section title suppression should create heading';
 
-like_string $result,
-    qr/<a name="ASuppressedHeading" id="nav_ASuppressedHeading">/,
+like_string $result, qr/<a name="ASuppressedHeading">/,
     '... but with anchor';
 
 like_string $result, qr!<h3>Yet Another Suppressed Heading</h3>!,
     '... subsection title suppression should create heading';
 
-like_string $result,
-    qr/<a name="YetAnotherSuppressedHeading" id="nav_YetAnotherSuppressedHeading">/,
+like_string $result, qr/<a name="YetAnotherSuppressedHeading">/,
     '... but with anchor';
 
 like_string $result,

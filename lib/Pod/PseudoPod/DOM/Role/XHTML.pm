@@ -283,9 +283,10 @@ sub emit_literal
 
 sub emit_anchor
 {
-    my $self   = shift;
-    my $anchor = $self->emit_kids( encode => 'index_anchor' );
-    return qq|<a name="$anchor" id="nav_$anchor"></a>|;
+    my $self = shift;
+    return qq|<a name="|
+         . $self->emit_kids( encode => 'index_anchor' )
+         . qq|"></a>|;
 }
 
 sub emit_italics
