@@ -168,7 +168,7 @@ sub emit_body
     return <<END_HTML_HEAD . $self->emit_kids( @_ ) . <<END_HTML;
 <html>
 <head>
-<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="../css/style.css" type="text/css" />
 </head>
 <body>
 
