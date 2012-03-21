@@ -5,17 +5,18 @@ use strict;
 use warnings;
 
 use Moose;
+use Path::Class;
+
 use Pod::PseudoPod::DOM::Index;
 use Pod::PseudoPod::DOM::TableOfContents;
 use Pod::PseudoPod::DOM::App 'open_fh';
 
-
 has 'documents',  is => 'ro', default => sub { [] };
 has 'references', is => 'ro', default => sub { {} };
 has 'index',      is => 'ro',
-    default => sub {Pod::PseudoPod::DOM::Index->new};
+    default => sub { Pod::PseudoPod::DOM::Index->new };
 has 'contents',   is => 'ro',
-    default => sub {Pod::PseudoPod::DOM::TableOfContents->new};
+    default => sub { Pod::PseudoPod::DOM::TableOfContents->new };
 
 sub add_document
 {
@@ -73,15 +74,29 @@ sub write_documents
 sub write_index
 {
     my $self  = shift;
-    my $outfh = open_fh( 'book_index.html', '>' );
+    my $outfh = $self->get_fh_in_path( 'book_index', '>' );
     print {$outfh} $self->get_index;
 }
 
 sub write_toc
 {
     my $self  = shift;
-    my $outfh = open_fh( 'index.html', '>' );
+    my $outfh = $self->get_fh_in_path( 'index', '>' );
     print {$outfh} $self->get_toc;
+}
+
+sub get_fh_in_path
+{
+    my ($self, $filename, $mode) = @_;
+    my $docs     = $self->documents;
+    return unless @$docs;
+
+    my $docfile  = $docs->[0]->filename;
+    my ($suffix) = $docfile =~ /\.(.+)$/;
+    my $dir      = file( $docfile )->dir;
+    my $file     = $dir->file( $filename . '.' . $suffix );
+
+    return open_fh( $file->stringify, $mode );
 }
 
 __PACKAGE__->meta->make_immutable;
