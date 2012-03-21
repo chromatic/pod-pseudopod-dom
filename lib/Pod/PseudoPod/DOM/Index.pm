@@ -38,7 +38,23 @@ sub emit_index
 {
     my $self    = shift;
     my $entries = $self->entries;
-    return join "\n", map { $entries->{$_}->emit } sort keys %$entries;
+    my $heading = <<END_HTML_HEAD;
+<html>
+<head>
+<link rel="stylesheet" href="../css/style.css" type="text/css" />
+</head>
+<body>
+<h1 id="index"><a name="index"></a>Index</h1>
+END_HTML_HEAD
+
+    my $footer = <<END_HTML_FOOTER;
+</body>
+</html>
+END_HTML_FOOTER
+
+    return $heading
+         . join( "\n", map { $entries->{$_}->emit } sort keys %$entries )
+         . $footer;
 }
 
 __PACKAGE__->meta->make_immutable;
