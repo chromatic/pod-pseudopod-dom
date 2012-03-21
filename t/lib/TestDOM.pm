@@ -11,7 +11,7 @@ sub import
     my ($self, $formatter, @args) = @_;
 
     my @caller   = caller;
-    my $filename = $caller[1] . '.tex';
+    my $filename = $caller[1] . '.pod';
     my $parse    = sub
     {
         my $doc  = parse_document( $formatter, $filename, @_ );

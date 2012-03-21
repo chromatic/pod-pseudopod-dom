@@ -7,6 +7,7 @@ use warnings;
 use parent 'Pod::PseudoPod';
 
 use Class::Load;
+use File::Basename;
 use Pod::PseudoPod::DOM::Elements;
 
 sub new
@@ -18,6 +19,8 @@ sub new
     $self->{formatter_role} = $role;
     $self->{formatter_args} = $args{formatter_args} || {};
     $self->{filename}       = $args{filename};
+    ($self->{basefile})     = $self->{filename} =~ m!/?([^/]+)$!
+        if $self->{filename};
 
     Class::Load::load_class( $role );
     $self->accept_targets( $role->accept_targets );
@@ -228,7 +231,7 @@ BEGIN
         {
             my $self   = shift;
             $self->push_link_element( 'Text::' . ucfirst $type,
-                                    type => $type, link => $self->{filename} );
+                                    type => $type, link => $self->{basefile} );
         };
 
         my $end_meth = sub

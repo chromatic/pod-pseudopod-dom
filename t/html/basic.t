@@ -244,7 +244,7 @@ A plain paragraph with a A<crossreferencelink>.
 EOPOD
 
 like $result,
-     qr!paragraph with a <a href="$0\.tex#crossreferencelink">XREF header</a>!,
+     qr!paragraph with a <a href="basic.t.pod#crossreferencelink">XREF header<!,
     'Link entity in a paragraph';
 
 $result = parse( <<'EOPOD' );
