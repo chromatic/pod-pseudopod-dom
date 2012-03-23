@@ -325,9 +325,12 @@ sub emit_verbatim
          . "</code></pre>\n\n";
 }
 
-sub emit_italics { shift->emit_tagged_kids( 'em',     @_ ) }
-sub emit_code    { shift->emit_tagged_kids( 'code',   @_ ) }
-sub emit_bold    { shift->emit_tagged_kids( 'strong', @_ ) }
+sub emit_italics     { shift->emit_tagged_kids( 'em',     @_ ) }
+sub emit_code        { shift->emit_tagged_kids( 'code',   @_ ) }
+sub emit_bold        { shift->emit_tagged_kids( 'strong', @_ ) }
+sub emit_superscript { shift->emit_tagged_kids( 'sup',    @_ ) }
+sub emit_subscript   { shift->emit_tagged_kids( 'sub',    @_ ) }
+sub emit_file        { shift->emit_tagged_kids( 'em',     @_ ) }
 
 sub emit_tagged_kids
 {
@@ -359,24 +362,6 @@ sub emit_link
 
     my ($file, $frag, $text) = $self->get_link_for_anchor( $anchor );
     return qq|<a href="$file#$frag">$text</a>|;
-}
-
-sub emit_superscript
-{
-    my $self = shift;
-    return "<sup>" . $self->emit_kids . "</sup>";
-}
-
-sub emit_subscript
-{
-    my $self = shift;
-    return "<sub>" . $self->emit_kids . "</sub>";
-}
-
-sub emit_file
-{
-    my $self = shift;
-    return "<em>" . $self->emit_kids . "</em>";
 }
 
 use constant { BEFORE => 0, AFTER => 1 };

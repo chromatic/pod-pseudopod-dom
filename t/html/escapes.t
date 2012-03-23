@@ -86,6 +86,9 @@ like_string $result, qr/<a name="&lt;=&gt;;numericcomparisonoperator1">/,
 like_string $result, qr/<a name="sigils;&amp;1">/,
     '... in index anchors as well';
 
+like_string $result, qr/<a name="\.tfiles1">/,
+    '... and should suppress HTML tags in index anchors';
+
 like_string $result, qr/<li>\$BANG BANG\$<p>/,
     'escapes work inside items first line';
 

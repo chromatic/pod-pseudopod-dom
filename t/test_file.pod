@@ -83,6 +83,7 @@ be single quotes, not fancy curly apostrophes.
 
 X<Special formatting>
 X<sigils; &>
+X<F<.t> files>
 
 Index entries are more fun, as more special characters must be escaped, with a
 quote sign. E.g. X<negation ! operator>, X<array @ sigil>, X<the pipe |> and
