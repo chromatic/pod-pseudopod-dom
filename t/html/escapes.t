@@ -83,6 +83,9 @@ like_string $result, qr/<a name="codeanditalicstext1">/,
 like_string $result, qr/<a name="&lt;=&gt;;numericcomparisonoperator1">/,
     '... and should escape <> symbols';
 
+like_string $result, qr/<a name="sigils;&amp;1">/,
+    '... in index anchors as well';
+
 like_string $result, qr/<li>\$BANG BANG\$<p>/,
     'escapes work inside items first line';
 

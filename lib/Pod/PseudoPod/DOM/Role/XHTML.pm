@@ -246,8 +246,7 @@ sub encode_index_anchor
 
     $text =~ s/^\*//;
     $text =~ s/[\s"]//g;
-    $text =~ s/</&lt;/g;
-    $text =~ s/>/&gt;/g;
+    $text = encode_entities($text);
 
     return $text;
 }
