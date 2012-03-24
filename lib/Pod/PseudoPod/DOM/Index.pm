@@ -49,7 +49,7 @@ sub emit_index
 <link rel="stylesheet" href="../css/style.css" type="text/css" />
 </head>
 <body>
-<h1 id="index"><a name="index"></a>Index</h1>
+<h1 id="index">Index</h1>
 END_HTML_HEAD
 
     my $footer = <<END_HTML_FOOTER;
