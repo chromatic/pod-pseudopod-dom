@@ -3,12 +3,12 @@ use warnings;
 
 use Test::More;
 use lib 't/lib';
-use TestDOM 'Pod::PseudoPod::DOM::Role::XHTML';
+use TestDOM 'Pod::PseudoPod::DOM::Role::HTML';
 
 use_ok('Pod::PseudoPod::DOM') or exit;
 
 my $parser = Pod::PseudoPod::DOM->new(
-    formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML'
+    formatter_role => 'Pod::PseudoPod::DOM::Role::HTML'
 );
 isa_ok $parser, 'Pod::PseudoPod::DOM';
 

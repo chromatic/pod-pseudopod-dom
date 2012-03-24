@@ -7,7 +7,7 @@ use Test::More;
 use Test::LongString;
 
 use lib 't/lib';
-use TestDOM 'Pod::PseudoPod::DOM::Role::XHTML';
+use TestDOM 'Pod::PseudoPod::DOM::Role::HTML';
 use Pod::PseudoPod::DOM::App;
 use File::Spec::Functions;
 use File::Slurp;

@@ -5,7 +5,7 @@ use Test::More;
 use Test::LongString;
 
 use lib 't/lib';
-use TestDOM 'Pod::PseudoPod::DOM::Role::XHTML';
+use TestDOM 'Pod::PseudoPod::DOM::Role::HTML';
 use File::Spec::Functions;
 use File::Slurp;
 
@@ -59,11 +59,11 @@ like_string $result, qr/ineffable/, 'ff ligature also gets no marking';
 like_string $result, qr/ligatures&mdash;and/,
     'spacey double dash should become a real emdash';
 
-like_string $result, qr/<a name="negation!operator1">/,
-    '! is fine as-is in index anchor';
+like_string $result, qr/<a name="negation%21operator1">/,
+    '! needs URI encoding in index anchor';
 
-like_string $result, qr/<a name="array\@sigil1">/,
-    '@ is also fine as-is in index anchor';
+like_string $result, qr/<a name="array%40sigil1">/,
+    '@ needs URI encoding in index anchor';
 
 like_string $result, qr/<a name="thepipe|1">/,
     'spaces removed from index anchors';
@@ -71,25 +71,25 @@ like_string $result, qr/<a name="thepipe|1">/,
 like_string $result, qr/<a name="strangequoteaa1">/,
     'quotes removed from index anchors';
 
-like_string $result, qr/<a name="\$\^W;carats1">/,
-    '... carat gets no special treatment in anchor';
+like_string $result, qr/<a name="%24%5EW%3Bcarats1">/,
+    '... carat needs URI encoding in anchor';
 
-like_string $result, qr/<a name="hierarchicalterms;omittingtrailingspaces1">/,
+like_string $result, qr/<a name="hierarchicalterms%3Bomittingtrailingspaces1">/,
     'trailing spaces in hierarchical terms should be ignored';
 
 like_string $result, qr/<a name="codeanditalicstext1">/,
     '... and code/italics formatting';
 
-like_string $result, qr/<a name="&lt;=&gt;;numericcomparisonoperator1">/,
+like_string $result, qr/<a name="%3C%3D%3E%3Bnumericcomparisonoperator1">/,
     '... and should escape <> symbols';
 
-like_string $result, qr/<a name="sigils;&amp;1">/,
+like_string $result, qr/<a name="sigils%3B%261">/,
     '... in index anchors as well';
 
 like_string $result, qr/<a name="\.tfiles1">/,
     '... and should suppress HTML tags in index anchors';
 
-like_string $result, qr/<a name="operators;&lt;1">/,
+like_string $result, qr/<a name="operators%3B&lt;1">/,
     '... encoding entities as necessary';
 
 like_string $result, qr/<code>&lt;=&gt;<\/code>/,

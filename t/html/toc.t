@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 use lib 't/lib';
-use TestDOM 'Pod::PseudoPod::DOM::Role::XHTML';
+use TestDOM 'Pod::PseudoPod::DOM::Role::HTML';
 use File::Spec::Functions;
 use File::Slurp;
 
