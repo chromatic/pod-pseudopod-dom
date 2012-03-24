@@ -29,7 +29,7 @@ sub get_top_entry
 {
     my ($self, $key) = @_;
     my $entries      = $self->entries;
-    my ($top_key)    = $key =~ /(\w)/;
+    my $top_key      = $key =~ /(\w)/ ? $1 : substr $key, 0, 1;
     return $entries->{uc $top_key}
         ||= Pod::PseudoPod::DOM::Index::TopEntryList->new( key => uc $top_key );
 }
