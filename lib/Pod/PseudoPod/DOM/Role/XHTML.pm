@@ -78,10 +78,7 @@ sub emit_character
     }
 
     my $char = Pod::Escapes::e2char( $content );
-
-    $args{encode} ||= '';
-    return $char unless $args{encode} =~ /^(index_|id$)/;
-    return $self->encode_index_anchor($char);
+    return $self->handle_encoding( $char );
 }
 
 sub emit
@@ -206,6 +203,12 @@ sub emit_plaintext
     my ($self, %args) = @_;
     my $content       = $self->content;
     $content          = '' unless defined $content;
+    $self->handle_encoding( $content, %args );
+}
+
+sub handle_encoding
+{
+    my ($self, $content, %args) = @_;
 
     if (my $encode = $args{encode})
     {

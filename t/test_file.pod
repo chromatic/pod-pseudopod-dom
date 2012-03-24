@@ -90,7 +90,7 @@ Index entries are more fun, as more special characters must be escaped, with a
 quote sign. E.g. X<negation ! operator>, X<array @ sigil>, X<the pipe |> and
 X<strange quote a"a>, not to mention X<C<$^W>; carats>. X<C<code> and
 I<italics> text> should appear properly too. X<arrays; C<splice>> is even more
-fun, as is X<C<< <=> >>; numeric comparison operator>.
+fun, as is X<C<< <=> >>; numeric comparison operator> and C<< E<lt>=E<gt> >>.
 
 More, we should be able to have superscripts like I<E = mcG<2>> or
 subscripts, like I<HH<2>O>.

@@ -92,6 +92,9 @@ like_string $result, qr/<a name="\.tfiles1">/,
 like_string $result, qr/<a name="operators;&lt;1">/,
     '... encoding entities as necessary';
 
+like_string $result, qr/<code>&lt;=&gt;<\/code>/,
+    '... even when specified as characters';
+
 like_string $result, qr/<li>\$BANG BANG\$<p>/,
     'escapes work inside items first line';
 
