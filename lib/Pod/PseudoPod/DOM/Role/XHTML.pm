@@ -67,16 +67,21 @@ my %characters = (
 
 sub emit_character
 {
-    my $self    = shift;
-    my $content = eval { $self->emit_kids( @_ ) };
-    return '' unless defined $content;
+    my ($self, %args) = @_;
+    my $content       = eval { $self->emit_kids( %args ) };
+
+    return ''       unless defined $content;
 
     if (my ($char, $class) = $content =~ /(\w)(\w+)/)
     {
         return $characters{$class}->($char) if exists $characters{$class};
     }
 
-    return Pod::Escapes::e2char( $content )
+    my $char = Pod::Escapes::e2char( $content );
+
+    $args{encode} ||= '';
+    return $char unless $args{encode} =~ /^(index_|id$)/;
+    return $self->encode_index_anchor($char);
 }
 
 sub emit

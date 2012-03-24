@@ -89,6 +89,9 @@ like_string $result, qr/<a name="sigils;&amp;1">/,
 like_string $result, qr/<a name="\.tfiles1">/,
     '... and should suppress HTML tags in index anchors';
 
+like_string $result, qr/<a name="operators;&lt;1">/,
+    '... encoding entities as necessary';
+
 like_string $result, qr/<li>\$BANG BANG\$<p>/,
     'escapes work inside items first line';
 
