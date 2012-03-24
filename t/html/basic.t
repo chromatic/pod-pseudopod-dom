@@ -199,7 +199,7 @@ EOPOD
 is $result, <<"EOHTML", "adding html body tags";
 <html>
 <head>
-<link rel="stylesheet" href="../css/style.css" type="text/css" />
+<link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 <body>
 
