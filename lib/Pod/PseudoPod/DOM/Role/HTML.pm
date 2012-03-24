@@ -1,10 +1,12 @@
-package Pod::PseudoPod::DOM::Role::XHTML;
-# ABSTRACT: an XHTML formatter role for PseudoPod DOM trees
+package Pod::PseudoPod::DOM::Role::HTML;
+# ABSTRACT: an HTML formatter role for PseudoPod DOM trees
 
 use strict;
 use warnings;
 
 use Moose::Role;
+
+use URI::Escape;
 use HTML::Entities;
 use Scalar::Util 'blessed';
 
@@ -19,7 +21,11 @@ sub get_link_for_anchor
     my $anchors         = $self->anchors;
 
     return unless my $heading = $anchors->{$anchor};
-    return map { $heading->$_ } qw( get_filename get_anchor get_link_text );
+    my $filename = $heading->get_filename;
+    my $target   = uri_escape_utf8( $heading->get_anchor, '^A-Za-z' );
+    my $title    = $heading->get_link_text;
+
+    return $filename, $target, $title;
 }
 
 sub resolve_anchors
@@ -159,9 +165,10 @@ sub get_heading_link
     my $content       = $self->emit_kids;
     my $filename      = $self->anchor->link || $args{filename};
     my $href          = $self->emit_kids( encode => 'index_anchor' );
+    my $frag          = 'toc_' . uri_escape_utf8( $href, '^A-Za-z' );
 
     $content          =~ s/^\*//;
-    return qq|<a href="$filename#$href">$content</a>|;
+    return qq|<a href="$filename#$frag">$content</a>|;
 }
 
 sub emit_body
@@ -259,7 +266,7 @@ sub encode_index_anchor
 
     $text =~ s/^\*//;
     $text =~ s/[\s"]//g;
-    $text = encode_entities($text);
+    $text = uri_escape_utf8( $text );
 
     return $text;
 }
@@ -496,12 +503,11 @@ sub emit_index
 
 sub emit_index_link
 {
-    my $self    = shift;
-    my $id      = $self->id;
-    my $content = $self->emit_kids( encode => 'index_anchor' ) . $id;
-    my $file    = $self->link;
-
-    return qq|<a href="$file#$content">$id</a>|;
+    my $self  = shift;
+    my $id    = $self->id;
+    my $frag  = $self->emit_kids( encode => 'index_anchor' ) . $id;
+    my $file  = $self->link;
+    return qq|<a href="$file#$frag">$id</a>|;
 }
 
 sub emit_table
