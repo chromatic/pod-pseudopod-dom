@@ -216,13 +216,14 @@ use strict;
 use warnings;
 
 use Moose;
+use HTML::Entities;
 
 extends 'Pod::PseudoPod::DOM::Index::EntryList';
 
 sub emit
 {
     my $self = shift;
-    my $key  = $self->key;
+    my $key  = encode_entities( $self->key );
 
     return qq|<h2>$key</h2>\n\n| . $self->emit_contents;
 }
