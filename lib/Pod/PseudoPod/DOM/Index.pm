@@ -65,6 +65,7 @@ use strict;
 use warnings;
 
 use Moose;
+use HTML::Entities;
 
 has 'key',      is => 'ro', required => 1;
 has 'contents', is => 'ro', default  => sub { {} };
@@ -116,7 +117,7 @@ sub add_entry
 sub emit
 {
     my $self    = shift;
-    my $key     = $self->key;
+    my $key     = encode_entities( $self->key );
 
     return qq|$key\n| . $self->emit_contents;
 }
@@ -162,6 +163,7 @@ use strict;
 use warnings;
 
 use Moose;
+use HTML::Entities;
 
 has 'key',       is => 'ro', required => 1;
 has 'locations', is => 'ro', default  => sub { [] };
@@ -170,7 +172,8 @@ sub emit
 {
     my $self = shift;
 
-    return $self->key . ' ' . join ' ', map { $_->emit } @{ $self->locations };
+    return encode_entities( $self->key ) . ' '
+         . join ' ', map { $_->emit } @{ $self->locations };
 }
 
 sub add_location
