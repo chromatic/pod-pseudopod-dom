@@ -14,9 +14,9 @@ with 'Pod::PseudoPod::DOM::Role::HTML' =>
 sub emit_anchor
 {
     my $self = shift;
-    return qq|<a id="|
+    return qq|<div id="|
          . $self->emit_kids( encode => 'index_anchor' )
-         . qq|"></a>|;
+         . qq|"></div>|;
 }
 
 sub emit_index
@@ -26,7 +26,7 @@ sub emit_index
     my $content = $self->emit_kids( encode => 'index_anchor' );
     $content   .= $self->id if $self->type eq 'index';
 
-    return qq|<a id="$content"></a>|;
+    return qq|<div id="$content"></div>|;
 }
 
 1;
