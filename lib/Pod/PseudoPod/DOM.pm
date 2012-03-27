@@ -100,6 +100,40 @@ sub end_Document
 {
     my $self = shift;
     $self->{active_elements} = [];
+    $self->finish_document;
+}
+
+sub finish_document
+{
+    my $self = shift;
+    $self->collapse_index_entries;
+}
+
+sub collapse_index_entries
+{
+    my $self     = shift;
+    my $document = $self->get_document;
+    my $kids     = $document->children;
+    my @saved_kids;
+    my @splice_kids;
+
+    # merge index entries into the next paragraph with visible text
+    for my $kid (@$kids)
+    {
+        if ($kid->type eq 'paragraph')
+        {
+            unless ($kid->has_visible_kids)
+            {
+                push @splice_kids, @{ $kid->children };
+                next;
+            }
+            unshift @{ $kid->children }, splice @splice_kids;
+        }
+
+        push @saved_kids, $kid;
+    }
+
+    @$kids = @saved_kids;
 }
 
 sub start_Verbatim

@@ -67,7 +67,7 @@ like_string $result, qr|<span class="footnote">but beware of footnotes!</span>|,
     'footnotes need special escaping too';
 
 my $link = encode_link( 'Specialformatting' );
-like_string $result, qr!^<a name="${link}1"></a><p>!m,
+like_string $result, qr!<p><a name="${link}1"></a>!m,
     'indexed items need even more special escaping';
 
 like_string $result, qr!<a name="${link}2"></a>!m,

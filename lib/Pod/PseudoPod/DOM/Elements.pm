@@ -13,7 +13,8 @@ use Moose;
     with 'MooseX::Traits';
 
     has 'type', is => 'ro', required => 1;
-    sub is_empty { 1 }
+    sub is_empty   { 1 }
+    sub is_visible { 1 }
 }
 
 {
@@ -45,6 +46,12 @@ use Moose;
     use Moose;
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
+
+    sub has_visible_kids
+    {
+        my $self = shift;
+        return grep { $_->is_visible } @{ $self->children };
+    }
 }
 
 {
@@ -61,7 +68,8 @@ use Moose;
         $self->content( shift );
     }
 
-    sub is_empty { length( shift->content ) == 0 }
+    sub is_visible { shift->content =~ /\S/ }
+    sub is_empty   { length( shift->content ) == 0 }
 }
 
 {
@@ -82,6 +90,7 @@ use Moose;
 
     extends 'Pod::PseudoPod::DOM::Element::Linkable';
 
+    sub is_visible    { 0 }
     sub get_anchor    { shift->emit_kids( encode => 'index_anchor' ) }
     sub get_link_text { shift->heading->emit_kids }
 }
@@ -93,6 +102,8 @@ use Moose;
     has 'id', is => 'rw', default => 1;
 
     extends 'Pod::PseudoPod::DOM::Element::Linkable';
+
+    sub is_visible { 0 }
 
     sub get_key
     {

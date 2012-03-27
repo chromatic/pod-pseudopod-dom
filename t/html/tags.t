@@ -44,4 +44,8 @@ $link = encode_link( 'next_heading' );
 like_string $result, qr!<a href="tags.t.pod#$link">!,
     '... and non-quoting when appropriate';
 
+$link = encode_link( 'Specialformatting' );
+like_string $result, qr!<p><a name="${link}1"></a>Special formatting!,
+    '... paragraphs of index/anchor tags should collapse';
+
 done_testing;
