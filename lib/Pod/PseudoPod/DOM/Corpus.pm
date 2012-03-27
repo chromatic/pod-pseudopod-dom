@@ -74,7 +74,7 @@ sub write_documents
 sub write_index
 {
     my $self  = shift;
-    my $outfh = $self->get_fh_in_path( 'book_index', '>' );
+    my $outfh = $self->get_fh_in_path( 'theindex', '>' );
     print {$outfh} $self->get_index;
 }
 
