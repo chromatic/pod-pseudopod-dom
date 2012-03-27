@@ -15,6 +15,13 @@ has 'add_body_tags',     is => 'ro', default => 0;
 has 'emit_environments', is => 'ro', default => sub { {} };
 has 'anchors',           is => 'rw', default => sub { {} };
 
+sub get_anchor
+{
+    my $self   = shift;
+    my $anchor = $self->emit_kids( encode => 'index_anchor' );
+    return encode_base64url( $anchor );
+}
+
 sub get_link_for_anchor
 {
     my ($self, $anchor) = @_;
@@ -22,7 +29,7 @@ sub get_link_for_anchor
 
     return unless my $heading = $anchors->{$anchor};
     my $filename = $heading->link;
-    my $target   = encode_base64url( $heading->get_anchor );
+    my $target   = $heading->get_anchor;
     my $title    = $heading->get_link_text;
 
     return $filename, $target, $title;
@@ -167,8 +174,7 @@ sub get_heading_link
 
     my $content       = $self->emit_kids;
     my $filename      = $self->filename || '';
-    my $href          = $self->emit_kids( encode => 'index_anchor' );
-    my $frag          = 'toc_' . encode_base64url( $href );
+    my $frag          = 'toc_' . $self->get_anchor;
 
     $content          =~ s/^\*//;
     return qq|<a href="$filename#$frag">$content</a>|;
@@ -314,9 +320,7 @@ sub emit_literal
 sub emit_anchor
 {
     my $self = shift;
-    return qq|<a name="|
-         . encode_base64url( $self->emit_kids( encode => 'index_anchor' ) )
-         . qq|"></a>|;
+    return qq|<a name="| . $self->get_anchor . qq|"></a>|;
 }
 
 sub emit_number_item
@@ -496,9 +500,7 @@ sub make_block_title
 sub emit_index
 {
     my $self    = shift;
-    my $content = encode_base64url(
-        $self->emit_kids( encode => 'index_anchor' )
-    );
+    my $content = $self->get_anchor;
     $content   .= $self->id if $self->type eq 'index';
 
     return qq|<a name="$content"></a>|;
@@ -508,7 +510,7 @@ sub emit_index_link
 {
     my $self  = shift;
     my $id    = $self->id;
-    my $frag  = $self->emit_kids( encode => 'index_anchor' ) . $id;
+    my $frag  = $self->get_anchor . $id;
     my $file  = $self->link;
     return qq|<a href="$file#$frag">$id</a>|;
 }

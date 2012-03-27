@@ -14,10 +14,7 @@ with 'Pod::PseudoPod::DOM::Role::HTML' =>
 sub emit_anchor
 {
     my $self   = shift;
-    my $anchor = $self->emit_kids( encode => 'index_anchor' );
-
-    # guess what's invalid in NCNames?
-    $anchor    =~ tr/%//d;
+    my $anchor = $self->get_anchor;
 
     return qq|<div id="$anchor" />|;
 }
@@ -26,11 +23,8 @@ sub emit_index
 {
     my $self = shift;
 
-    my $content = $self->emit_kids( encode => 'index_anchor' );
+    my $content = $self->get_anchor;
     $content   .= $self->id if $self->type eq 'index';
-
-    # guess what's invalid in NCNames?
-    $content    =~ tr/%//d;
 
     return qq|<div id="$content" />|;
 }
