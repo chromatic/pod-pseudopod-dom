@@ -202,11 +202,7 @@ BEGIN
         my $end_meth = sub
         {
             my $self = shift;
-            my $head = $self->reset_to_item( Heading => level => $heading );
-
-            $self->start_Z;
-            $self->handle_text( $head->emit_kids( encode => 'index_anchor' ) );
-            $self->end_Z;
+            $self->reset_to_item( Heading => level => $heading );
         };
 
         do

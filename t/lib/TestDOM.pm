@@ -5,6 +5,7 @@ use warnings;
 
 use Pod::PseudoPod::DOM;
 use Pod::PseudoPod::DOM::App;
+use MIME::Base64;
 
 sub import
 {
@@ -35,10 +36,11 @@ sub import
 
     do
     {
+        my $package = $caller[0] . '::';
         no strict 'refs';
-        *{ $caller[0] . '::' . 'parse' }              = $parse;
-        *{ $caller[0] . '::' . 'parse_with_anchors' } = $parse_with_anchors;
-
+        *{ $package . 'parse' }              = $parse;
+        *{ $package . 'parse_with_anchors' } = $parse_with_anchors;
+        *{ $package . 'encode_link'        } = \&MIME::Base64::encode_base64url;
     };
 }
 

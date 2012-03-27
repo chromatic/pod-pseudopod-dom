@@ -6,9 +6,9 @@ use warnings;
 
 use Moose::Role;
 
-use URI::Escape;
 use HTML::Entities;
 use Scalar::Util 'blessed';
+use MIME::Base64 'encode_base64url';
 
 requires 'type';
 has 'add_body_tags',     is => 'ro', default => 0;
@@ -22,7 +22,7 @@ sub get_link_for_anchor
 
     return unless my $heading = $anchors->{$anchor};
     my $filename = $heading->get_filename;
-    my $target   = uri_escape_utf8( $heading->get_anchor, '^A-Za-z' );
+    my $target   = encode_base64url( $heading->get_anchor );
     my $title    = $heading->get_link_text;
 
     return $filename, $target, $title;
@@ -74,7 +74,7 @@ my %characters = (
 sub emit_character
 {
     my ($self, %args) = @_;
-    my $content       = eval { $self->emit_kids( %args ) };
+    my $content       = eval { $self->emit_kids };
 
     return ''       unless defined $content;
 
@@ -83,7 +83,10 @@ sub emit_character
         return $characters{$class}->($char) if exists $characters{$class};
     }
 
+    $args{encode}   ||= '';
     my $char = Pod::Escapes::e2char( $content );
+    return $char if $args{encode} =~ /^(index_|id$)/;
+
     return $self->handle_encoding( $char );
 }
 
@@ -163,9 +166,9 @@ sub get_heading_link
     my ($self, %args) = @_;
 
     my $content       = $self->emit_kids;
-    my $filename      = $self->anchor->link || $args{filename};
+    my $filename      = $args{filename};
     my $href          = $self->emit_kids( encode => 'index_anchor' );
-    my $frag          = 'toc_' . uri_escape_utf8( $href, '^A-Za-z' );
+    my $frag          = 'toc_' . encode_base64url( $href );
 
     $content          =~ s/^\*//;
     return qq|<a href="$filename#$frag">$content</a>|;
@@ -200,9 +203,9 @@ sub emit_header
     my $id      = $self->emit_kids( encode => 'id' );
     my $no_toc  = $content =~ s/^\*//;
     my $level   = 'h' . ($self->level + 1);
-    my $header  = qq|<$level id="$id">$content</$level>\n\n|;
+    my $anchor  = $no_toc ? '' : $self->emit_index( @_ );
 
-    return $no_toc ? $header : $self->emit_index( @_ ) . $header;
+    return qq|<$level id="$id">$anchor$content</$level>\n\n|;
 }
 
 sub emit_plaintext
@@ -240,6 +243,11 @@ sub encode_text
 {
     my ($self, $text) = @_;
 
+    use Carp;
+    unless (defined $text)
+    {
+        confess 'no text';
+    }
     $text = encode_entities($text);
     $text =~ s/\s*---\s*/&#8213;/g;
     $text =~ s/\s*--\s*/&mdash;/g;
@@ -261,7 +269,6 @@ sub encode_index_anchor
 
     $text =~ s/^\*//;
     $text =~ s/[\s"]//g;
-    $text = uri_escape_utf8( $text );
 
     return $text;
 }
@@ -308,7 +315,7 @@ sub emit_anchor
 {
     my $self = shift;
     return qq|<a name="|
-         . $self->emit_kids( encode => 'index_anchor' )
+         . encode_base64url( $self->emit_kids( encode => 'index_anchor' ) )
          . qq|"></a>|;
 }
 
@@ -489,8 +496,9 @@ sub make_block_title
 sub emit_index
 {
     my $self    = shift;
-
-    my $content = $self->emit_kids( encode => 'index_anchor' );
+    my $content = encode_base64url(
+        $self->emit_kids( encode => 'index_anchor' )
+    );
     $content   .= $self->id if $self->type eq 'index';
 
     return qq|<a name="$content"></a>|;

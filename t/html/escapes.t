@@ -59,37 +59,48 @@ like_string $result, qr/ineffable/, 'ff ligature also gets no marking';
 like_string $result, qr/ligatures&mdash;and/,
     'spacey double dash should become a real emdash';
 
-like_string $result, qr/<a name="negation%21operator1">/,
+my $link = encode_link( 'negation!operator' );
+like_string $result, qr/<a name="${link}1">/,
     '! needs URI encoding in index anchor';
 
-like_string $result, qr/<a name="array%40sigil1">/,
+$link = encode_link( 'array@sigil' );
+like_string $result, qr/<a name="${link}1">/,
     '@ needs URI encoding in index anchor';
 
-like_string $result, qr/<a name="thepipe|1">/,
+$link = encode_link( 'thepipe|' );
+like_string $result, qr/<a name="${link}1">/,
     'spaces removed from index anchors';
 
-like_string $result, qr/<a name="strangequoteaa1">/,
+$link = encode_link( 'strangequoteaa' );
+like_string $result, qr/<a name="${link}1">/,
     'quotes removed from index anchors';
 
-like_string $result, qr/<a name="%24%5EW%3Bcarats1">/,
+$link = encode_link( '$^W;carats' );
+like_string $result, qr/<a name="${link}1">/,
     '... carat needs URI encoding in anchor';
 
-like_string $result, qr/<a name="hierarchicalterms%3Bomittingtrailingspaces1">/,
+$link = encode_link( 'hierarchicalterms;omittingtrailingspaces' );
+like_string $result, qr/<a name="${link}1">/,
     'trailing spaces in hierarchical terms should be ignored';
 
-like_string $result, qr/<a name="codeanditalicstext1">/,
+$link = encode_link( 'codeanditalicstext' );
+like_string $result, qr/<a name="${link}1">/,
     '... and code/italics formatting';
 
-like_string $result, qr/<a name="%3C%3D%3E%3Bnumericcomparisonoperator1">/,
+$link = encode_link( '<=>;numericcomparisonoperator' );
+like_string $result, qr/<a name="${link}1">/,
     '... and should escape <> symbols';
 
-like_string $result, qr/<a name="sigils%3B%261">/,
+$link = encode_link( 'sigils;&' );
+like_string $result, qr/<a name="${link}1">/,
     '... in index anchors as well';
 
-like_string $result, qr/<a name="\.tfiles1">/,
+$link = encode_link( '.tfiles' );
+like_string $result, qr/<a name="${link}1">/,
     '... and should suppress HTML tags in index anchors';
 
-like_string $result, qr/<a name="operators%3B&lt;1">/,
+$link = encode_link( 'operators;<' );
+like_string $result, qr/<a name="${link}1">/,
     '... encoding entities as necessary';
 
 like_string $result, qr/<code>&lt;=&gt;<\/code>/,

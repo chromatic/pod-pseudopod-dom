@@ -18,35 +18,43 @@ my %anchors;
 my $file   = read_file( catfile( qw( t test_file.pod ) ) );
 my $result = parse_with_anchors( $file );
 
-like_string $result, qr!<h1 id="somedocument">Some Document</h1>!,
+my $link   = encode_link( 'SomeDocument' );
+like_string $result,
+    qr!<h1 id="somedocument"><a name="$link"></a>Some Document</h1>!,
     '0 heads should become chapter titles';
 
-like_string $result, qr!<h2 id="aheading">A Heading</h2>!,
+$link = encode_link( 'AHeading' );
+like_string $result, qr!<h2 id="aheading"><a name="$link"></a>A Heading</h2>!,
     'A heads should become section titles';
 
-like_string $result, qr!<h3 id="bheading">B heading</h3>!,
+$link = encode_link( 'Bheading' );
+like_string $result, qr!<h3 id="bheading"><a name="$link"></a>B heading</h3>!,
     'B heads should become subsection titles';
 
-like_string $result, qr!<h4 id="cheading">c heading</h4>!,
+$link = encode_link( 'cheading' );
+like_string $result, qr!<h4 id="cheading"><a name="$link"></a>c heading</h4>!,
     'C heads should become subsubsection titles';
 
 like_string $result, qr!<h1 id="another.+">Another Suppressed Heading</h1>!,
     '... chapter title TOC suppression should create heading';
 
-like_string $result, qr/<a name="AnotherSuppressedHeading">/,
-    '... but with anchor';
+$link = encode_link( 'AnotherSuppressedHeading' );
+unlike_string $result, qr/<a name="$link">/,
+    '... without anchor';
 
 like_string $result, qr!<h2 id="asuppressed.+">A Suppressed Heading</h2>!,
     '... section title suppression should create heading';
 
-like_string $result, qr/<a name="ASuppressedHeading">/,
-    '... but with anchor';
+$link = encode_link( 'ASuppressedHeading' );
+unlike_string $result, qr/<a name="$link">/,
+    '... without anchor';
 
 like_string $result, qr!<h3 id="yet.+ing">Yet Another Suppressed Heading</h3>!,
     '... subsection title suppression should create heading';
 
-like_string $result, qr/<a name="YetAnotherSuppressedHeading">/,
-    '... but with anchor';
+$link = encode_link( 'YetAnotherSuppressedHeading' );
+unlike_string $result, qr/<a name="$link">/,
+    '... without anchor';
 
 like_string $result,
     qr/<pre><code>\s*&quot;This text.+--.+ \$text.&quot;\n/s,

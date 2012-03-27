@@ -14,7 +14,8 @@ use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 my $file           = read_file( catfile( qw( t test_file.pod ) ) );
 my ($doc, $result) = parse_with_anchors( $file );
 
-like_string $result, qr/<p><a name="figure_link">/,
+my $link = encode_link( 'figure_link' );
+like_string $result, qr/<p><a name="$link">/,
     'figure should start a figure environment';
 like_string $result, qr!<img src="some/path/to/image_file.png"!,
     '... without quoting image file paths';

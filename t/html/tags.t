@@ -14,28 +14,34 @@ use_ok( 'Pod::PseudoPod::DOM' ) or exit;
 my $file   = read_file( catfile( qw( t test_file.pod ) ) );
 my $result = parse_with_anchors( $file );
 
-like_string $result, qr!<a name="startofdocument"></a>!m,
+my $link   = encode_link( 'startofdocument' );
+like_string $result, qr!<a name="$link"></a>!m,
     'Z<> tags should become anchors';
 
-like_string $result, qr!<a name="next_heading"></a>!m,
+$link = encode_link( 'next_heading' );
+like_string $result, qr!<a name="$link"></a>!m,
     '... without normal escaping';
 
-like_string $result, qr!<a name="slightlycomplex\?heading"></a>!,
+$link = encode_link( 'slightlycomplex?heading' );
+like_string $result, qr!<a name="$link"></a>!,
     '... and escaping non-alphanumerics';
 
 like_string $result, qr!<a class="url" href="http://www.google.com/">!,
     'U<> tag should become urls';
 
-like_string $result, qr!<a href="tags.t.pod#startofdocument">!,
+$link = encode_link( 'startofdocument' );
+like_string $result, qr!<a href="tags.t.pod#$link">!,
     'L<> tag should become cross references';
 
-like_string $result, qr!<a href="tags.t.pod#startofdocument">!,
+like_string $result, qr!<a href="tags.t.pod#$link">!,
     'A<> tag should become cross references';
 
-like_string $result, qr!<a href="tags.t.pod#slightlycomplex\?heading">!,
+$link = encode_link( 'slightlycomplex?heading' );
+like_string $result, qr!<a href="tags.t.pod#$link">!,
     '... with appropriate quoting';
 
-like_string $result, qr!<a href="tags.t.pod#next_heading">!,
+$link = encode_link( 'next_heading' );
+like_string $result, qr!<a href="tags.t.pod#$link">!,
     '... and non-quoting when appropriate';
 
 done_testing;

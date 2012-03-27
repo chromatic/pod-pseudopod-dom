@@ -2,6 +2,8 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::LongString;
+
 use lib 't/lib';
 use TestDOM 'Pod::PseudoPod::DOM::Role::HTML';
 
@@ -47,18 +49,22 @@ Is it not nifty?
 
 END_POD
 
-like $result, qr!<h1 id="sometitle">Some Title</h1>!, '=head0 to <h1> title';
+my $link = encode_link( 'SomeTitle' );
+like $result, qr!<h1 id="sometitle"><a name="$link"></a>Some Title</h1>!,
+    '=head0 to <h1> title';
 
+$link = encode_link( 'SomeTitlewithCodeandEmphasizedandBold' );
 like $result,
-    qr!<h2 id="sometitlewithcodeand.+">Some Title with <code>Code</code>!,
+    qr!<h2 id="sometitlewithcodeand.+"><a name="$link"></a>Some Title with <code>Code</code>!,
     'C<> tag nested in =headn';
-like $result, qr!<h2 id="someti.+andemph.+">Some Title.+?<em>Emphasized</em>!,
+like $result, qr!<h2 id="someti.+andemp.+">.+?Some Title.+?<em>Emphasized</em>!,
     'I<> tag nested in =headn';
-like $result, qr!<h2 id="someti.+andbold">Some Title.+?<strong>Bold</strong>!,
+like $result, qr!<h2 id="somet.+andbold">.+?Some Title.+?<strong>Bold</strong>!,
     'B<> tag nested in =headn';
 
+$link = encode_link( 'AHeaderNestedinaSidebar' );
 like $result,
-    qr|<div class="sidebar">[^>]+<a name="AHeade.+"></a><h3 id="ahe.+">A Head|,
+    qr|<div class="sidebar">[^>]+<h3 id="ahe.+"><a name="$link"></a>A Head|,
     '=headn nested in sidebar';
 
 like $result, qr!<ul>[^>]+<li>One.*</div>!s,
