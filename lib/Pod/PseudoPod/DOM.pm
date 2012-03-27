@@ -194,8 +194,10 @@ BEGIN
         my $start_meth = sub
         {
             my $self = shift;
-            $self->push_heading_element(
-                Heading => level => $heading, type => 'header'
+            $self->push_heading_element( Heading  =>
+                                         level    => $heading,
+                                         type     => 'header',
+                                         filename => $self->{basefile},
             );
         };
 

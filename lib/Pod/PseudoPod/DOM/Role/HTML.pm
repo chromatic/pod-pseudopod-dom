@@ -21,7 +21,7 @@ sub get_link_for_anchor
     my $anchors         = $self->anchors;
 
     return unless my $heading = $anchors->{$anchor};
-    my $filename = $heading->get_filename;
+    my $filename = $heading->link;
     my $target   = encode_base64url( $heading->get_anchor );
     my $title    = $heading->get_link_text;
 
@@ -166,7 +166,7 @@ sub get_heading_link
     my ($self, %args) = @_;
 
     my $content       = $self->emit_kids;
-    my $filename      = $args{filename};
+    my $filename      = $self->filename || '';
     my $href          = $self->emit_kids( encode => 'index_anchor' );
     my $frag          = 'toc_' . encode_base64url( $href );
 

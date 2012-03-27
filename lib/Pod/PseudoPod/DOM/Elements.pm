@@ -82,8 +82,6 @@ use Moose;
 
     extends 'Pod::PseudoPod::DOM::Element::Linkable';
 
-    # XXX: this shouldn't be here
-    sub get_filename  { shift->link               }
     sub get_anchor    { shift->emit_kids( encode => 'index_anchor' ) }
     sub get_link_text { shift->heading->emit_kids }
 }
@@ -133,8 +131,9 @@ use Moose;
 
     extends 'Pod::PseudoPod::DOM::ParentElement';
 
-    has 'level',  is => 'ro', required => 1;
-    has 'anchor', is => 'rw';
+    has 'level',    is => 'ro', required => 1;
+    has 'anchor',   is => 'rw';
+    has 'filename', is => 'ro', required => 1;
 
     sub exclude_from_toc
     {
