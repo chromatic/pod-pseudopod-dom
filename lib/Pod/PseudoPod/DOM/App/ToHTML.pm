@@ -47,7 +47,7 @@ sub process_files_with_output
 sub process_args
 {
     my @files;
-    my $role  = 'html';
+    my $role  = 'HTML';
     my %roles = ( html => 'HTML', epub => 'EPUB' );
 
     for my $arg (@_)
