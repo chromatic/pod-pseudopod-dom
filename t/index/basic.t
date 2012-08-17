@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 use Pod::PseudoPod::DOM;
+use MIME::Base64 'encode_base64url';
 
 exit main( @ARGV );
 
@@ -35,7 +36,7 @@ sub make_index_nodes
     }
 
     my $parser = Pod::PseudoPod::DOM->new(
-        formatter_role => 'Pod::PseudoPod::DOM::Role::XHTML',
+        formatter_role => 'Pod::PseudoPod::DOM::Role::HTML',
         filename       => 'dummy_file.html',
     );
     my $dom   = $parser->parse_string_document( $doc )->get_document;
@@ -81,8 +82,10 @@ sub test_multiple_entries_in_one_index
     like $output, qr!<h2>A</h2>!, 'index should contain top-level keys';
     like $output, qr!<h2>B</h2>!, '... with proper capitalization';
 
+    my $key = encode_base64url( 'aardvark' );
+
     like $output,
-        qr!aardvark \[<a href=".+?#aardvark1">1</a>\] \[.+?vark2">2</a>\]!,
+        qr!aardvark \[<a href=".+?#${key}1">1</a>\] \[.+?${key}2">2</a>\]!,
         '... with multiple entries merged';
 }
 
@@ -142,8 +145,8 @@ sub test_subsubentries
     like $output, qr!<li>aardvark.+?<li>anteater!s,
         '... with entries in alphabetical order too';
 
-    like $output, qr!#animals;a-letter;aardvark1!,
-        '... and full anchors';
+    my $key = encode_base64url( 'animals;a-letter;aardvark' );
+    like $output, qr!#${key}1!, '... and full anchors';
 }
 
 sub test_subentry_with_entry
