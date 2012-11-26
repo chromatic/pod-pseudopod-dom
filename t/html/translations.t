@@ -67,10 +67,10 @@ like_string $result, qr|<span class="footnote">but beware of footnotes!</span>|,
     'footnotes need special escaping too';
 
 my $link = encode_link( 'Specialformatting' );
-like_string $result, qr!<p><a name="${link}1"></a>!m,
+like_string $result, qr!<p id="${link}1">!m,
     'indexed items need even more special escaping';
 
-like_string $result, qr!<a name="${link}2"></a>!m,
+like_string $result, qr!<p id="${link}2">!m,
     '... and de-duplication';
 
 like_string $result, qr!mc<sup>2</sup>!, 'superscript works';

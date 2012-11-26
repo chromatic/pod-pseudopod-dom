@@ -428,10 +428,32 @@ sub emit_paragraph
     my $self             = shift;
     my @kids             = @{ $self->children };
     my $has_visible_text = grep { ! exists $invisibles{ $_->type } } @kids;
-    my $content          = $self->emit_kids( @_ );
+    return $self->emit_kids( @_ ) unless $has_visible_text;
 
-    return         $content unless $has_visible_text;
-    return '<p>' . $content . qq|</p>\n\n|;
+    my $attrs = @kids && $kids[0]->type =~ /anchor|index/
+              ? $self->get_anchored_paragraph_attrs( shift @kids )
+              : '';
+
+    # inlined emit_kids() here to reflect any anchor manipulation
+    my $content          = join '', map { $_->emit( @_ ) } @kids;
+    return "<p$attrs>" . $content . qq|</p>\n\n|;
+}
+
+sub get_anchored_paragraph_attrs
+{
+    my ($self, $tag) = @_;
+    my $type         = $tag->type;
+
+    if ($type eq 'anchor')
+    {
+        my $content = $tag->get_anchor;
+        return qq| id="$content"|;
+    }
+    elsif ($type eq 'index')
+    {
+        my $content = $tag->get_anchor . $tag->id;
+        return qq| id="$content"|;
+    }
 }
 
 my %parent_items =

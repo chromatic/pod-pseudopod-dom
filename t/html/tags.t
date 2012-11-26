@@ -15,15 +15,15 @@ my $file   = read_file( catfile( qw( t test_file.pod ) ) );
 my $result = parse_with_anchors( $file );
 
 my $link   = encode_link( 'startofdocument' );
-like_string $result, qr!<a name="$link"></a>!m,
+like_string $result, qr!<p id="$link">!m,
     'Z<> tags should become anchors';
 
 $link = encode_link( 'next_heading' );
-like_string $result, qr!<a name="$link"></a>!m,
+like_string $result, qr!<p id="$link">!m,
     '... without normal escaping';
 
 $link = encode_link( 'slightlycomplex?heading' );
-like_string $result, qr!<a name="$link"></a>!,
+like_string $result, qr!<p id="$link">!,
     '... and escaping non-alphanumerics';
 
 like_string $result, qr!<a class="url" href="http://www.google.com/">!,
@@ -45,7 +45,7 @@ like_string $result, qr!<a href="tags.t.pod#$link">!,
     '... and non-quoting when appropriate';
 
 $link = encode_link( 'Specialformatting' );
-like_string $result, qr!<p><a name="${link}1"></a>Special formatting!,
+like_string $result, qr!<p id="${link}1">Special formatting!,
     '... paragraphs of index/anchor tags should collapse';
 
 done_testing;
