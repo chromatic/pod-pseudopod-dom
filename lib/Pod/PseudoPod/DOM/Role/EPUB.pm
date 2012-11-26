@@ -16,7 +16,7 @@ sub emit_anchor
     my $self   = shift;
     my $anchor = $self->get_anchor;
 
-    return qq|<div id="$anchor" />|;
+    return qq|<span id="$anchor"></span>|;
 }
 
 sub emit_index
@@ -26,7 +26,7 @@ sub emit_index
     my $content = $self->get_anchor;
     $content   .= $self->id if $self->type eq 'index';
 
-    return qq|<div id="$content" />|;
+    return qq|<span id="$content"></span>|;
 }
 
 sub emit_body
