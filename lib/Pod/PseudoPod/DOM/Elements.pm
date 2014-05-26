@@ -13,8 +13,9 @@ use Moose;
     with 'MooseX::Traits';
 
     has 'type', is => 'ro', required => 1;
-    sub is_empty   { 1 }
-    sub is_visible { 1 }
+    sub is_empty           { 1 }
+    sub is_visible         { 1 }
+    sub can_contain_anchor { 0 }
 }
 
 {
@@ -38,6 +39,13 @@ use Moose;
     sub add_children { push @{ shift->children }, @_ }
 
     sub is_empty { return @{ shift->children } == 0 }
+
+    sub remove
+    {
+        my ($self, $kid) = @_;
+        my $kids         = $self->children;
+        @{ $self->children } = [ grep { $_ != $kid } @$kids ];
+    }
 }
 
 {
@@ -90,9 +98,17 @@ use Moose;
 
     extends 'Pod::PseudoPod::DOM::Element::Linkable';
 
-    sub is_visible    { 0 }
-    sub get_anchor    { shift->emit_kids( encode => 'index_anchor' ) }
-    sub get_link_text { shift->heading->emit_kids }
+    sub is_visible         { 0 }
+    sub get_anchor         { shift->emit_kids( encode => 'index_anchor' ) }
+    sub get_link_text      { shift->heading->emit_kids }
+}
+
+{
+    package Pod::PseudoPod::DOM::Element::Text::HeadingAnchor;
+
+    use Moose;
+
+    extends 'Pod::PseudoPod::DOM::Element::Text::Anchor';
 }
 
 {
@@ -145,6 +161,8 @@ use Moose;
     has 'level',    is => 'ro', required => 1;
     has 'anchor',   is => 'rw';
     has 'filename', is => 'ro', required => 1;
+
+    sub can_contain_anchor { 1 }
 
     sub exclude_from_toc
     {
@@ -215,6 +233,16 @@ use Moose;
     extends 'Pod::PseudoPod::DOM::ParentElement';
 
     has 'caption', is => 'rw', default => '';
+
+    sub anchor {
+        my $self = shift;
+        for my $kid (@{ $self->children })
+        {
+            next unless $kid->type eq 'anchor';
+            return $kid;
+        }
+    }
+
     sub fixup_figure
     {
         my $self     = shift;
@@ -225,16 +253,6 @@ use Moose;
             ? @{ $_->children }
             : $_
         } @$children;
-    }
-
-    sub anchor
-    {
-        my $self = shift;
-        for my $kid (@{ $self->children })
-        {
-            next unless $kid->type eq 'anchor';
-            return $kid;
-        }
     }
 
     sub file

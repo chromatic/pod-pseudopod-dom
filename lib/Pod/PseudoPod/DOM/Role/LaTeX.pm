@@ -56,11 +56,13 @@ sub emit_header
     my $level    = $self->level;
     my $text     = $self->emit_kids;
     my $suppress = $text =~ s/^\*// ? '*' : '';
+    my $anchor   = $self->anchor ? $self->anchor->emit_anchor : '';
 
-    return qq|\\chapter${suppress}{$text}\n\n| if $level == 0;
+    return qq|\\chapter${suppress}{$text}\n\n$anchor| if $level == 0;
 
     my $subs = 'sub' x ($level - 1);
-    return qq|\\${subs}section${suppress}{$text}\n\n|;
+
+    return qq|\\${subs}section${suppress}{$text}\n\n$anchor|;
 }
 
 sub emit_plaintext

@@ -42,6 +42,7 @@ sub resolve_anchors
 
     for my $anchor (@{ $self->anchor })
     {
+        my $a = $anchor->emit_kids;
         $anchors->{$anchor->emit_kids} = $anchor;
     }
 }
@@ -206,10 +207,11 @@ sub emit_header
 {
     my $self    = shift;
     my $content = $self->emit_kids( @_ );
-    my $id      = $self->emit_kids( encode => 'id' );
+    my $id_node = $self->anchor;
+    my $id      = $id_node ? $id_node->get_anchor : $self->get_anchor;
     my $no_toc  = $content =~ s/^\*//;
     my $level   = 'h' . ($self->level + 1);
-    my $anchor  = $no_toc ? '' : $self->emit_index( @_ );
+    my $anchor  = $id_node ? $self->emit_index( @_ ) : '';
 
     return qq|<$level id="$id">$anchor$content</$level>\n\n|;
 }
@@ -430,7 +432,7 @@ sub emit_paragraph
     my $has_visible_text = grep { ! exists $invisibles{ $_->type } } @kids;
     return $self->emit_kids( @_ ) unless $has_visible_text;
 
-    my $attrs = @kids && $kids[0]->type =~ /anchor|index/
+    my $attrs = @kids && $kids[0]->type =~ /^(?:anchor|index)$/
               ? $self->get_anchored_paragraph_attrs( shift @kids )
               : '';
 
@@ -583,14 +585,14 @@ sub emit_figure
     my $self    = shift;
     my $caption = $self->caption;
     my $anchor  = $self->anchor;
-    $anchor     = defined $anchor ? $anchor->emit : '';
+    my $id      = defined $anchor ? ' id="' . $anchor->get_anchor . '"' : '';
     my $file    = $self->file->emit_kids;
-    my $content = '<p>';
+    my $content = qq|<p$id>|;
 
     $content   .= $anchor if $anchor;
     $content   .= qq|<img src="$file" />|;
     $content   .= qq|<br />\n<em>$caption</em>| if $caption;
-    $content   .= '</p>';
+    $content   .= qq|</p>\n\n|;
 
     return $content;
 }

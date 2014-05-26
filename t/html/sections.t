@@ -19,41 +19,50 @@ my $file   = read_file( catfile( qw( t test_file.pod ) ) );
 my $result = parse_with_anchors( $file );
 
 my $link   = encode_link( 'SomeDocument' );
+my $l2     = encode_link( 'startofdocument' );
 like_string $result,
-    qr!<h1 id="somedocument"><a name="$link"></a>Some Document</h1>!,
+    qr!<h1 id="$l2"><a name="$link"></a>Some Document</h1>!,
     '0 heads should become chapter titles';
 
 $link = encode_link( 'AHeading' );
-like_string $result, qr!<h2 id="aheading"><a name="$link"></a>A Heading</h2>!,
+$l2   = encode_link( 'next_heading' );
+like_string $result, qr!<h2 id="$l2"><a name="$link"></a>A Heading</h2>!,
     'A heads should become section titles';
 
 $link = encode_link( 'Bheading' );
-like_string $result, qr!<h3 id="bheading"><a name="$link"></a>B heading</h3>!,
-    'B heads should become subsection titles';
+$l2   = encode_link( 'slightlycomplex?heading' );
+contains_string $result, qq!<h3 id="$l2"><a name="$link"></a>B heading</h3>!,
+    'B heads should become subsection titles' . " $l2 $link ";
+
+lacks_string $result, qq|<p id="$l2">|,
+    '... and rolled up anchors should not appear in paragraphs too';
 
 $link = encode_link( 'cheading' );
-like_string $result, qr!<h4 id="cheading"><a name="$link"></a>c heading</h4>!,
+like_string $result, qr!<h4 id="$link">c heading</h4>!,
     'C heads should become subsubsection titles';
 
-like_string $result, qr!<h1 id="another.+">Another Suppressed Heading</h1>!,
+$link = encode_link( 'AnotherSuppressedHeading' );
+contains_string $result,
+    qq!<h1 id="$link">Another Suppressed Heading</h1>!,
     '... chapter title TOC suppression should create heading';
 
 $link = encode_link( 'AnotherSuppressedHeading' );
-unlike_string $result, qr/<a name="$link">/,
+lacks_string $result, qq!<a name="$link"></a>!,
     '... without anchor';
-
-like_string $result, qr!<h2 id="asuppressed.+">A Suppressed Heading</h2>!,
-    '... section title suppression should create heading';
 
 $link = encode_link( 'ASuppressedHeading' );
-unlike_string $result, qr/<a name="$link">/,
+contains_string $result, qq!<h2 id="$link">A Suppressed Heading</h2>!,
+    '... section title suppression should create heading';
+
+lacks_string $result, qq!<a name="$link"></a>!,
     '... without anchor';
 
-like_string $result, qr!<h3 id="yet.+ing">Yet Another Suppressed Heading</h3>!,
+$link = encode_link( 'YetAnotherSuppressedHeading' );
+contains_string $result,
+    qq!<h3 id="$link">Yet Another Suppressed Heading</h3>!,
     '... subsection title suppression should create heading';
 
-$link = encode_link( 'YetAnotherSuppressedHeading' );
-unlike_string $result, qr/<a name="$link">/,
+lacks_string $result, qq!<a name="$link"></a>!,
     '... without anchor';
 
 like_string $result,

@@ -14,28 +14,28 @@ isa_ok $parser, 'Pod::PseudoPod::DOM';
 
 my $result = parse( "=head0 Narf!" );
 my $link   = encode_link( 'Narf!' );
-like $result, qr|<h1 id="narf"><a name="$link"></a>Narf!</h1>\n\n|,
+like $result, qr|<h1 id="$link">Narf!</h1>\n\n|,
     "head0 level output";
 
 $result = parse( "=head1 Poit!" );
 $link   = encode_link( 'Poit!' );
-like $result, qr|<h2 id="poit"><a name="$link"></a>Poit!</h2>\n\n|,
+like $result, qr|<h2 id="$link">Poit!</h2>\n\n|,
     "head1 level output";
 
 $result = parse( "=head2 I think so Brain." );
 $link   = encode_link( 'IthinksoBrain.' );
 like $result,
-    qr|<h3 id="ithinksobrain"><a name="$link"></a>I think so Brain.</h3>\n\n|,
+    qr|<h3 id="$link">I think so Brain.</h3>\n\n|,
      "head2 level output";
 
 $result = parse( "=head3 I say, Brain..." );
 $link   = encode_link( 'Isay,Brain...' );
-like $result, qr|<h4 id="isaybrain"><a name="$link"></a>I say, Brain...</h4>\n|,
+like $result, qr|<h4 id="$link">I say, Brain...</h4>\n|,
     "head3 level output";
 
 $result = parse( "=head4 Zort!" );
 $link   = encode_link( 'Zort!' );
-like $result, qr|<h5 id="zort"><a name="$link"></a>Zort!</h5>\n\n|,
+like $result, qr|<h5 id="$link">Zort!</h5>\n\n|,
     "head4 level output";
 
 $result = parse( <<'EOPOD' );

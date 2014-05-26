@@ -106,7 +106,52 @@ sub end_Document
 sub finish_document
 {
     my $self = shift;
+    $self->reparent_anchors;
     $self->collapse_index_entries;
+}
+
+sub reparent_anchors
+{
+    my $self     = shift;
+    my $document = $self->get_document;
+    my $kids     = $document->children;
+
+    my $anchor_parent;
+    my @spliced_kids;
+
+    for my $child (@$kids) {
+        if ($child->can_contain_anchor) {
+            $anchor_parent = $child;
+            push @spliced_kids, $child;
+            next;
+        }
+
+        # an anchor is the only child of a top-level paragraph
+        if ($child->type eq 'paragraph') {
+            my $grandkids = $child->children;
+            if (@$grandkids != 1) {
+                push @spliced_kids, $child;
+                next;
+            }
+
+            if ($grandkids->[0]->type ne 'anchor') {
+                push @spliced_kids, $child;
+                next;
+            }
+
+            $child = $grandkids->[0];
+        }
+
+        if ($anchor_parent && $child->type eq 'anchor') {
+            $anchor_parent->anchor( $child );
+            undef $anchor_parent;
+            next;
+        }
+
+        push @spliced_kids, $child;
+    }
+
+    @$kids = @spliced_kids;
 }
 
 sub collapse_index_entries
@@ -181,7 +226,6 @@ sub push_link_element
         $class, heading => $heading, %args
     );
 
-    $heading->anchor( $child ) if $heading and $args{type} eq 'anchor';
     $self->add_link( $args{type} => $child );
 }
 
@@ -221,6 +265,22 @@ sub reset_to_item
     }
 }
 
+sub start_Z
+{
+    my $self = shift;
+    my $child = $self->push_element( 'Text::Anchor',
+                                      type    => 'anchor',
+                                      link    => $self->{basefile},
+                                      heading => $self->{latest_heading} );
+    $self->add_link( anchor => $child );
+}
+
+sub end_Z
+{
+    my $self = shift;
+    $self->reset_to_item( 'Text::Anchor', type => 'anchor' );
+}
+
 BEGIN
 {
     for my $heading ( 0 .. 4 )
@@ -252,7 +312,6 @@ BEGIN
     my %link_types =
     (
         X => 'index',
-        Z => 'anchor',
         L => 'link',
         A => 'link',
     );

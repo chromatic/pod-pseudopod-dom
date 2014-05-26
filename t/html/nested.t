@@ -50,21 +50,21 @@ Is it not nifty?
 END_POD
 
 my $link = encode_link( 'SomeTitle' );
-like $result, qr!<h1 id="sometitle"><a name="$link"></a>Some Title</h1>!,
+like $result, qr!<h1 id="$link">Some Title</h1>!,
     '=head0 to <h1> title';
 
 $link = encode_link( 'SomeTitlewithCodeandEmphasizedandBold' );
 like $result,
-    qr!<h2 id="sometitlewithcodeand.+"><a name="$link"></a>Some Title with <code>Code</code>!,
+    qr!<h2 id="$link">Some Title with <code>Code</code>!,
     'C<> tag nested in =headn';
-like $result, qr!<h2 id="someti.+andemp.+">.+?Some Title.+?<em>Emphasized</em>!,
+like $result, qr!<h2 id="$link">Some Title.+?<em>Emphasized</em>!,
     'I<> tag nested in =headn';
-like $result, qr!<h2 id="somet.+andbold">.+?Some Title.+?<strong>Bold</strong>!,
+like $result, qr!<h2 id="$link">Some Title.+?<strong>Bold</strong>!,
     'B<> tag nested in =headn';
 
 $link = encode_link( 'AHeaderNestedinaSidebar' );
 like $result,
-    qr|<div class="sidebar">[^>]+<h3 id="ahe.+"><a name="$link"></a>A Head|,
+    qr|<div class="sidebar">[^>]+<h3 id="$link">A Head|,
     '=headn nested in sidebar';
 
 like $result, qr!<ul>[^>]+<li>One.*</div>!s,
