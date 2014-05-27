@@ -175,7 +175,7 @@ sub get_heading_link
 
     my $content       = $self->emit_kids;
     my $filename      = $self->filename || '';
-    my $frag          = 'toc_' . $self->get_anchor;
+    my $frag          = $self->get_anchor;
 
     $content          =~ s/^\*//;
     return qq|<a href="$filename#$frag">$content</a>|;

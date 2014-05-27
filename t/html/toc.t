@@ -17,22 +17,22 @@ my $toc            = $doc->emit_toc;
 my $link           = encode_link( 'SomeDocument' );
 
 like   $toc, qr/Some Document/, 'TOC should contain chapter heading';
-like   $toc, qr!<a href="html_toc.html#toc_$link">Some Document</a>!,
+like   $toc, qr!<a href="html_toc.html#$link">Some Document</a>!,
     '... with link to chapter heading anchor';
 
 $link  = encode_link( 'AHeading' );
 like   $toc, qr/A Heading/, 'TOC should contain section heading';
-like   $toc, qr!<a href="html_toc.html#toc_$link">A Heading</a>!,
+like   $toc, qr!<a href="html_toc.html#$link">A Heading</a>!,
     '... with link to section heading anchor';
 
 $link  = encode_link( 'Bheading' );
 like   $toc, qr/B heading/, 'TOC should contain sub-section heading';
-like   $toc, qr!<a href="html_toc.html#toc_$link">B heading</a>!,
+like   $toc, qr!<a href="html_toc.html#$link">B heading</a>!,
     '... with link to sub-section heading anchor';
 
 $link  = encode_link( 'cheading' );
 like   $toc, qr/c heading/, 'TOC should contain sub-sub-section heading';
-like   $toc, qr!<a href="html_toc.html#toc_$link">c heading</a>!,
+like   $toc, qr!<a href="html_toc.html#$link">c heading</a>!,
     '... with link to sub-sub-section heading anchor';
 
 unlike $toc, qr/Another Suppressed Heading/,
