@@ -185,7 +185,8 @@ sub emit_body
 {
     my $self = shift;
     return <<END_HTML_HEAD . $self->emit_kids( @_ ) . <<END_HTML;
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <link rel="stylesheet" href="../css/style.css" type="text/css" />
 </head>

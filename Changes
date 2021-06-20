@@ -1,6 +1,7 @@
 Revision history for Pod-PseudoPod-DOM
 
 {{$NEXT}}
+    - make emitted HTML5 compliant with spec
 
 1.20210620.2004 2021-06-20 13:04:22-07:00 America/Los_Angeles
     - fix tests for unescaped left curly brackets

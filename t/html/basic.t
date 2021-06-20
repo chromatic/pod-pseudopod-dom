@@ -199,7 +199,8 @@ $result = parse( <<'EOPOD', formatter_args => { add_body_tags => 1 } );
 A plain paragraph with body tags turned on.
 EOPOD
 is $result, <<"EOHTML", "adding html body tags";
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <link rel="stylesheet" href="../css/style.css" type="text/css" />
 </head>
