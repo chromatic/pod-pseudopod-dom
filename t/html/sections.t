@@ -119,10 +119,10 @@ TODO:
 {
     local $TODO = "Seems like an upstream bug here\n";
 
-    like_string $result, qr/\\begin{enumerate}.+\\item \[2\] First/,
+    like_string $result, qr/\\begin\{enumerate}.+\\item \[2\] First/,
         'enumerated lists need their numbers intact';
 
-    like_string $result, qr/\\item \[77\].+Fooled you!.+\\end{itemize}/s,
+    like_string $result, qr/\\item \[77\].+Fooled you!.+\\end\{itemize}/s,
         '... and their itemized endings okay';
 }
 

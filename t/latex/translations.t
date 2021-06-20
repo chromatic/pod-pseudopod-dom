@@ -40,14 +40,14 @@ like_string $result, qr/ligatures---and/,
 
 like_string $result, qr/\\pm some constant/, 'plusmn should get an escape too';
 
-like_string $result, qr/\\textbf{very} important/,
+like_string $result, qr/\\textbf\{very} important/,
     'bold text needs a formatting directive';
 
-like_string $result, qr/\\texttt{code-like text}/,
+like_string $result, qr/\\texttt\{code-like text}/,
     'code-marked text needs a formatting directive';
 
 like_string $result,
-    qr/\\texttt{\\textquotesingle{}single quotes\\textquotesingle{}}/,
+    qr/\\texttt\{\\textquotesingle\{}single quotes\\textquotesingle\{}}/,
     '... and needs special treatment for single quotes';
 
 like_string $result, qr/such as \\texttt\{0\}/,
@@ -56,25 +56,25 @@ like_string $result, qr/such as \\texttt\{0\}/,
 like_string $result, qr/\$some\\_variable-\\mbox\{\}-/,
     '... and if it contains special characters';
 
-like_string $result, qr/special \\emph{emphasis}/,
+like_string $result, qr/special \\emph\{emphasis}/,
     'file paths need an emphasis directive';
 
 like_string $result, qr/or \\emph\{0\} should/,
     '... even if text is Perl-like false';
 
-like_string $result, qr/\\emph{semantic-only emphasis}/,
+like_string $result, qr/\\emph\{semantic-only emphasis}/,
     '... and so does italicized text';
 
-like_string $result, qr/\\footnote{but beware of footnotes!}/,
+like_string $result, qr/\\footnote\{but beware of footnotes!}/,
     'footnotes need special escaping too';
 
-like_string $result, qr/\\index{Special formatting}/,
+like_string $result, qr/\\index\{Special formatting}/,
     'indexed items need even more special escaping';
 
 like_string $result, qr/mc\$\^\{2\}\$/, 'superscript works';
 
 like_string $result, qr/H\$\_\{2\}\$O/, 'subscript works';
 
-like_string $result, qr[\\url{http://www.google.com/}], 'urls work';
+like_string $result, qr[\\url\{http://www.google.com/}], 'urls work';
 
 done_testing;

@@ -15,7 +15,7 @@ my $file           = read_file( catfile( qw( t test_file.pod ) ) );
 my ($doc, $result) = parse( $file, filename => 'tables_test.tex' );
 
 like $result,
-    qr!\\begin{center}\n\\LTXtable{\\linewidth}{tables_test_table0.tex}!,
+    qr!\\begin\{center}\n\\LTXtable\{\\linewidth}\{tables_test_table0.tex}!,
     'table should translate to LTXtable with external ref';
 
 my $tables = $doc->tables;
@@ -25,21 +25,21 @@ ok exists $tables->{'tables_test_table0.tex'},
     '... keyed on table name reference from doc';
 
 $result = $tables->{'tables_test_table0.tex'};
-like $result, qr!\\begin{longtable}{\| X \| X \|}\n\\hline!,
+like $result, qr!\\begin\{longtable}\{\| X \| X \|}\n\\hline!,
     '... containing appropriate table header';
 like $result,
-    qr!\\emph{Left Column} & \\emph{Right Column}\\\\\\endhead\\hline!,
+    qr!\\emph\{Left Column} & \\emph\{Right Column}\\\\\\endhead\\hline!,
     '... and head row';
-like $result, qr!Left Cell One & \\begin{itemize}\n!,
+like $result, qr!Left Cell One & \\begin\{itemize}\n!,
     '... and body cell';
-like $result, qr!\\item First.+\\item Second.+\\item Third.+\\end{itemize}!s,
+like $result, qr!\\item First.+\\item Second.+\\item Third.+\\end\{itemize}!s,
     '... with list in cell';
-like $result, qr!\\end{itemize}\\\\\\hline!s,
+like $result, qr!\\end\{itemize}\\\\\\hline!s,
     '... and list ending';
-like $result, qr!Left Cell Two & Right Cell Two\\\\\\hline\n\\caption{!,
+like $result, qr!Left Cell Two & Right Cell Two\\\\\\hline\n\\caption\{!,
     '... ending with caption';
 like_string $result,
-    qr!\\caption{A Table of \\emph{Fun} Things}\n\\end{longtable}!,
+    qr!\\caption\{A Table of \\emph\{Fun} Things}\n\\end\{longtable}!,
     '... and table ending';
 
 done_testing;
