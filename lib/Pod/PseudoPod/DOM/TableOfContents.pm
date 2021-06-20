@@ -48,7 +48,14 @@ sub add_document
 sub emit_toc
 {
     my $self = shift;
-    return "<ul>\n" . $self->contents->emit . "</ul>\n";
+    return <<END_HTML . $self->contents->emit . "</ul></body></html>";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../css/style.css" type="text/css" />
+</head>
+<body>
+END_HTML
 }
 
 __PACKAGE__->meta->make_immutable;
